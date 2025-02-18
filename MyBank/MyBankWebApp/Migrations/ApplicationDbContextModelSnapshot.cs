@@ -35,11 +35,11 @@ namespace MyBankWebApp.Migrations
 
                     b.Property<string>("CountryCode")
                         .IsRequired()
-                        .HasColumnType("nvarchar(2)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("IBAN")
                         .IsRequired()
-                        .HasColumnType("nvarchar(34)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("UserId");
 
