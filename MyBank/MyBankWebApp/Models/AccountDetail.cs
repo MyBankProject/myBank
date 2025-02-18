@@ -11,7 +11,7 @@ namespace MyBankWebApp.Models
         public required string IBAN { get; set; }
 
         [Required]
-        public required string IBAN_Prefix { get; set; }
+        public required string CountryCode { get; set; }
 
         public decimal Balance { get; set; } = 0;
 

@@ -20,6 +20,6 @@ namespace MyBankWebApp.Models
 
         public TransactionStatus Status { get; set; }
         
-        public TransactionTypes TransactionTypes { get; set; }
+        public TransactionTypes TransactionType { get; set; }
     }
 }
