@@ -4,15 +4,15 @@
     {
         public enum TransactionTypes
         {
-            deposit,
-            transfer
+            Deposit,
+            Transfer
         };
 
         public enum TransactionStatus
         {
-            pending,
-            completed,
-            failed
+            Pending,
+            Completed,
+            Failed
         }
     }
 }
