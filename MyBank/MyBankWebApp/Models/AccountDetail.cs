@@ -20,6 +20,7 @@ namespace MyBankWebApp.Models
 
         public decimal Balance { get; set; } = 0;
 
-        public ICollection<Transaction>? Transfers { get; set; }
+        public ICollection<Transaction>? SentTransactions {  get; set; }
+        public ICollection<Transaction>? RecivedTransactions {  get; set; }
     }
 }

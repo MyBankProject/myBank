@@ -14,6 +14,7 @@ namespace MyBankWebApp.Models
 
         public string? Description { get; set; }
 
+
         public int Reciver { get; set; }
 
         public int Sender { get; set; }
@@ -21,5 +22,9 @@ namespace MyBankWebApp.Models
         public TransactionStatus Status { get; set; }
         
         public TransactionTypes TransactionType { get; set; }
+
+        public AccountDetail? ReciverAccountDetails { get; set; }
+
+        public AccountDetail? SenderAccountDetails { get; set; }
     }
 }
