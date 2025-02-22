@@ -1,11 +1,16 @@
-﻿.main-container {
+﻿body {
+    background: #1E2026;
+}
+
+.main-container {
     display: flex;
     flex-direction: column;
 }
 
-.header {
+.top-container {
     display: flex;
-    background-color: blue;
+    background-color: #2a2d35;
+    border: 1px solid #6393F2;
     justify-content: end;
     align-items: center;
     padding: 10px;
@@ -15,8 +20,13 @@
         margin: 0;
     }
 
+    .logo {
+        height: 50px;
+    }
+
 .settings-button {
     margin-left: auto;
+    background: #6393F2;
     flex-basis: 5%;
     height: 50%;
     font-size: 10px;
@@ -29,9 +39,12 @@
     margin-top: 25px;
 }
 
-.greeting-box {
-    border: 1px solid black;
-    border-radius: 25px;
+.greeting-card {
+    background: #2a2d35;
+    border: 1px solid #276BF2;
+    color: #276BF2;
+    text-shadow: 0.5px 0.5px 0 white, -0.5px -0.5px 0 white, 0.5px -0.5px 0 white, -0.5px 0.5px 0 white;
+    border-radius: 5px;
     padding: 25px 100px;
 }
 
@@ -44,7 +57,8 @@
 }
 
 .balance-box {
-    flex-basis: 60%;
+    background: #79F241;
+    flex-basis: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -53,14 +67,15 @@
 }
 
 .cards-box {
-    flex-basis: 40%;
+    background: #79F241;
+    flex-basis: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
     border: 1px solid black;
 }
 
-.transactions-container {
+.bottom-container {
     display: flex;
     justify-content: center;
     width: 100%;
@@ -69,6 +84,7 @@
 }
 
 .calculations-box {
+    background: #6393F2;
     flex-basis: 30%;
     display: flex;
     justify-content: center;
@@ -79,6 +95,7 @@
 
 .history-box {
     flex-grow: 1;
+    background: #6393F2;
     display: flex;
     justify-content: center;
     align-items: center;
