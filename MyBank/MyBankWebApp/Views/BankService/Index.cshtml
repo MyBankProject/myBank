@@ -1,46 +1,35 @@
 ﻿@{
-    ViewData["Title"] = "Bank Service";
-    <link rel="stylesheet" href="~/css/BankServiceStyle.css" />
+	ViewData["Title"] = "Bank Service";
+	<link rel="stylesheet" href="~/css/BankServiceStyle.css" />
 }
 
-<div class="main-container" style="display:flex; flex-direction: column;">
-    <div style="display: flex; background-color: blue; justify-content: end;">
-        <div style="display: flex; flex-direction: column;
-        height: 80px">
-            <h2>Your Account</h2>
-        </div>
-        <button style="margin-left: auto;
-        flex-basis: 5%; height: 50%; font-size: 10px;">settings button</button>
+<div class="main-container">
+    <div class="header">
+        <h2>Your Account</h2>
+        <button class="settings-button">Settings</button>
     </div>
-    <div style="justify-items: center; font-size: 3rem; 
-    margin-top: 25px;">
-        <div style="border: 1px solid black; border-radius: 25px; 
-        padding: 25px 100px 25px 100px;">
+
+    <div class="greeting-container">
+        <div class="greeting-box">
             <h1>Hello, how</h1>
             <h1>is Your day?</h1>
         </div>
     </div>
 
-    <div style="display: flex; flex-direction: row; justify-items: center; width: 100%;
-    margin-top: 20px; height: 200px;">
-        <div style="flex-basis: 60%; display: flex; justify-content: center; align-items: center;
-        border: 1px solid black; margin-right: 10px;">
+    <div class="balance-cards-container">
+        <div class="balance-box">
             <h2>Saldo</h2>
         </div>
-        <div style="flex-basis: 40%; display: flex; justify-content: center; align-items: center;
-        border: 1px solid black;">
+        <div class="cards-box">
             <h2>Cards</h2>
         </div>
     </div>
 
-    <div style="display: flex; flex-direction: row; justify-items: center; width: 100%;
-    margin-top: 20px; height: 500px;">
-        <div style="flex-basis: 30%; display: flex; justify-content: center; align-items: center;
-        border: 1px solid black; margin-right: 10px;">
-            <h2>calculations / how much did Your spend in this month</h2>
+    <div class="transactions-container">
+        <div class="calculations-box">
+            <h2>Calculations / How much did you spend this month?</h2>
         </div>
-        <div style="flex-grow: 1; display: flex; justify-content: center; align-items: center;
-        border: 1px solid black;">
+        <div class="history-box">
             <h2>History of transactions</h2>
         </div>
     </div>
