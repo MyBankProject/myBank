@@ -19,4 +19,9 @@
     <Folder Include="Migrations\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="wwwroot\img\Logo-wide.png" />
+    <None Include="wwwroot\img\Logo.png" />
+  </ItemGroup>
+
 </Project>
