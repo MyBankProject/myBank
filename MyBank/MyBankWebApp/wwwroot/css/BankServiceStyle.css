@@ -1,170 +1,180 @@
 ﻿:root {
-  --main-color: #3ae8a4;
-  --secondary-color: #0fe419;
-  --third-color: #e9ba4d;
-  --fourth-color: #ce6aec;
-  --cancel-color: #e8563a;
-  --white-color: #f0e6d9;
-  --background-color: #19181f;
-  --scd-background-color: #262b30;
+    --main-color: #3ae8a4;
+    --secondary-color: #0fe419;
+    --third-color: #e9ba4d;
+    --fourth-color: #ce6aec;
+    --cancel-color: #e8563a;
+    --white-color: #f0e6d9;
+    --background-color: #19181f;
+    --scd-background-color: #262b30;
 }
 
 .bebas-neue-regular {
-  font-family: "Bebas Neue", sans-serif;
-  font-weight: 400;
-  font-style: normal;
+    font-family: "Bebas Neue", sans-serif;
+    font-weight: 400;
+    font-style: normal;
 }
 
 body {
-  font-family: "Bebas Neue", sans-serif;
+    font-family: "Bebas Neue", sans-serif;
+    background: var(--background-color);
 }
 
 div {
-  color: var(--white-color);
+    color: var(--white-color);
 }
 
 .box {
-  background-color: var(--scd-background-color);
-  border: 1px solid var(--main-color);
+    background-color: var(--scd-background-color);
+    border: 1px solid var(--main-color);
 }
 
-body {
-  background: var(--background-color);
+.zoom-animation {
+    transition: transform 0.3s ease-in-out;
 }
+
+    .zoom-animation:hover {
+        transform: scale(1.1);
+    }
 
 .main-container {
-  display: flex;
-  flex-direction: column;
+    display: flex;
+    flex-direction: column;
 }
 
 #top-box {
-  display: flex;
-  border: 1px solid var(--main-color);
-  background: transparent;
-  align-items: center;
-  padding: 10px;
-  border-radius: 0px;
-  width: 100%;
+    display: flex;
+    border: 1px solid var(--main-color);
+    background: transparent;
+    align-items: center;
+    padding: 10px;
+    border-radius: 0px;
+    width: 100%;
+    overflow: visible;
 }
 
-#top-box h2 {
-  color: var(--white-);
-  font-size: 40px;
-  position: absolute;
-  left: 50%;
-  top: 6.5%;
-  transform: translate(-50%);
-  color: var(--main-color);
-}
+    #top-box h2 {
+        color: var(--white-);
+        font-size: 40px;
+        position: absolute;
+        left: 50%;
+        top: 6.5%;
+        transform: translate(-50%);
+        color: var(--main-color);
+    }
 
 .logo {
-  height: 45px;
+    height: 45px;
+    width: auto;
+    display: block;
 }
 
 #settings-button {
-  color: var(--main-color);
-  margin-left: auto;
-  font-size: 35px;
+    color: var(--main-color);
+    margin-left: auto;
+    font-size: 35px;
+    display: inline-block;
+    transition: transform 0.3s ease-in-out;
 }
 
-#settings-button:hover {
-  display: flex;
-  color: var(--white-color);
-  font-size: 37px;
-}
+    #settings-button:hover {
+        color: var(--white-color);
+        cursor: pointer;
+        transform: scale(1.1);
+    }
 
 .greeting-container {
-  display: flex;
-  justify-content: center;
-  text-align: center;
-  margin: 50px 100px;
-  font-family: "Bebas Neue", sans-serif;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    margin: 50px 100px;
+    font-family: "Bebas Neue", sans-serif;
+    user-select: none;
+    cursor: default;
 }
 
-.greeting-container img {
-    width: 200px;
-    margin-top: 20px;
-}
+    .greeting-container img {
+        width: 200px;
+        margin-top: 20px;
+        transition: transform 0.3s ease-in-out;
+    }
+
+        .greeting-container img:hover {
+            transform: scale(1.07);
+        }
 
 #greeting-box {
-  background: transparent;
-  color: var(--main-color);
-  border: 0px;
+    background: transparent;
+    color: var(--main-color);
+    border: 0px;
 }
 
 .fancy-text {
-  --a: -45deg;
-  --t: 0.23em;
-  color: var(--third-color);
-  font-size: 4rem;
-  font-weight: bold;
-  line-height: 1.5;
-  text-transform: capitalize;
+    --a: -45deg;
+    --t: 0.23em;
+    color: var(--third-color);
+    font-size: 4rem;
+    font-weight: bold;
+    line-height: 1.5;
+    text-transform: capitalize;
 }
 
-.fancy-text span {
-  --_s: calc(var(--t) * cos(var(--a)));
-  background: linear-gradient(
-      var(--a),
-      #0000 var(--_s),
-      currentColor 0 calc(100% - var(--_s)),
-      #0000 0
-    )
-    bottom/var(--i, 90%) var(--t) no-repeat;
-  padding: 0 0.25em calc(var(--t) * 0.5);
-  -webkit-box-decoration-break: clone;
-  box-decoration-break: clone;
-  transition: 0.3s;
-  cursor: pointer;
-}
+    .fancy-text span {
+        --_s: calc(var(--t) * cos(var(--a)));
+        background: linear-gradient( var(--a), #0000 var(--_s), currentColor 0 calc(100% - var(--_s)), #0000 0 ) bottom/var(--i, 90%) var(--t) no-repeat;
+        padding: 0 0.25em calc(var(--t) * 0.5);
+        -webkit-box-decoration-break: clone;
+        box-decoration-break: clone;
+        transition: 0.3s;
+    }
 
-.fancy-text:hover span {
-  --i: 100%;
-}
+    .fancy-text:hover span {
+        --i: 100%;
+    }
 
 .balance-cards-container {
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  margin-top: 20px;
-  height: 200px;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: 20px;
+    height: 200px;
 }
 
 #balance-box {
-  flex-basis: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-right: 15px;
+    flex-basis: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 15px;
 }
 
 #cards-box {
-  flex-basis: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+    flex-basis: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .bottom-container {
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  margin-top: 20px;
-  height: 500px;
-  gap: 5px;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: 20px;
+    height: 500px;
+    gap: 5px;
 }
 
 #calculations-box {
-  flex-basis: 30%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-right: 10px;
+    flex-basis: 30%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 10px;
 }
 
 #history-box {
-  flex-grow: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
