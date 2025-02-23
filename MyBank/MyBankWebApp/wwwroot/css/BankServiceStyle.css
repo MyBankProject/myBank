@@ -1,5 +1,20 @@
-﻿body {
-    background: #1E2026;
+﻿:root {
+    --main-color: #3AE8A4; 
+    --secondary-color: #0fe419; 
+    --third-color: #E8B43A;
+    --fourth-color: #C03AE8;
+    --cancel-color: #E8563A;
+    --white-color: #F3FFE8;
+    --background-color: #19181f;
+    --scd-background-color: #262b30;
+}
+
+div {
+    color: var(--white-color);
+}
+
+body {
+    background: var(--background-color);
 }
 
 .main-container {
@@ -9,19 +24,22 @@
 
 .top-container {
     display: flex;
-    background-color: #2a2d35;
-    border: 1px solid #6393F2;
+    background-color: var(--scd-background-color);
+    border: 1px solid var(--main-color);
     justify-content: end;
     align-items: center;
     padding: 10px;
 }
 
-    .header h2 {
+    .top-container h2 {
         margin: 0;
+        color: var(--white-color);
+        font-size: 40px;
+        justify-content: center;
     }
 
     .logo {
-        height: 50px;
+        height: 45px;
     }
 
 .settings-button {
@@ -41,9 +59,8 @@
 
 .greeting-card {
     background: #2a2d35;
-    border: 1px solid #276BF2;
-    color: #276BF2;
-    text-shadow: 0.5px 0.5px 0 white, -0.5px -0.5px 0 white, 0.5px -0.5px 0 white, -0.5px 0.5px 0 white;
+    border: 1px solid var(--main-color);
+    color: var(--main-color);
     border-radius: 5px;
     padding: 25px 100px;
 }
@@ -57,7 +74,7 @@
 }
 
 .balance-box {
-    background: #79F241;
+    background: var(--scd-background-color);
     flex-basis: 50%;
     display: flex;
     justify-content: center;
@@ -67,7 +84,7 @@
 }
 
 .cards-box {
-    background: #79F241;
+    background: var(--scd-background-color);
     flex-basis: 50%;
     display: flex;
     justify-content: center;
@@ -84,7 +101,7 @@
 }
 
 .calculations-box {
-    background: #6393F2;
+    background: var(--scd-background-color);
     flex-basis: 30%;
     display: flex;
     justify-content: center;
@@ -95,7 +112,7 @@
 
 .history-box {
     flex-grow: 1;
-    background: #6393F2;
+    background: var(--scd-background-color);
     display: flex;
     justify-content: center;
     align-items: center;
