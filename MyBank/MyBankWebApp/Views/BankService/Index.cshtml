@@ -1,4 +1,5 @@
-﻿@{
+﻿	@model AccountDetail
+@{
 	ViewData["Title"] = "Bank Service";
 	<link rel="stylesheet" href="~/css/BankServiceStyle.css" />
 	<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
@@ -22,7 +23,7 @@
 
 	<div class="balance-cards-container">
 		<div class="box" id="balance-box">
-			<h2>Saldo</h2>
+			<h2>Balance: @String.Format("{0:N0}", Model.Balance) $</h2>
 		</div>
 		<div class="box" id="cards-box">
 			<h2>Cards</h2>

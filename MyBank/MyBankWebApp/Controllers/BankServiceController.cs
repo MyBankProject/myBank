@@ -1,17 +1,36 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MyBankWebApp.Data;
+using MyBankWebApp.Models;
+using System.Diagnostics;
 
 namespace MyBankWebApp.Controllers
 {
     public class BankServiceController : Controller
     {
-        public BankServiceController()
+        private readonly ApplicationDbContext context;
+
+        public BankServiceController(ApplicationDbContext context)
         {
-            //TODO: Dodać w konstruktorze model jednego użytkownika - na razie trzeba go najpierw stworzyć
+            this.context = context;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(int id)
         {
-            return View();
+            if (ModelState.IsValid)
+            {
+                //TODO: Usunąć przypisanie Id, kiedy już będzie logowanie na konto
+                id = 5;
+                AccountDetail? user = context.AccountDetails.FirstOrDefault(x => x.UserId == id);
+                return View(user);
+            }
+            return Error();
+        }
+
+
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 }
