@@ -1,12 +1,18 @@
 ﻿:root {
   --main-color: #3ae8a4;
   --secondary-color: #0fe419;
-  --third-color: #e8b43a;
-  --fourth-color: #c03ae8;
+  --third-color: #e9ba4d;
+  --fourth-color: #ce6aec;
   --cancel-color: #e8563a;
-  --white-color: #eaecd0;
+  --white-color: #f0e6d9;
   --background-color: #19181f;
   --scd-background-color: #262b30;
+}
+
+.bebas-neue-regular {
+    font-family: "Bebas Neue", sans-serif;
+    font-weight: 400;
+    font-style: normal;
 }
 
 div {
@@ -39,7 +45,7 @@ body {
 }
 
 #top-box h2 {
-  color: var(--white-color);
+  color: var(--white-);
   font-size: 40px;
   position: absolute;
   left: 50%;
@@ -62,13 +68,39 @@ body {
 .greeting-container {
   display: flex;
   justify-content: center;
+  text-align: center;
   margin: 50px 100px;
+  font-family: "Bebas Neue", sans-serif;
 }
 
 #greeting-box {
   background: transparent;
   color: var(--main-color);
   border: 0px;
+}
+
+.fancy-text {
+    --a: -45deg; 
+    --t: .23em; 
+    color: var(--third-color);
+    font-size: 4rem;
+    font-weight: bold;
+    line-height: 1.5;
+    text-transform: capitalize;
+}
+
+.fancy-text span {
+    --_s: calc(var(--t) * cos(var(--a)));
+    background: linear-gradient(var(--a), #0000 var(--_s), currentColor 0 calc(100% - var(--_s)), #0000 0) bottom/var(--i,90%) var(--t) no-repeat;
+    padding: 0 .25em calc(var(--t) * 0.5);
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+    transition: .3s;
+    cursor: pointer;
+}
+
+.fancy-text:hover span {
+    --i: 100%;
 }
 
 .balance-cards-container {
