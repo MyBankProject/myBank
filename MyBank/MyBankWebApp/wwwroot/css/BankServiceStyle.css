@@ -27,6 +27,10 @@ div {
 .box {
     background-color: var(--scd-background-color);
     border: 1px solid var(--main-color);
+    padding: 25px;
+    justify-content: flex-start;
+    align-items: flex-start;
+    display: flex;
 }
 
 .zoom-animation {
@@ -34,7 +38,7 @@ div {
 }
 
     .zoom-animation:hover {
-        transform: scale(1.1);
+        transform: scale(1.05);
     }
 
 .main-container {
@@ -47,7 +51,7 @@ div {
     border: 1px solid var(--main-color);
     background: transparent;
     align-items: center;
-    padding: 10px;
+    padding: 15px;
     border-radius: 0px;
     width: 100%;
     overflow: visible;
@@ -74,7 +78,7 @@ div {
     margin-left: auto;
     font-size: 35px;
     display: inline-block;
-    transition: transform 0.3s ease-in-out;
+    transition: transform 0.3s ease-in-out, color 0.3s ease-in-out; 
 }
 
     #settings-button:hover {
@@ -104,9 +108,12 @@ div {
         }
 
 #greeting-box {
+    display: inline;
     background: transparent;
     color: var(--main-color);
     border: 0px;
+    justify-content: center;
+    align-content: center;
 }
 
 .fancy-text {
@@ -134,7 +141,6 @@ div {
 
 .balance-cards-container {
     display: flex;
-    justify-content: center;
     width: 100%;
     margin-top: 20px;
     height: 200px;
@@ -143,16 +149,12 @@ div {
 #balance-box {
     flex-basis: 50%;
     display: flex;
-    justify-content: center;
-    align-items: center;
     margin-right: 15px;
 }
 
 #cards-box {
     flex-basis: 50%;
     display: flex;
-    justify-content: center;
-    align-items: center;
 }
 
 .bottom-container {
@@ -167,14 +169,10 @@ div {
 #calculations-box {
     flex-basis: 30%;
     display: flex;
-    justify-content: center;
-    align-items: center;
     margin-right: 10px;
 }
 
 #history-box {
     flex-grow: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    flex-direction: column;
 }

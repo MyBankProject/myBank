@@ -22,5 +22,10 @@ namespace MyBankWebApp.Models
 
         public ICollection<Transaction>? SentTransactions {  get; set; }
         public ICollection<Transaction>? RecivedTransactions {  get; set; }
+
+        //nie wiem czy dobrze zrobiłem rozdzielając sent i recive ale nie wiem czy da się to zrobić razem w bazie danych, żeby tabelki nie były zbyt
+        //zagmatwane. Piszę tutaj żebym nie zapomniał przy PRze, daj znać co o tym myślisz.
+        [NotMapped]
+        public List<Transaction>? Transactions { get; set; }
     }
 }

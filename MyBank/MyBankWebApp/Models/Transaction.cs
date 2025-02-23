@@ -14,7 +14,6 @@ namespace MyBankWebApp.Models
 
         public string? Description { get; set; }
 
-
         public int Reciver { get; set; }
 
         public int Sender { get; set; }
