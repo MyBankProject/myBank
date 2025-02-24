@@ -30,7 +30,12 @@
 
 	<div class="balance-cards-container">
 		<div class="box" id="balance-box">
-			<h2>Balance: @String.Format("{0:N0}", Model.Balance) $</h2>
+			<h2>Balance: </h2>
+			<div id="balance">
+			<h1>@String.Format("{0:N2}", Model.Balance)</h1>
+			<h1 id="currency">$</h1>
+			</div>
+			<button>Transaction</button>
 		</div>
 		<div class="box" id="cards-box">
 			<h2>Cards</h2>
