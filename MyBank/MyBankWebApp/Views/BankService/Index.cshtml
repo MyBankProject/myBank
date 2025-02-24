@@ -55,8 +55,8 @@
 				@foreach (var transfer in Model.Transactions)
 				{
 					<li>
-						<span>@transfer.Amount.ToString("C")</span> -
-						<span>@transfer.CreationTime.ToString("yyyy-mm-dd")</span> -
+						<span>@transfer.Amount.ToString("C")</span>
+						<span>@transfer.CreationTime.ToString("yyyy-mm-dd")</span>
 						<span>@transfer.Description</span>
 					</li>
 				}
