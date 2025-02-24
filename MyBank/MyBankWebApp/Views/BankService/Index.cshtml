@@ -1,16 +1,23 @@
-﻿	@model AccountDetail
+﻿@model AccountDetail
 @{
 	ViewData["Title"] = "Bank Service";
 	<link rel="stylesheet" href="~/css/BankServiceStyle.css" />
 	<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
-	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=settings" />
+	<link rel="stylesheet"
+		href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=settings" />
 }
 
 <div class="main-container">
 	<div class="box" id="top-box">
-		<img src="~/img/Logos/Logo-green.png" alt="Logo" class="logo zoom-animation">
-		<h2>Your Account</h2>
-		<span id="settings-button" class="material-symbols-outlined zoom-animation">settings</span>
+		<div>
+			<img src="~/img/Logos/Logo-green.png" alt="Logo" class="logo zoom-animation">
+		</div>
+		<div>
+			<h2>Your Account</h2>
+		</div>
+		<div>
+			<span id="settings-button" class="material-symbols-outlined zoom-animation">settings</span>
+		</div>
 	</div>
 
 	<div class="greeting-container">
@@ -40,8 +47,8 @@
 				@foreach (var transfer in Model.Transactions)
 				{
 					<li>
-						<span>@transfer.Amount.ToString("C")</span> - 
-						<span>@transfer.CreationTime.ToString("yyyy-mm-dd")</span> - 
+						<span>@transfer.Amount.ToString("C")</span> -
+						<span>@transfer.CreationTime.ToString("yyyy-mm-dd")</span> -
 						<span>@transfer.Description</span>
 					</li>
 				}

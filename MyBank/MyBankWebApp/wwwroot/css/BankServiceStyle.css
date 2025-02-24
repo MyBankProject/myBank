@@ -44,31 +44,36 @@ div {
 .main-container {
     display: flex;
     flex-direction: column;
+    padding: 10px 0 30px 0;
 }
 
 #top-box {
     display: flex;
     border: 1px solid var(--main-color);
     background: transparent;
-    align-items: center;
-    padding: 15px;
-    border-radius: 0px;
+    justify-content: space-between;
+    padding: 10px 15px 10px 15px;
     width: 100%;
-    overflow: visible;
+}
+
+#top-box div {
+    flex: 1; 
+    text-align: center; 
+    height: 40px;
+}
+
+#top-box div:nth-child(3){
+    text-align: right;
 }
 
     #top-box h2 {
         color: var(--white-);
         font-size: 40px;
-        position: absolute;
-        left: 50%;
-        top: 6.5%;
-        transform: translate(-50%);
         color: var(--main-color);
     }
 
 .logo {
-    height: 45px;
+    height: 40px;
     width: auto;
     display: block;
 }
@@ -79,6 +84,8 @@ div {
     font-size: 35px;
     display: inline-block;
     transition: transform 0.3s ease-in-out, color 0.3s ease-in-out; 
+    margin: 0;
+    padding: 0;
 }
 
     #settings-button:hover {
@@ -91,7 +98,6 @@ div {
     display: flex;
     justify-content: center;
     text-align: center;
-    margin: 50px 100px;
     font-family: "Bebas Neue", sans-serif;
     user-select: none;
     cursor: default;
