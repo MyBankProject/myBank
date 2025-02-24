@@ -18,10 +18,11 @@
 body {
   font-family: "Bebas Neue", sans-serif;
   background: var(--background-color);
+  color: var(--white-color);
 }
 
-div {
-  color: var(--white-color);
+h1 {
+  font-size: 50px;
 }
 
 .box {
@@ -29,6 +30,7 @@ div {
   border: 1px solid var(--main-color);
   padding: 25px;
   display: flex;
+  overflow: hidden;
 }
 
 .zoom-animation {
@@ -65,7 +67,6 @@ div {
 }
 
 #top-box h2 {
-  color: var(--white-);
   font-size: 40px;
   color: var(--main-color);
 }
@@ -87,7 +88,6 @@ div {
 }
 
 #settings-button:hover {
-  color: var(--white-color);
   cursor: pointer;
   transform: scale(1.1);
 }
@@ -163,20 +163,54 @@ div {
 }
 
 #balance-box div {
-    display: flex;
-    flex-direction: row;
-    color: var(--third-color);
-    justify-content: center;
+  display: flex;
+  flex-direction: row;
+  color: var(--third-color);
 }
 
 #currency {
-    margin-left: 10px;
-    color: var(--fourth-color);
-    opacity: 0.75;
+  margin-left: 10px;
+  color: var(--fourth-color);
+  opacity: 0.75;
 }
 
-h1 {
-    font-size: 50px;
+button {
+  box-shadow: 0 0 0 0.1em inset var(--main-color); /*frame color */
+  color: var(--white-color);
+  --_g: linear-gradient(var(--main-color) 0 0) no-repeat;
+  background: var(--_g) calc(var(--_p, 0%) - 100%) 0%,
+    var(--_g) calc(200% - var(--_p, 0%)) 0%,
+    var(--_g) calc(var(--_p, 0%) - 100%) 100%,
+    var(--_g) calc(200% - var(--_p, 0%)) 100%;
+  background-size: 50.5% calc(var(--_p, 0%) / 2 + 0.5%);
+  outline-offset: 0.1em;
+  transition: background-size 0.4s, background-position 0s 0.4s, color 1s;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.1em 0.6em;
+  border: none;
+}
+
+button:hover {
+  --_p: 100%;
+  transition: background-position 0.4s, background-size 0s, color 1s;
+  color: black;
+}
+
+.buttons-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.buttons-container button{
+    flex-basis: 45%;
+}
+
+button:active {
+  box-shadow: 0 0 9e9Q inset var(--third-color); /* background color */
+  background-color: var(--c);
+  color: black; /* font color */
 }
 
 #cards-box {

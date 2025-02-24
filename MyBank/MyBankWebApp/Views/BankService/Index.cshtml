@@ -32,10 +32,13 @@
 		<div class="box" id="balance-box">
 			<h2>Balance: </h2>
 			<div id="balance">
-			<h1>@String.Format("{0:N2}", Model.Balance)</h1>
-			<h1 id="currency">$</h1>
+				<h1>@String.Format("{0:N2}", Model.Balance)</h1>
+				<h1 id="currency">$</h1>
 			</div>
-			<button>Transaction</button>
+			<div class="buttons-container">
+				<button style="--c:#E95A49">Transfer</button>
+				<button style="--c:#E95A49">Internal</button>
+			</div>
 		</div>
 		<div class="box" id="cards-box">
 			<h2>Cards</h2>
