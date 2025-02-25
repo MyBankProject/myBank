@@ -2,11 +2,11 @@
 {
     public class Enums
     {
-        public enum TransactionTypes
+        public enum TransactionDirections
         {
-            Deposit,
-            Transfer
-        };
+            Incoming,
+            Outgoing
+        }
 
         public enum TransactionStatus
         {
@@ -14,5 +14,11 @@
             Completed,
             Failed
         }
+
+        public enum TransactionTypes
+        {
+            Deposit,
+            Transfer
+        };
     }
 }
