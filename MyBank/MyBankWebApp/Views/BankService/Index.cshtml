@@ -1,4 +1,5 @@
-﻿@model AccountDetail
+﻿@using System.Globalization
+@model AccountDetail
 @{
 	ViewData["Title"] = "Bank Service";
 	<link rel="stylesheet" href="~/css/BankServiceStyle.css" />
@@ -51,16 +52,30 @@
 		</div>
 		<div class="box" id="history-box">
 			<h2>History of transactions</h2>
+			@{
+				var culture = new CultureInfo("en-US");
+				culture.NumberFormat.CurrencyPositivePattern = 3;
+			}
 			<ul>
 				@foreach (var transfer in Model.Transactions)
 				{
 					<li>
-						<span>@transfer.Amount.ToString("C")</span>
-						<span>@transfer.CreationTime.ToString("yyyy-mm-dd")</span>
+						<span>@transfer.Amount.ToString("C", culture)</span>
+						<span>@transfer.CreationTime.ToString("dd-MM-yyyy")</span>
 						<span>@transfer.Description</span>
+						@* ogarnąć tutaj nazwę wysyłającego/otrzymującego przelew *@
+						@if (transfer.Reciver == Model.UserId)
+						{
+							<span>@transfer.Sender</span>
+						}
+						else
+						{
+							<span>@transfer.Reciver</span>
+						}
 					</li>
 				}
 			</ul>
+
 		</div>
 	</div>
 </div>

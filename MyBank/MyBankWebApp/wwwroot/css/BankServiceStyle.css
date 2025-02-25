@@ -223,10 +223,18 @@ button:active {
 
 ul {
   list-style-type: none;
-  font-size: 22px;
+  font-size: 21px;
   padding: 0;
 }
 
 li {
-  border-top: 1px solid var(--main-color);
+  display: grid;
+  grid-template-columns: 1fr 1fr 2fr 1fr; /* Dostosuj szerokości */
+  align-items: center;
+  border-top: 0.5px solid var(--main-color);
+}
+
+li span {
+  text-align: left;
+  white-space: nowrap;
 }
