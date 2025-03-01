@@ -1,17 +1,54 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using MyBankWebApp.Data;
+using MyBankWebApp.DTOs;
+using MyBankWebApp.Mappers;
+using MyBankWebApp.Models;
+using System.Diagnostics;
 
 namespace MyBankWebApp.Controllers
 {
     public class BankServiceController : Controller
     {
-        public BankServiceController()
+        private readonly ApplicationDbContext context;
+        private readonly IMapper mapper;
+
+        public BankServiceController(ApplicationDbContext context, IMapper mapper)
         {
-            //TODO: Dodać w konstruktorze model jednego użytkownika - na razie trzeba go najpierw stworzyć
+            this.context = context;
+            this.mapper = mapper;
         }
 
-        public IActionResult Index()
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
         {
-            return View();
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        public IActionResult Index(int id)
+        {
+            if (ModelState.IsValid)
+            {
+                //TODO: Usunąć przypisanie Id, kiedy już będzie logowanie na konto
+                id = 5;
+                AccountDetail? user = context.AccountDetails
+                    .Include(a => a.RecivedTransactions)
+                    .Include(a => a.SentTransactions)
+                    .FirstOrDefault(x => x.UserId == id);
+                var AccountDto = GetAccountDetailDto(user);
+                return View(AccountDto);
+            }
+            return Error();
+        }
+
+        private AccountDetailDto GetAccountDetailDto(AccountDetail? user)
+        {
+            if (user != null)
+            {
+                return mapper.Map<AccountDetailDto>(user);
+            }
+            throw new ArgumentNullException(nameof(user), "User could not be found.");
         }
     }
 }
