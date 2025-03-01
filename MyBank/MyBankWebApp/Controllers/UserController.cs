@@ -1,11 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FluentValidation;
+using Microsoft.AspNetCore.Mvc;
 using MyBankWebApp.DTOs.Creates;
 using MyBankWebApp.Services.Abstractions;
 
 namespace MyBankWebApp.Controllers
 {
-    [Route("api/user")]
     [ApiController]
+    [Route("api/user")]
     public class UserController : ControllerBase
     {
         private readonly IUserService userService;

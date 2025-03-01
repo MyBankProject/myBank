@@ -1,7 +1,12 @@
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MyBankWebApp.Data;
+using MyBankWebApp.DTOs.Creates;
+using MyBankWebApp.Entities;
 using MyBankWebApp.Mappers;
+using MyBankWebApp.Models.Validators;
 using MyBankWebApp.Services;
 using MyBankWebApp.Services.Abstractions;
 
@@ -9,12 +14,21 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddControllers();
+builder.Services.AddFluentValidationAutoValidation(); // Automatyczna walidacja
+builder.Services.AddFluentValidationClientsideAdapters(); // Obs³uga walidacji po stronie klienta
+builder.Services.AddValidatorsFromAssemblyContaining<RegisterUserDtoValidator>(); // Rejestracja walidatorów
+//builder.Services.AddValidatorsFromAssemblyContaining<RegisterUserDtoValidator>();
 builder.Services.AddAutoMapper(typeof(AccountDetailsMapper));
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 builder.Services.AddSwaggerGen();
+//builder.Services.AddScoped<IValidator<RegisterUserDto>, RegisterUserDtoValidator>();
+builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
+
+
 builder.Services.AddScoped<IUserService, UserService>();
 
 var app = builder.Build();
