@@ -1,0 +1,74 @@
+﻿@using System.Globalization
+@using MyBankWebApp.DTOs
+@model AccountDetailDto
+@{
+	ViewData["Title"] = "Bank Service";
+	<link rel="stylesheet" href="~/css/BankServiceStyle.css" />
+	<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+	<link rel="stylesheet"
+		href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=settings" />
+}
+
+<div class="main-container">
+	<div class="box" id="top-box">
+		<div>
+			<img src="~/img/Logos/Logo-green.png" alt="Logo" class="logo zoom-animation">
+		</div>
+		<div>
+			<h2>Your Account</h2>
+		</div>
+		<div>
+			<span id="settings-button" class="material-symbols-outlined zoom-animation">settings</span>
+		</div>
+	</div>
+
+	<div class="greeting-container">
+		<div class="box" id="greeting-box">
+			<h2 class="fancy-text"><span>Your Finances</span></h2>
+			<h2 class="fancy-text" style="color: #ce6aec;"><span>Your Space</span></h2>
+			<img src="~/img/Logos/Logo-green.png" alt="Logo">
+		</div>
+	</div>
+
+	<div class="balance-cards-container">
+		<div class="box" id="balance-box">
+			<h2>Balance: </h2>
+			<div id="balance">
+				<h1>@String.Format("{0:N2}", Model.Balance)</h1>
+				<h1 id="currency">$</h1>
+			</div>
+			<div class="buttons-container">
+				<button>Transfer</button>
+				<button>Internal</button>
+			</div>
+		</div>
+		<div class="box" id="cards-box">
+			<h2>Cards</h2>
+		</div>
+	</div>
+
+	<div class="bottom-container">
+		<div class="box" id="calculations-box">
+			<h2>Calculations / How much did you spend this month?</h2>
+		</div>
+		<div class="box" id="history-box">
+			<h2>History of transactions</h2>
+			@{
+				var culture = new CultureInfo("en-US");
+				culture.NumberFormat.CurrencyPositivePattern = 3;
+			}
+			<ul>
+				@foreach (var transfer in Model.Transactions)
+				{
+					<li>
+						<span>@transfer.Amount.ToString("C", culture)</span>
+						<span>@transfer.CreationTime.ToString("dd-MM-yyyy")</span>
+						<span>@transfer.Description</span>
+						<span>@transfer.OtherSideOfTransaction</span>
+					</li>
+				}
+			</ul>
+
+		</div>
+	</div>
+</div>
