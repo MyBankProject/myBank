@@ -1,4 +1,5 @@
-﻿using MyBankWebApp.Models;
+﻿using MyBankWebApp.Entities;
+using MyBankWebApp.Models;
 using static MyBankWebApp.Enums;
 
 namespace MyBankWebApp.Data
@@ -13,47 +14,32 @@ namespace MyBankWebApp.Data
 
                 context.Database.EnsureCreated();
 
+                if (!context.Roles.Any())
+                {
+                    var roles = GetRoles();
+                    context.Roles.AddRange(roles);
+                    context.SaveChanges();
+                }
+
                 if (!context.AccountDetails.Any())
                 {
-                    context.AccountDetails.AddRange(new List<AccountDetail>()
-                    {
-                        new AccountDetail()
-                        {
-                            IBAN = "PL61109010140000071219812874",
-                            CountryCode = "PL",
-                            Balance = 1500.75m
-                        },
-                        new AccountDetail()
-                         {
-                             IBAN = "PL27114020040000300201355387",
-                             CountryCode = "PL",
-                             Balance = 240.50m
-                         },
-                         new AccountDetail()
-                         {
-                             IBAN = "PL46116022020000000231710798",
-                             CountryCode = "PL",
-                             Balance = 320000.00m
-                         },
-                         new AccountDetail()
-                         {
-                             IBAN = "PL10105000997603123456789123",
-                             CountryCode = "PL",
-                             Balance = 50.25m
-                         },
-                         new AccountDetail()
-                         {
-                             IBAN = "PL27113000000000123456789123",
-                             CountryCode = "PL",
-                             Balance = 785000000.90m
-                         }
-                    });
+                    var accountDetails = GetAccountDetails();
+                    context.AccountDetails.AddRange(accountDetails);
                     context.SaveChanges();
                 }
 
                 if (!context.Transactions.Any())
                 {
-                    context.Transactions.AddRange(new List<Transaction>()
+                    var transactions = GetTransactions();
+                    context.Transactions.AddRange(transactions);
+                    context.SaveChanges();
+                }
+            }
+        }
+
+        private static IEnumerable<Transaction> GetTransactions()
+        {
+            return new List<Transaction>()
                     {
                         new Transaction()
                         {
@@ -105,10 +91,54 @@ namespace MyBankWebApp.Data
                             Status = TransactionStatus.Completed,
                             TransactionType = TransactionTypes.Deposit
                         }
-                    });
-                    context.SaveChanges();
-                }
-            }
+                    };
         }
+
+        private static IEnumerable<AccountDetail> GetAccountDetails()
+        {
+           return new List<AccountDetail>()
+                    {
+                        new AccountDetail()
+                        {
+                            IBAN = "PL61109010140000071219812874",
+                            CountryCode = "PL",
+                            Balance = 1500.75m
+                        },
+                        new AccountDetail()
+                         {
+                             IBAN = "PL27114020040000300201355387",
+                             CountryCode = "PL",
+                             Balance = 240.50m
+                         },
+                         new AccountDetail()
+                         {
+                             IBAN = "PL46116022020000000231710798",
+                             CountryCode = "PL",
+                             Balance = 320000.00m
+                         },
+                         new AccountDetail()
+                         {
+                             IBAN = "PL10105000997603123456789123",
+                             CountryCode = "PL",
+                             Balance = 50.25m
+                         },
+                         new AccountDetail()
+                         {
+                             IBAN = "PL27113000000000123456789123",
+                             CountryCode = "PL",
+                             Balance = 785000000.90m
+                         }
+                    };
+        }
+
+      private static IEnumerable<Role> GetRoles()
+        {
+            return new List<Role>()
+            {
+                new Role() { Name = "User" },
+                new Role() { Name = "Manager" },
+                new Role() { Name = "Admin" }
+            };
+        } 
     }
 }
