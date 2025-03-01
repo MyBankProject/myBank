@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MyBankWebApp.Data;
+using MyBankWebApp.DTOs;
+using MyBankWebApp.Mappers;
 using MyBankWebApp.Models;
 using System.Diagnostics;
 
@@ -9,10 +12,12 @@ namespace MyBankWebApp.Controllers
     public class BankServiceController : Controller
     {
         private readonly ApplicationDbContext context;
+        private readonly IMapper mapper;
 
-        public BankServiceController(ApplicationDbContext context)
+        public BankServiceController(ApplicationDbContext context, IMapper mapper)
         {
             this.context = context;
+            this.mapper = mapper;
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
@@ -31,23 +36,19 @@ namespace MyBankWebApp.Controllers
                     .Include(a => a.RecivedTransactions)
                     .Include(a => a.SentTransactions)
                     .FirstOrDefault(x => x.UserId == id);
-                ReadTransactions(user);
-                return View(user);
+                var AccountDto = GetAccountDetailDto(user);
+                return View(AccountDto);
             }
             return Error();
         }
 
-        private static void ReadTransactions(AccountDetail? user)
+        private AccountDetailDto GetAccountDetailDto(AccountDetail? user)
         {
-            //TODO: ogarnąć null-menage
             if (user != null)
             {
-                List<Transaction> recived = user.RecivedTransactions?.ToList() ?? [];
-                List<Transaction> send = user.SentTransactions?.ToList() ?? [];
-                user.Transactions = recived.Concat(send)
-                    .OrderBy(t => t.CreationTime)
-                    .ToList();
+                return mapper.Map<AccountDetailDto>(user);
             }
+            throw new ArgumentNullException(nameof(user), "User could not be found.");
         }
     }
 }

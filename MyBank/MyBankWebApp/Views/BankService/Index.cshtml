@@ -1,5 +1,6 @@
 ﻿@using System.Globalization
-@model AccountDetail
+@using MyBankWebApp.DTOs
+@model AccountDetailDto
 @{
 	ViewData["Title"] = "Bank Service";
 	<link rel="stylesheet" href="~/css/BankServiceStyle.css" />
@@ -63,15 +64,7 @@
 						<span>@transfer.Amount.ToString("C", culture)</span>
 						<span>@transfer.CreationTime.ToString("dd-MM-yyyy")</span>
 						<span>@transfer.Description</span>
-						@* ogarnąć tutaj nazwę wysyłającego/otrzymującego przelew *@
-						@if (transfer.Reciver == Model.UserId)
-						{
-							<span>@transfer.Sender</span>
-						}
-						else
-						{
-							<span>@transfer.Reciver</span>
-						}
+						<span>@transfer.OtherSideOfTransaction</span>
 					</li>
 				}
 			</ul>
