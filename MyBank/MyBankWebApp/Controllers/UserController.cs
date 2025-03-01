@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
+using MyBankWebApp.DTOs;
 using MyBankWebApp.DTOs.Creates;
 using MyBankWebApp.Services.Abstractions;
 
@@ -21,6 +22,13 @@ namespace MyBankWebApp.Controllers
         {
             userService.RegisterUser(dto);
             return Ok();
+        }
+
+        [HttpPost("login")]
+        public ActionResult Login([FromBody] LoginDto dto)
+        {
+            string token = userService.GenerateJwt(dto);
+            return Ok(token);
         }
     }
 }

@@ -2,6 +2,8 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using MyBankWebApp;
 using MyBankWebApp.Data;
 using MyBankWebApp.DTOs.Creates;
 using MyBankWebApp.Entities;
@@ -9,6 +11,7 @@ using MyBankWebApp.Mappers;
 using MyBankWebApp.Models.Validators;
 using MyBankWebApp.Services;
 using MyBankWebApp.Services.Abstractions;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,6 +28,28 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 builder.Services.AddSwaggerGen();
+
+var authenticationSettings = new AuthenticationSettings();
+builder.Configuration.GetSection("Authentication").Bind(authenticationSettings);
+builder.Services.AddSingleton(authenticationSettings);
+
+
+builder.Services.AddAuthentication(option =>
+{
+    option.DefaultAuthenticateScheme = "Bearer";
+    option.DefaultScheme = "Bearer";
+    option.DefaultChallengeScheme = "Bearer";
+}).AddJwtBearer(cfg =>
+{
+    cfg.RequireHttpsMetadata = false;
+    cfg.SaveToken = true;
+    cfg.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+    {
+        ValidIssuer = authenticationSettings.JwtIssuer,
+        ValidAudience = authenticationSettings.JwtIssuer,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authenticationSettings.JwtKey)),
+    };
+});
 //builder.Services.AddScoped<IValidator<RegisterUserDto>, RegisterUserDtoValidator>();
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 
@@ -43,7 +68,7 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
-
+app.UseAuthorization();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
@@ -54,8 +79,6 @@ app.UseSwaggerUI(c =>
 });
 
 app.UseRouting();
-
-app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
