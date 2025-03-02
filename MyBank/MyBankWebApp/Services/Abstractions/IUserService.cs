@@ -5,7 +5,7 @@ namespace MyBankWebApp.Services.Abstractions
 {
     public interface IUserService
     {
-        void RegisterUser(RegisterUserDto dto);
+        List<string> RegisterUser(RegisterUserDto dto);
         string GenerateJwt(LoginDto dto);
     }
 }

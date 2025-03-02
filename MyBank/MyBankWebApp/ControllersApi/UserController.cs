@@ -4,7 +4,7 @@ using MyBankWebApp.DTOs;
 using MyBankWebApp.DTOs.Creates;
 using MyBankWebApp.Services.Abstractions;
 
-namespace MyBankWebApp.Controllers
+namespace MyBankWebApp.ControllersApi
 {
     [ApiController]
     [Route("api/user")]

@@ -16,7 +16,8 @@ namespace MyBankWebApp.Models.Validators
                 .MinimumLength(6);
 
             RuleFor(x => x.ConfirmPassword)
-                .Equal(p => p.Password);
+                .Equal(p => p.Password)
+                .WithMessage("Passwords do not match."); ;
 
             RuleFor(x => x.Email)
                 .Custom((value, context) =>

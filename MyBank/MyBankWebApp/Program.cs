@@ -17,11 +17,13 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddControllers();
-builder.Services.AddFluentValidationAutoValidation(); // Automatyczna walidacja
-builder.Services.AddFluentValidationClientsideAdapters(); // Obs³uga walidacji po stronie klienta
+
+// dziala w przypadku api.. w przypadku serwisow trzeba recznie wstrzykiwac
+//builder.Services.AddControllers();
+//builder.Services.AddFluentValidationAutoValidation(); // Automatyczna walidacja
+//builder.Services.AddFluentValidationClientsideAdapters(); // Obs³uga walidacji po stronie klienta
 builder.Services.AddValidatorsFromAssemblyContaining<RegisterUserDtoValidator>(); // Rejestracja walidatorów
-//builder.Services.AddValidatorsFromAssemblyContaining<RegisterUserDtoValidator>();
+
 builder.Services.AddAutoMapper(typeof(AccountDetailsMapper));
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
@@ -32,7 +34,6 @@ builder.Services.AddSwaggerGen();
 var authenticationSettings = new AuthenticationSettings();
 builder.Configuration.GetSection("Authentication").Bind(authenticationSettings);
 builder.Services.AddSingleton(authenticationSettings);
-
 
 builder.Services.AddAuthentication(option =>
 {
@@ -68,7 +69,7 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
-app.UseAuthorization();
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
@@ -78,7 +79,10 @@ app.UseSwaggerUI(c =>
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "MyBank Api");
 });
 
+
 app.UseRouting();
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",

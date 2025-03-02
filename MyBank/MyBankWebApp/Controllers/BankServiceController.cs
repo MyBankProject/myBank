@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MyBankWebApp.Data;
@@ -26,6 +27,7 @@ namespace MyBankWebApp.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
+       // [Authorize]
         public IActionResult Index(int id)
         {
             if (ModelState.IsValid)

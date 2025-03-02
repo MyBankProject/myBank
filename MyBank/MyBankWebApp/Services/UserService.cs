@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using FluentValidation;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using MyBankWebApp.Data;
@@ -7,6 +8,7 @@ using MyBankWebApp.DTOs.Creates;
 using MyBankWebApp.Entities;
 using MyBankWebApp.Exceptions;
 using MyBankWebApp.Services.Abstractions;
+using System.ComponentModel.DataAnnotations;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -18,12 +20,18 @@ namespace MyBankWebApp.Services
         private readonly ApplicationDbContext dbContext;
         private readonly IPasswordHasher<User> passwordHasher;
         private readonly AuthenticationSettings authenticationSettings;
+        private readonly IValidator<RegisterUserDto> validator;
 
-        public UserService(ApplicationDbContext dbContext, IPasswordHasher<User> passwordHasher, AuthenticationSettings authenticationSettings)
+        public UserService(
+            ApplicationDbContext dbContext,
+            IPasswordHasher<User> passwordHasher, 
+            AuthenticationSettings authenticationSettings,
+            IValidator<RegisterUserDto> validator)
         {
             this.dbContext = dbContext;
             this.passwordHasher = passwordHasher;
             this.authenticationSettings = authenticationSettings;
+            this.validator = validator;
         }
 
         public string GenerateJwt(LoginDto dto)
@@ -64,8 +72,14 @@ namespace MyBankWebApp.Services
             return tokenHandler.WriteToken(token);
         }
 
-        public void RegisterUser(RegisterUserDto dto)
+        public List<string> RegisterUser(RegisterUserDto dto)
         {
+            var result = validator.Validate(dto);
+            if (!result.IsValid)
+            {
+                return result.Errors.Select(e => e.ErrorMessage).ToList();
+            }
+
             var newUser = new User()
             {
                 Email = dto.Email,
@@ -78,6 +92,7 @@ namespace MyBankWebApp.Services
             newUser.PasswordHash =  passwordHasher.HashPassword(newUser, dto.Password);
             dbContext.Users.Add(newUser);
             dbContext.SaveChanges();
+            return null;
         }
     }
 }
