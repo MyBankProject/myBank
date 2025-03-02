@@ -8,11 +8,11 @@ namespace MyBankWebApp.ControllersApi
 {
     [ApiController]
     [Route("api/user")]
-    public class UserController : ControllerBase
+    public class UserApiController : ControllerBase
     {
         private readonly IUserService userService;
 
-        public UserController(IUserService userService)
+        public UserApiController(IUserService userService)
         {
             this.userService = userService;
         }

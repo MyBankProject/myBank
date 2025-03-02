@@ -1,0 +1,15 @@
+﻿<html>
+<body>
+	<h1>Register new user</h1>
+	<form method="post" action="/User/SendLogin">
+		<div asp-validation-summary="All" class="text-danger"></div>
+		<label for="email">Email:</label>
+		<input type="text" id="email" name="Email" required>
+		<br />
+		<label for="password">Password:</label>
+		<input type="password" id="password" name="Password" required>
+		<br />
+		<button type="submit">Submit</button>
+	</form>
+</body>
+</html>
