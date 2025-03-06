@@ -1,4 +1,4 @@
-﻿@model MyBankWebApp.Models.AccountDetail
+﻿@model MyBankWebApp.Models.Transaction
 
 @{
 	ViewData["Title"] = "Transfer";
@@ -28,20 +28,6 @@
 			<div class="form-group">
 				<label asp-for="Reciver" class="control-label"></label>
 				<select asp-for="Reciver" class="form-control" asp-items="ViewBag.Reciver"></select>
-			</div>
-			<div class="form-group">
-				<label asp-for="Sender" class="control-label"></label>
-				<select asp-for="Sender" class="form-control" asp-items="ViewBag.Sender"></select>
-			</div>
-			<div class="form-group">
-				<label asp-for="Status" class="control-label"></label>
-				<select asp-for="Status" class="form-control"></select>
-				<span asp-validation-for="Status" class="text-danger"></span>
-			</div>
-			<div class="form-group">
-				<label asp-for="TransactionType" class="control-label"></label>
-				<select asp-for="TransactionType" class="form-control"></select>
-				<span asp-validation-for="TransactionType" class="text-danger"></span>
 			</div>
 			<div class="form-group">
 				<input type="submit" value="Create" class="btn btn-primary" />
