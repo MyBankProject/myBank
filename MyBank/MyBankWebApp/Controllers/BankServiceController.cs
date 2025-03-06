@@ -56,7 +56,7 @@ namespace MyBankWebApp.Controllers
         {
             if (context.AccountDetails.Any(user => user.UserId == id))
             {
-                return View(new Transaction() { Sender = id});
+                return View(new NewTransactionDto() { SenderId = id});
             }
             return RedirectToAction(nameof(Index));
         }

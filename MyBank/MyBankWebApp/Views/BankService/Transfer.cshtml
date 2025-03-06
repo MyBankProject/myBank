@@ -1,4 +1,4 @@
-﻿@model MyBankWebApp.Models.Transaction
+﻿@model MyBankWebApp.DTOs.NewTransactionDto
 
 @{
 	ViewData["Title"] = "Transfer";
@@ -11,14 +11,19 @@
 		<form asp-action="Transfer">
 			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
 			<div class="form-group">
-				<label asp-for="Amount" class="control-label"></label>
-				<input asp-for="Amount" class="form-control" />
-				<span asp-validation-for="Amount" class="text-danger"></span>
+				<label asp-for="ReciverName" class="control-label"></label>
+				<select asp-for="ReciverName" class="form-control" asp-items="ViewBag.Reciver"></select>
+				<span asp-validation-for="ReciverName" class="text-danger"></span>
 			</div>
 			<div class="form-group">
-				<label asp-for="CreationTime" class="control-label"></label>
-				<input asp-for="CreationTime" class="form-control" />
-				<span asp-validation-for="CreationTime" class="text-danger"></span>
+				<label asp-for="ReciverIBAN" class="control-label"></label>
+				<select asp-for="ReciverIBAN" class="form-control" asp-items="ViewBag.Reciver"></select>
+				<span asp-validation-for="ReciverIBAN" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="TransferDate" class="control-label"></label>
+				<input asp-for="TransferDate" class="form-control" />
+				<span asp-validation-for="TransferDate" class="text-danger"></span>
 			</div>
 			<div class="form-group">
 				<label asp-for="Description" class="control-label"></label>
@@ -26,8 +31,9 @@
 				<span asp-validation-for="Description" class="text-danger"></span>
 			</div>
 			<div class="form-group">
-				<label asp-for="Reciver" class="control-label"></label>
-				<select asp-for="Reciver" class="form-control" asp-items="ViewBag.Reciver"></select>
+				<label asp-for="Amount" class="control-label"></label>
+				<input asp-for="Amount" class="form-control" />
+				<span asp-validation-for="Amount" class="text-danger"></span>
 			</div>
 			<div class="form-group">
 				<input type="submit" value="Create" class="btn btn-primary" />
