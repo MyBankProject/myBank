@@ -51,5 +51,14 @@ namespace MyBankWebApp.Controllers
             }
             throw new ArgumentNullException(nameof(user), "User could not be found.");
         }
+
+        public IActionResult Transfer(AccountDetail? sender)
+        {
+            if (sender != null)
+            {
+                return View(sender);
+            }
+            return View("Index");
+        }
     }
 }
