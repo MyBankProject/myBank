@@ -26,7 +26,8 @@ builder.Services.AddControllersWithViews();
 //builder.Services.AddFluentValidationClientsideAdapters(); // Obs³uga walidacji po stronie klienta
 builder.Services.AddValidatorsFromAssemblyContaining<RegisterUserDtoValidator>(); // Rejestracja walidatorów
 
-builder.Services.AddAutoMapper(typeof(AccountDetailsMapper));
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));

@@ -5,6 +5,8 @@ namespace MyBankWebApp.DTOs
     public class NewTransactionDto
     {
         [Required]
+        [DataType(DataType.Currency)]
+        [DisplayFormat(DataFormatString = "{0:N2}", ApplyFormatInEditMode = true)]
         public decimal Amount { get; set; }
 
         [Required]
@@ -14,7 +16,7 @@ namespace MyBankWebApp.DTOs
         public string ReciverIBAN { get; set; }
 
         [Required]
-        public int ReciverName { get; set; }
+        public string ReciverName { get; set; }
 
         [Required]
         public int SenderId { get; set; }

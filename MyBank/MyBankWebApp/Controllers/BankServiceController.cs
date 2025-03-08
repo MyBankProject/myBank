@@ -1,12 +1,11 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MyBankWebApp.Data;
 using MyBankWebApp.DTOs;
-using MyBankWebApp.Mappers;
 using MyBankWebApp.Models;
 using System.Diagnostics;
+using System.Security.Claims;
 
 namespace MyBankWebApp.Controllers
 {
@@ -43,6 +42,33 @@ namespace MyBankWebApp.Controllers
             return Error();
         }
 
+        public IActionResult Transaction(int id)
+        {
+            if (context.AccountDetails.Any(user => user.UserId == id))
+            {
+                return View(new NewTransactionDto() { SenderId = id });
+            }
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        [AutoValidateAntiforgeryToken]
+        public IActionResult Transaction(NewTransactionDto newTransactionDto)
+        {
+            //TODO: przerzucić do serwisu
+            if (newTransactionDto != null && newTransactionDto.Amount > 0)
+            {
+                var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                if (!int.TryParse(userIdClaim, out int userId))
+                {
+                    return Unauthorized();
+                }
+                newTransactionDto.SenderId = userId;
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
         private AccountDetailDto GetAccountDetailDto(AccountDetail? user)
         {
             if (user != null)
@@ -50,22 +76,6 @@ namespace MyBankWebApp.Controllers
                 return mapper.Map<AccountDetailDto>(user);
             }
             throw new ArgumentNullException(nameof(user), "User could not be found.");
-        }
-
-        public IActionResult Transaction(int id)
-        {
-            if (context.AccountDetails.Any(user => user.UserId == id))
-            {
-                return View(new NewTransactionDto() { SenderId = id});
-            }
-            return RedirectToAction(nameof(Index));
-        }
-
-        [HttpPost]
-        public IActionResult Transaction(NewTransactionDto newTransactionDto)
-        {
-            //TODO: Dodać logikę
-            return RedirectToAction(nameof(Index));
         }
     }
 }
