@@ -1,23 +1,21 @@
 using FluentValidation;
-using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using MyBankWebApp;
 using MyBankWebApp.Data;
-using MyBankWebApp.DTOs.Creates;
 using MyBankWebApp.Entities;
-using MyBankWebApp.Mappers;
 using MyBankWebApp.Models.Validators;
-using MyBankWebApp.Services;
-using MyBankWebApp.Services.Abstractions;
+using MyBankWebApp.Services.Transactions.Abstractions;
+using MyBankWebApp.Services.UserServices.Abstractions;
+using MyBankWebApp.Services.UserServices;
 using System.Text;
+using MyBankWebApp.Services.Transactions;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Register controllers
 builder.Services.AddControllersWithViews();
 
 // dziala w przypadku api.. w przypadku serwisow trzeba recznie wstrzykiwac
@@ -26,7 +24,14 @@ builder.Services.AddControllersWithViews();
 //builder.Services.AddFluentValidationClientsideAdapters(); // Obs³uga walidacji po stronie klienta
 builder.Services.AddValidatorsFromAssemblyContaining<RegisterUserDtoValidator>(); // Rejestracja walidatorów
 
-builder.Services.AddAutoMapper(typeof(AccountDetailsMapper));
+//Register Services
+builder.Services.AddScoped<ITransactionService, TransactionService>();
+
+//Register Mappers
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+
+//Register Db Context
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
@@ -53,7 +58,6 @@ builder.Services.AddAuthentication(option =>
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authenticationSettings.JwtKey)),
     };
 
-
     // Pobieranie tokena z ciasteczka
     cfg.Events = new JwtBearerEvents
     {
@@ -66,11 +70,9 @@ builder.Services.AddAuthentication(option =>
             return Task.CompletedTask;
         }
     };
-
 });
 //builder.Services.AddScoped<IValidator<RegisterUserDto>, RegisterUserDtoValidator>();
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
-
 
 builder.Services.AddScoped<IUserService, UserService>();
 
@@ -96,7 +98,6 @@ app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "MyBank Api");
 });
-
 
 app.UseRouting();
 app.UseAuthentication();

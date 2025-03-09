@@ -1,0 +1,51 @@
+﻿@model MyBankWebApp.DTOs.NewTransactionDto
+
+@{
+	ViewData["Title"] = "Transfer";
+}
+
+<h1>New Transfer</h1>
+<hr />
+<div class="row">
+	<div class="col-md-4">
+		<form asp-action="Transaction">
+			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+			<div class="form-group">
+				<label asp-for="ReciverName" class="control-label">Reciver Name</label>
+				<input asp-for="ReciverName" class="form-control"></input>
+				<span asp-validation-for="ReciverName" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="ReciverIBAN" class="control-label">Account Number</label>
+				<input asp-for="ReciverIBAN" class="form-control"></input>
+				<span asp-validation-for="ReciverIBAN" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="TransferDate" class="control-label"></label>
+				<input asp-for="TransferDate" class="form-control" />
+				<span asp-validation-for="TransferDate" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="Description" class="control-label"></label>
+				<input asp-for="Description" class="form-control" />
+				<span asp-validation-for="Description" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="Amount" class="control-label"></label>
+				<input asp-for="Amount" class="form-control" />
+				<span asp-validation-for="Amount" class="text-danger"></span>
+			</div>
+			<br />
+			<div class="form-group" style="display: flex; gap: 15px;">
+				<input type="submit" value="Create" class="btn btn-primary" />
+				<a asp-action="Index" class="btn btn-danger">Cancel</a>
+			</div>
+		</form>
+	</div>
+</div>
+
+@section Scripts {
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+}

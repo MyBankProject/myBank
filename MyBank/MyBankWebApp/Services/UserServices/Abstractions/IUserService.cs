@@ -1,7 +1,7 @@
 ﻿using MyBankWebApp.DTOs;
 using MyBankWebApp.DTOs.Creates;
 
-namespace MyBankWebApp.Services.Abstractions
+namespace MyBankWebApp.Services.UserServices.Abstractions
 {
     public interface IUserService
     {

@@ -4,7 +4,7 @@ using MyBankWebApp.DTOs;
 using MyBankWebApp.DTOs.Creates;
 using MyBankWebApp.Models;
 using MyBankWebApp.Services;
-using MyBankWebApp.Services.Abstractions;
+using MyBankWebApp.Services.UserServices.Abstractions;
 
 namespace MyBankWebApp.Controllers
 {

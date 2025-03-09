@@ -100,31 +100,31 @@ namespace MyBankWebApp.Data
                     {
                         new AccountDetail()
                         {
-                            IBAN = "PL61109010140000071219812874",
+                            IBAN = "61109010140000071219812874",
                             CountryCode = "PL",
                             Balance = 1500.75m
                         },
                         new AccountDetail()
                          {
-                             IBAN = "PL27114020040000300201355387",
+                             IBAN = "27114020040000300201355387",
                              CountryCode = "PL",
                              Balance = 240.50m
                          },
                          new AccountDetail()
                          {
-                             IBAN = "PL46116022020000000231710798",
+                             IBAN = "46116022020000000231710798",
                              CountryCode = "PL",
                              Balance = 320000.00m
                          },
                          new AccountDetail()
                          {
-                             IBAN = "PL10105000997603123456789123",
+                             IBAN = "10105000997603123456789123",
                              CountryCode = "PL",
                              Balance = 50.25m
                          },
                          new AccountDetail()
                          {
-                             IBAN = "PL27113000000000123456789123",
+                             IBAN = "27113000000000123456789123",
                              CountryCode = "PL",
                              Balance = 785000000.90m
                          }
