@@ -7,24 +7,23 @@ using MyBankWebApp.DTOs;
 using MyBankWebApp.DTOs.Creates;
 using MyBankWebApp.Entities;
 using MyBankWebApp.Exceptions;
-using MyBankWebApp.Services.User.Abstractions;
-using System.ComponentModel.DataAnnotations;
+using MyBankWebApp.Services.UserServices.Abstractions;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace MyBankWebApp.Services
+namespace MyBankWebApp.Services.UserServices
 {
     public class UserService : IUserService
     {
+        private readonly AuthenticationSettings authenticationSettings;
         private readonly ApplicationDbContext dbContext;
         private readonly IPasswordHasher<User> passwordHasher;
-        private readonly AuthenticationSettings authenticationSettings;
         private readonly IValidator<RegisterUserDto> validator;
 
         public UserService(
             ApplicationDbContext dbContext,
-            IPasswordHasher<User> passwordHasher, 
+            IPasswordHasher<User> passwordHasher,
             AuthenticationSettings authenticationSettings,
             IValidator<RegisterUserDto> validator)
         {
@@ -45,7 +44,7 @@ namespace MyBankWebApp.Services
             }
 
             var result = passwordHasher.VerifyHashedPassword(user, user.PasswordHash, dto.Password);
-            if(result == PasswordVerificationResult.Failed)
+            if (result == PasswordVerificationResult.Failed)
             {
                 throw new BadReQuestException("Invalid username or password");
             }
@@ -89,7 +88,7 @@ namespace MyBankWebApp.Services
                 FirstName = dto.FirstName,
                 LastName = dto.LastName,
             };
-            newUser.PasswordHash =  passwordHasher.HashPassword(newUser, dto.Password);
+            newUser.PasswordHash = passwordHasher.HashPassword(newUser, dto.Password);
             dbContext.Users.Add(newUser);
             dbContext.SaveChanges();
             return null;

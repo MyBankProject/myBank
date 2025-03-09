@@ -4,20 +4,28 @@ using Microsoft.EntityFrameworkCore;
 using MyBankWebApp.Data;
 using MyBankWebApp.DTOs;
 using MyBankWebApp.Models;
+using MyBankWebApp.Services.Transactions.Abstractions;
 using System.Diagnostics;
-using System.Security.Claims;
 
 namespace MyBankWebApp.Controllers
 {
     public class BankServiceController : Controller
     {
         private readonly ApplicationDbContext context;
+        private readonly ILogger<BankServiceController> logger;
         private readonly IMapper mapper;
+        private readonly ITransactionService transactionService;
 
-        public BankServiceController(ApplicationDbContext context, IMapper mapper)
+        public BankServiceController(
+            ApplicationDbContext context,
+            IMapper mapper,
+            ILogger<BankServiceController> logger,
+            ITransactionService transactionService)
         {
             this.context = context;
             this.mapper = mapper;
+            this.logger = logger;
+            this.transactionService = transactionService;
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
@@ -53,19 +61,34 @@ namespace MyBankWebApp.Controllers
 
         [HttpPost]
         [AutoValidateAntiforgeryToken]
-        public IActionResult Transaction(NewTransactionDto newTransactionDto)
+        public async Task<IActionResult> Transaction(NewTransactionDto newTransactionDto)
         {
-            //TODO: zaimplementować użycie serwisu tutaj
             if (newTransactionDto != null && newTransactionDto.Amount > 0)
             {
-                var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                if (!int.TryParse(userIdClaim, out int userId))
-                {
-                    return Unauthorized();
-                }
-                newTransactionDto.SenderId = userId;
-            }
+                //TODO: Odkomentować po zrobieniu logowania (Id użytkownika, który wysyła przelew jest dla bezpieczeństwa pobierany dopiero tutaj, żeby nie można było wpisać tego
+                //z inspektora w przeglądarce i robić za kogoś przelewów z jego konta XD
+                //var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                //if (!int.TryParse(userIdClaim, out int userId))
+                //{
+                //    return Unauthorized();
+                //}
+                //newTransactionDto.SenderId = userId;
+                newTransactionDto.SenderId = 5;
 
+                try
+                {
+                    await transactionService.AddTransactionAsync(newTransactionDto);
+                }
+                catch (Exception ex)
+                {
+                    logger.LogError(ex, "Unable to create transaction: {Transaction}.", newTransactionDto);
+                    TempData["ErrorMessage"] = $"Transaction Failed: {ex.Message}";
+                    return RedirectToAction(nameof(Index));
+                }
+                TempData["SuccessMesage"] = "Transaction Successful!";
+                return RedirectToAction(nameof(Index));
+            }
+            TempData["ErrorMessage"] = "Transaction Failed";
             return RedirectToAction(nameof(Index));
         }
 

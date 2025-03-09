@@ -11,17 +11,15 @@ namespace MyBankWebApp.Services.Transactions
     public class TransactionService : ITransactionService
     {
         private readonly ApplicationDbContext context;
-        private readonly ILogger<TransactionService> logger;
         private readonly IMapper mapper;
 
-        public TransactionService(ApplicationDbContext context, IMapper mapper, ILogger<TransactionService> logger)
+        public TransactionService(ApplicationDbContext context, IMapper mapper)
         {
             this.context = context;
             this.mapper = mapper;
-            this.logger = logger;
         }
 
-        public async Task<bool> AddTransactionAsync(NewTransactionDto newTransaction)
+        public async Task AddTransactionAsync(NewTransactionDto newTransaction)
         {
             AccountDetail senderAccount = GetAccountById(newTransaction);
             AccountDetail reciverAccount = GetAccountByIban(newTransaction);
@@ -31,13 +29,11 @@ namespace MyBankWebApp.Services.Transactions
             {
                 ProcessTransaction(senderAccount, reciverAccount, newTransaction);
                 await dbTransaction.CommitAsync();
-                return true;
             }
-            catch (Exception ex)
+            catch
             {
                 await dbTransaction.RollbackAsync();
-                logger.LogError(ex, "Exception during processing transaction. Sender: {Sender}, Reciver: {Reciver}", senderAccount, reciverAccount);
-                return false;
+                throw;
             }
         }
 

@@ -4,6 +4,6 @@ namespace MyBankWebApp.Services.Transactions.Abstractions
 {
     public interface ITransactionService
     {
-        Task<bool> AddTransactionAsync(NewTransactionDto newTransaction);
+        Task AddTransactionAsync(NewTransactionDto newTransaction);
     }
 }
