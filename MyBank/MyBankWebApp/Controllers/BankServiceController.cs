@@ -55,7 +55,7 @@ namespace MyBankWebApp.Controllers
         [AutoValidateAntiforgeryToken]
         public IActionResult Transaction(NewTransactionDto newTransactionDto)
         {
-            //TODO: przerzucić do serwisu
+            //TODO: zaimplementować użycie serwisu tutaj
             if (newTransactionDto != null && newTransactionDto.Amount > 0)
             {
                 var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);

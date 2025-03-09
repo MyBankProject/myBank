@@ -7,7 +7,7 @@ using MyBankWebApp.DTOs;
 using MyBankWebApp.DTOs.Creates;
 using MyBankWebApp.Entities;
 using MyBankWebApp.Exceptions;
-using MyBankWebApp.Services.Abstractions;
+using MyBankWebApp.Services.User.Abstractions;
 using System.ComponentModel.DataAnnotations;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;

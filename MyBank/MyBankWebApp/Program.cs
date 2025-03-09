@@ -12,7 +12,7 @@ using MyBankWebApp.Entities;
 using MyBankWebApp.Mappers;
 using MyBankWebApp.Models.Validators;
 using MyBankWebApp.Services;
-using MyBankWebApp.Services.Abstractions;
+using MyBankWebApp.Services.User.Abstractions;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);

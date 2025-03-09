@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MyBankWebApp.DTOs;
 using MyBankWebApp.DTOs.Creates;
-using MyBankWebApp.Services.Abstractions;
+using MyBankWebApp.Services.User.Abstractions;
 
 namespace MyBankWebApp.ControllersApi
 {
