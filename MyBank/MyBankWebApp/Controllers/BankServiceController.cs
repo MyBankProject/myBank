@@ -85,7 +85,7 @@ namespace MyBankWebApp.Controllers
                     TempData["ErrorMessage"] = $"Transaction Failed: {ex.Message}";
                     return RedirectToAction(nameof(Index));
                 }
-                TempData["SuccessMesage"] = "Transaction Successful!";
+                TempData["SuccessMessage"] = "Transaction Successful!";
                 return RedirectToAction(nameof(Index));
             }
             TempData["ErrorMessage"] = "Transaction Failed";
