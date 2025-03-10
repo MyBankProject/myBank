@@ -96,7 +96,7 @@ namespace MyBankWebApp.Data
 
         private static IEnumerable<AccountDetail> GetAccountDetails()
         {
-           return new List<AccountDetail>()
+            return new List<AccountDetail>()
                     {
                         new AccountDetail()
                         {
@@ -131,7 +131,7 @@ namespace MyBankWebApp.Data
                     };
         }
 
-      private static IEnumerable<Role> GetRoles()
+        private static IEnumerable<Role> GetRoles()
         {
             return new List<Role>()
             {
@@ -139,6 +139,6 @@ namespace MyBankWebApp.Data
                 new Role() { Name = "Manager" },
                 new Role() { Name = "Admin" }
             };
-        } 
+        }
     }
 }

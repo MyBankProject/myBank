@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using MyBankWebApp.Data;
 using MyBankWebApp.DTOs;
 using MyBankWebApp.Models;
+using MyBankWebApp.Repositories.Abstractions;
 using MyBankWebApp.Services.Transactions.Abstractions;
 using System.Diagnostics;
 
@@ -11,18 +12,21 @@ namespace MyBankWebApp.Controllers
 {
     public class BankServiceController : Controller
     {
-        private readonly ApplicationDbContext context;
         private readonly ILogger<BankServiceController> logger;
+        private readonly IAccountDetailsRepository accountDetailsRepository;
+        private readonly ITransactionRepository transactionRepository;
         private readonly IMapper mapper;
         private readonly ITransactionService transactionService;
 
         public BankServiceController(
-            ApplicationDbContext context,
+            IAccountDetailsRepository accountDetailsRepository,
+            ITransactionRepository transactionRepository,
             IMapper mapper,
             ILogger<BankServiceController> logger,
             ITransactionService transactionService)
         {
-            this.context = context;
+            this.accountDetailsRepository = accountDetailsRepository;
+            this.transactionRepository = transactionRepository;
             this.mapper = mapper;
             this.logger = logger;
             this.transactionService = transactionService;
@@ -40,11 +44,9 @@ namespace MyBankWebApp.Controllers
             {
                 //TODO: Usunąć przypisanie Id, kiedy już będzie logowanie na konto
                 id = 5;
-                AccountDetail? user = context.AccountDetails
-                    .Include(a => a.RecivedTransactions)
-                    .Include(a => a.SentTransactions)
-                    .FirstOrDefault(x => x.UserId == id);
-                var AccountDto = GetAccountDetailDto(user);
+                AccountDetail? user = accountDetailsRepository
+                    .GetAccountById(id, query => query.Include(a => a.RecivedTransactions).Include(a => a.SentTransactions));
+                AccountDetailDto AccountDto = GetAccountDetailDto(user);
                 return View(AccountDto);
             }
             return Error();
@@ -52,7 +54,7 @@ namespace MyBankWebApp.Controllers
 
         public IActionResult Transaction(int id)
         {
-            if (context.AccountDetails.Any(user => user.UserId == id))
+            if (accountDetailsRepository.AnyById(id))
             {
                 return View(new NewTransactionDto() { SenderId = id });
             }

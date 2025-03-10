@@ -1,30 +1,32 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore.Storage;
-using MyBankWebApp.Data;
 using MyBankWebApp.DTOs;
 using MyBankWebApp.Exceptions;
 using MyBankWebApp.Models;
+using MyBankWebApp.Repositories.Abstractions;
 using MyBankWebApp.Services.Transactions.Abstractions;
 
 namespace MyBankWebApp.Services.Transactions
 {
     public class TransactionService : ITransactionService
     {
-        private readonly ApplicationDbContext context;
+        private readonly IAccountDetailsRepository accountDetailsRepository;
         private readonly IMapper mapper;
+        private readonly ITransactionRepository transactionRepository;
 
-        public TransactionService(ApplicationDbContext context, IMapper mapper)
+        public TransactionService(ITransactionRepository transactionRepository, IAccountDetailsRepository accountDetailsRepository, IMapper mapper)
         {
-            this.context = context;
+            this.transactionRepository = transactionRepository;
+            this.accountDetailsRepository = accountDetailsRepository;
             this.mapper = mapper;
         }
 
         public async Task AddTransactionAsync(NewTransactionDto newTransaction)
         {
-            AccountDetail senderAccount = GetAccountById(newTransaction);
-            AccountDetail reciverAccount = GetAccountByIban(newTransaction);
+            AccountDetail senderAccount = accountDetailsRepository.GetAccountById(newTransaction.SenderId);
+            AccountDetail reciverAccount = accountDetailsRepository.GetAccountByIban(newTransaction.ReciverIBAN);
             ValidateTransaction(senderAccount, newTransaction);
-            using IDbContextTransaction dbTransaction = await context.Database.BeginTransactionAsync();
+            using IDbContextTransaction dbTransaction = await transactionRepository.BeginTransactionAsync();
             try
             {
                 ProcessTransaction(senderAccount, reciverAccount, newTransaction);
@@ -62,20 +64,12 @@ namespace MyBankWebApp.Services.Transactions
             return transaction;
         }
 
-        private AccountDetail GetAccountByIban(NewTransactionDto newTransaction) =>
-            context.AccountDetails.FirstOrDefault(account => account.IBAN == newTransaction.ReciverIBAN)
-                ?? throw new UserNotFoundException("Reciver not found");
-
-        private AccountDetail GetAccountById(NewTransactionDto newTransaction) =>
-            context.AccountDetails.FirstOrDefault(account => account.UserId == newTransaction.SenderId)
-                ?? throw new UserNotFoundException("Sender not found");
-
         private void ProcessTransaction(AccountDetail senderAccount, AccountDetail reciverAccount, NewTransactionDto newTransaction)
         {
             Transaction transaction = CreateTransaction(senderAccount, reciverAccount, newTransaction);
             UpdateBalanceForBothSides(senderAccount, reciverAccount, newTransaction);
-            context.Transactions.Add(transaction);
-            context.SaveChanges();
+            transactionRepository.AddTransaction(transaction);
+            transactionRepository.Save();
         }
     }
 }
