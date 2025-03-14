@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using MyBankWebApp.Data;
 using MyBankWebApp.DTOs;
 using MyBankWebApp.Models;
 using MyBankWebApp.Repositories.Abstractions;
@@ -10,27 +9,16 @@ using System.Diagnostics;
 
 namespace MyBankWebApp.Controllers
 {
-    public class BankServiceController : Controller
+    public class BankServiceController(
+        IAccountDetailsRepository accountDetailsRepository,
+        IMapper mapper,
+        ILogger<BankServiceController> logger,
+        ITransactionService transactionService) : Controller
     {
-        private readonly ILogger<BankServiceController> logger;
-        private readonly IAccountDetailsRepository accountDetailsRepository;
-        private readonly ITransactionRepository transactionRepository;
-        private readonly IMapper mapper;
-        private readonly ITransactionService transactionService;
-
-        public BankServiceController(
-            IAccountDetailsRepository accountDetailsRepository,
-            ITransactionRepository transactionRepository,
-            IMapper mapper,
-            ILogger<BankServiceController> logger,
-            ITransactionService transactionService)
-        {
-            this.accountDetailsRepository = accountDetailsRepository;
-            this.transactionRepository = transactionRepository;
-            this.mapper = mapper;
-            this.logger = logger;
-            this.transactionService = transactionService;
-        }
+        private readonly IAccountDetailsRepository accountDetailsRepository = accountDetailsRepository;
+        private readonly ILogger<BankServiceController> logger = logger;
+        private readonly IMapper mapper = mapper;
+        private readonly ITransactionService transactionService = transactionService;
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
@@ -38,23 +26,24 @@ namespace MyBankWebApp.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        public IActionResult Index(int id)
+        public async Task<IActionResult> Index(int id)
         {
             if (ModelState.IsValid)
             {
                 //TODO: Usunąć przypisanie Id, kiedy już będzie logowanie na konto
                 id = 5;
-                AccountDetail? user = accountDetailsRepository
-                    .GetAccountById(id, query => query.Include(a => a.RecivedTransactions).Include(a => a.SentTransactions));
+                AccountDetail user = await accountDetailsRepository
+                    .GetByIdAsync(id, query => query.Include(a => a.RecivedTransactions)
+                    .Include(a => a.SentTransactions));
                 AccountDetailDto AccountDto = GetAccountDetailDto(user);
                 return View(AccountDto);
             }
             return Error();
         }
 
-        public IActionResult Transaction(int id)
+        public async Task<IActionResult> Transaction(int id)
         {
-            if (accountDetailsRepository.AnyById(id))
+            if (await accountDetailsRepository.AnyByIdAsync(id))
             {
                 return View(new NewTransactionDto() { SenderId = id });
             }

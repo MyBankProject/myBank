@@ -1,12 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore.Storage;
-using MyBankWebApp.Models;
+﻿using MyBankWebApp.Models;
 
 namespace MyBankWebApp.Repositories.Abstractions
 {
-    public interface ITransactionRepository
+    public interface ITransactionRepository : IRepositoryBase<Transaction>
     {
-        void AddTransaction(Transaction transaction);
-        Task<IDbContextTransaction> BeginTransactionAsync();
-        void Save();
     }
 }

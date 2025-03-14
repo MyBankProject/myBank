@@ -1,18 +1,18 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 using MyBankWebApp.Entities;
 using MyBankWebApp.Models;
 
 namespace MyBankWebApp.Data
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : DbContext(options)
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
-
         public DbSet<AccountDetail> AccountDetails { get; set; }
-        public DbSet<Transaction> Transactions { get; set; }
-        public DbSet<User> Users { get; set; }
+
         public DbSet<Role> Roles { get; set; }
+
+        public DbSet<Transaction> Transactions { get; set; }
+
+        public DbSet<User> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

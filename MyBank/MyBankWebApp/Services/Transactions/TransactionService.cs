@@ -23,8 +23,8 @@ namespace MyBankWebApp.Services.Transactions
 
         public async Task AddTransactionAsync(NewTransactionDto newTransaction)
         {
-            AccountDetail senderAccount = accountDetailsRepository.GetAccountById(newTransaction.SenderId);
-            AccountDetail reciverAccount = accountDetailsRepository.GetAccountByIban(newTransaction.ReciverIBAN);
+            var reciverAccount = await accountDetailsRepository.GetAccountByIbanAsync(newTransaction.ReciverIBAN);
+            var senderAccount =  await accountDetailsRepository.GetByIdAsync(newTransaction.SenderId);
             ValidateTransaction(senderAccount, newTransaction);
             using IDbContextTransaction dbTransaction = await transactionRepository.BeginTransactionAsync();
             try
@@ -64,12 +64,12 @@ namespace MyBankWebApp.Services.Transactions
             return transaction;
         }
 
-        private void ProcessTransaction(AccountDetail senderAccount, AccountDetail reciverAccount, NewTransactionDto newTransaction)
+        private async Task ProcessTransaction(AccountDetail senderAccount, AccountDetail reciverAccount, NewTransactionDto newTransaction)
         {
             Transaction transaction = CreateTransaction(senderAccount, reciverAccount, newTransaction);
             UpdateBalanceForBothSides(senderAccount, reciverAccount, newTransaction);
-            transactionRepository.AddTransaction(transaction);
-            transactionRepository.Save();
+            await transactionRepository.AddAsync(transaction);
+            await transactionRepository.SaveAsync();
         }
     }
 }

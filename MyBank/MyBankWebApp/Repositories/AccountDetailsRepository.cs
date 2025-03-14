@@ -1,29 +1,22 @@
-﻿using MyBankWebApp.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using MyBankWebApp.Data;
 using MyBankWebApp.Exceptions;
 using MyBankWebApp.Models;
 using MyBankWebApp.Repositories.Abstractions;
 
 namespace MyBankWebApp.Repositories
 {
-    public class AccountDetailsRepository : IAccountDetailsRepository
+    internal class AccountDetailsRepository(
+        ApplicationDbContext context) : RepositoryBase<AccountDetail>(context), IAccountDetailsRepository
     {
-        //TODO: Wydłubać klasę bazową dla klas Repository
-        private readonly ApplicationDbContext context;
+        public async Task<bool> AnyByIdAsync(int id) => await context.AccountDetails.AnyAsync(account => account.UserId == id);
 
-        public AccountDetailsRepository(ApplicationDbContext context)
-        {
-            this.context = context;
-        }
+        public async Task<AccountDetail> GetAccountByIbanAsync(string iban) =>
+                    await context.AccountDetails.FirstOrDefaultAsync(account => account.IBAN == iban)
+                    ?? throw new UserNotFoundException("Reciver not found");
 
-        public void Add(AccountDetail transaction) => context.AccountDetails.Add(transaction);
-
-        public bool AnyById(int id) => context.AccountDetails.Any(account => account.UserId == id);
-
-        public AccountDetail GetAccountByIban(string iban) =>
-                    context.AccountDetails.FirstOrDefault(account => account.IBAN == iban)
-            ?? throw new UserNotFoundException("Reciver not found");
-
-        public AccountDetail GetAccountById(int id, Func<IQueryable<AccountDetail>, IQueryable<AccountDetail>>? inclue = null)
+        //TODO: przenieść do klasy bazowej po poprawieniu ID w całej bazie danych
+        public async Task<AccountDetail> GetByIdAsync(int id, Func<IQueryable<AccountDetail>, IQueryable<AccountDetail>>? inclue = null)
         {
             IQueryable<AccountDetail> query = context.AccountDetails;
             if (inclue != null)
@@ -31,10 +24,8 @@ namespace MyBankWebApp.Repositories
                 query = inclue(query);
             }
 
-            return query.FirstOrDefault(account => account.UserId == id)
+            return await query.FirstOrDefaultAsync(account => account.UserId == id)
                 ?? throw new UserNotFoundException("Sender not found");
         }
-
-        public void SaveChanges() => context.SaveChanges();
     }
 }
