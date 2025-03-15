@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MyBankWebApp.Models;
+using MyBankWebApp.Models.Abstractions;
 using MyBankWebApp.Repositories.Abstractions;
 using MyBankWebApp.Services.Transactions.Abstractions;
 using MyBankWebApp.ViewModels;
@@ -32,7 +33,7 @@ namespace MyBankWebApp.Controllers
             {
                 //TODO: Usunąć przypisanie Id, kiedy już będzie logowanie na konto
                 id = 5;
-                AccountDetail user = await accountDetailsRepository
+                IAccountDetail user = await accountDetailsRepository
                     .GetByIdAsync(id, query => query.Include(a => a.RecivedTransactions)
                     .Include(a => a.SentTransactions));
                 AccountDetailViewModel AccountDto = GetAccountDetailDto(user);
@@ -82,7 +83,7 @@ namespace MyBankWebApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private AccountDetailViewModel GetAccountDetailDto(AccountDetail? user)
+        private AccountDetailViewModel GetAccountDetailDto(IAccountDetail? user)
         {
             if (user != null)
             {

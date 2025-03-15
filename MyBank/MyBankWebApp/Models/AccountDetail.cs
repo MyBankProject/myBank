@@ -1,9 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using MyBankWebApp.Models.Abstractions;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyBankWebApp.Models
 {
-    public class AccountDetail
+    public class AccountDetail : IAccountDetail
     {
         [Key]
         public int UserId { get; set; }
@@ -20,7 +21,8 @@ namespace MyBankWebApp.Models
 
         public decimal Balance { get; set; } = 0;
 
-        public ICollection<Transaction>? SentTransactions {  get; set; }
-        public ICollection<Transaction>? RecivedTransactions {  get; set; }
+        public ICollection<Transaction>? SentTransactions { get; set; }
+
+        public ICollection<Transaction>? RecivedTransactions { get; set; }
     }
 }

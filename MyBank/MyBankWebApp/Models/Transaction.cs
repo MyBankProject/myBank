@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using MyBankWebApp.Models.Abstractions;
+using System.ComponentModel.DataAnnotations;
 using static MyBankWebApp.Enums;
 
 namespace MyBankWebApp.Models
@@ -22,8 +23,8 @@ namespace MyBankWebApp.Models
         
         public TransactionTypes TransactionType { get; set; }
 
-        public AccountDetail? ReciverAccountDetails { get; set; }
+        public IAccountDetail? ReciverAccountDetails { get; set; }
 
-        public AccountDetail? SenderAccountDetails { get; set; }
+        public IAccountDetail? SenderAccountDetails { get; set; }
     }
 }
