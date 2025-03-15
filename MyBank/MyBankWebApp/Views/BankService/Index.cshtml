@@ -1,6 +1,4 @@
-﻿@using System.Globalization
-@using MyBankWebApp.DTOs
-@model AccountDetailDto
+﻿@model AccountDetailViewModel
 @{
 	ViewData["Title"] = "Bank Service";
 	<link rel="stylesheet" href="~/css/BankServiceStyle.css" asp-append-version="true"/>
@@ -53,7 +51,7 @@
 				<h1 id="currency">$</h1>
 			</div>
 			<div class="buttons-container">
-				<a asp-controller="BankService" asp-action="Transaction" asp-route-id="@Model.UserId">Transfer</a>
+				<a asp-controller="BankService" asp-action="NewTransaction" asp-route-id="@Model.UserId">New Transaction</a>
 				<a>Internal</a>
 			</div>
 		</div>

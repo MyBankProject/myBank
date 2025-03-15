@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using MyBankWebApp.DTOs;
 using MyBankWebApp.Models;
+using MyBankWebApp.ViewModels;
 
 namespace MyBankWebApp.Mappers
 {

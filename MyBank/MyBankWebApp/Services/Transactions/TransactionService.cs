@@ -1,10 +1,11 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore.Storage;
-using MyBankWebApp.DTOs;
 using MyBankWebApp.Exceptions;
 using MyBankWebApp.Models;
 using MyBankWebApp.Repositories.Abstractions;
 using MyBankWebApp.Services.Transactions.Abstractions;
+using MyBankWebApp.ViewModels;
+using System.Text.RegularExpressions;
 
 namespace MyBankWebApp.Services.Transactions
 {
@@ -23,8 +24,9 @@ namespace MyBankWebApp.Services.Transactions
 
         public async Task AddTransactionAsync(NewTransactionViewModel newTransaction)
         {
-            var reciverAccount = await accountDetailsRepository.GetAccountByIbanAsync(newTransaction.ReciverIBAN);
-            var senderAccount =  await accountDetailsRepository.GetByIdAsync(newTransaction.SenderId);
+            string filteredIban = Regex.Replace(newTransaction.ReciverIBAN, @"\D", "");
+            AccountDetail reciverAccount = await accountDetailsRepository.GetAccountByIbanAsync(filteredIban);
+            AccountDetail senderAccount = await accountDetailsRepository.GetByIdAsync(newTransaction.SenderId);
             ValidateTransaction(senderAccount, newTransaction);
             using IDbContextTransaction dbTransaction = await transactionRepository.BeginTransactionAsync();
             try

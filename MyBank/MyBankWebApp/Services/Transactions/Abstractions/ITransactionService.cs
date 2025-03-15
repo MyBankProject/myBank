@@ -1,4 +1,4 @@
-﻿using MyBankWebApp.DTOs;
+﻿using MyBankWebApp.ViewModels;
 
 namespace MyBankWebApp.Services.Transactions.Abstractions
 {

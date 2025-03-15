@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using MyBankWebApp.DTOs;
 using MyBankWebApp.Models;
 using MyBankWebApp.Repositories.Abstractions;
 using MyBankWebApp.Services.Transactions.Abstractions;
+using MyBankWebApp.ViewModels;
 using System.Diagnostics;
 
 namespace MyBankWebApp.Controllers
@@ -35,13 +35,13 @@ namespace MyBankWebApp.Controllers
                 AccountDetail user = await accountDetailsRepository
                     .GetByIdAsync(id, query => query.Include(a => a.RecivedTransactions)
                     .Include(a => a.SentTransactions));
-                AccountDetailDto AccountDto = GetAccountDetailDto(user);
+                AccountDetailViewModel AccountDto = GetAccountDetailDto(user);
                 return View(AccountDto);
             }
             return Error();
         }
 
-        public async Task<IActionResult> Transaction(int id)
+        public async Task<IActionResult> NewTransaction(int id)
         {
             if (await accountDetailsRepository.AnyByIdAsync(id))
             {
@@ -51,8 +51,7 @@ namespace MyBankWebApp.Controllers
         }
 
         [HttpPost]
-        [AutoValidateAntiforgeryToken]
-        public async Task<IActionResult> Transaction(NewTransactionViewModel newTransactionDto)
+        public async Task<IActionResult> NewTransaction(NewTransactionViewModel newTransactionDto)
         {
             if (newTransactionDto != null && newTransactionDto.Amount > 0)
             {
@@ -83,11 +82,11 @@ namespace MyBankWebApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private AccountDetailDto GetAccountDetailDto(AccountDetail? user)
+        private AccountDetailViewModel GetAccountDetailDto(AccountDetail? user)
         {
             if (user != null)
             {
-                return mapper.Map<AccountDetailDto>(user);
+                return mapper.Map<AccountDetailViewModel>(user);
             }
             throw new ArgumentNullException(nameof(user), "User could not be found.");
         }
