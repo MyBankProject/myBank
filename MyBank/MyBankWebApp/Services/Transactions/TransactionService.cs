@@ -64,6 +64,7 @@ namespace MyBankWebApp.Services.Transactions
             transaction.ReciverAccountDetails = reciverAccount;
             transaction.Reciver = reciverAccount.UserId;
             transaction.Status = Enums.TransactionStatus.Completed;
+            transaction.TransactionType = Enums.TransactionTypes.Transfer;
             return transaction;
         }
 
