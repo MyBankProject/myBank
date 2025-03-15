@@ -21,7 +21,7 @@ namespace MyBankWebApp.Services.Transactions
             this.mapper = mapper;
         }
 
-        public async Task AddTransactionAsync(NewTransactionDto newTransaction)
+        public async Task AddTransactionAsync(NewTransactionViewModel newTransaction)
         {
             var reciverAccount = await accountDetailsRepository.GetAccountByIbanAsync(newTransaction.ReciverIBAN);
             var senderAccount =  await accountDetailsRepository.GetByIdAsync(newTransaction.SenderId);
@@ -29,7 +29,7 @@ namespace MyBankWebApp.Services.Transactions
             using IDbContextTransaction dbTransaction = await transactionRepository.BeginTransactionAsync();
             try
             {
-                ProcessTransaction(senderAccount, reciverAccount, newTransaction);
+                await ProcessTransaction(senderAccount, reciverAccount, newTransaction);
                 await dbTransaction.CommitAsync();
             }
             catch
@@ -39,13 +39,13 @@ namespace MyBankWebApp.Services.Transactions
             }
         }
 
-        private static void UpdateBalanceForBothSides(AccountDetail senderAccount, AccountDetail reciverAccount, NewTransactionDto newTransaction)
+        private static void UpdateBalanceForBothSides(AccountDetail senderAccount, AccountDetail reciverAccount, NewTransactionViewModel newTransaction)
         {
             senderAccount.Balance -= newTransaction.Amount;
             reciverAccount.Balance += newTransaction.Amount;
         }
 
-        private static void ValidateTransaction(AccountDetail senderAccount, NewTransactionDto newTransaction)
+        private static void ValidateTransaction(AccountDetail senderAccount, NewTransactionViewModel newTransaction)
         {
             if (senderAccount.Balance < newTransaction.Amount)
             {
@@ -53,10 +53,10 @@ namespace MyBankWebApp.Services.Transactions
             }
         }
 
-        private Transaction CreateTransaction(AccountDetail senderAccount, AccountDetail reciverAccount, NewTransactionDto newTransaction)
+        private Transaction CreateTransaction(AccountDetail senderAccount, AccountDetail reciverAccount, NewTransactionViewModel newTransaction)
         {
             Transaction transaction = mapper.Map<Transaction>(newTransaction);
-            //TODO: Trzeba kogoś dopytać o to czy trzeba wypełniać te property. EF sam tego nie zrobi?
+            //TODO: Muszę kogoś dopytać o to czy trzeba wypełniać te property. EF sam tego nie zrobi?
             transaction.SenderAccountDetails = senderAccount;
             transaction.ReciverAccountDetails = reciverAccount;
             transaction.Reciver = reciverAccount.UserId;
@@ -64,7 +64,7 @@ namespace MyBankWebApp.Services.Transactions
             return transaction;
         }
 
-        private async Task ProcessTransaction(AccountDetail senderAccount, AccountDetail reciverAccount, NewTransactionDto newTransaction)
+        private async Task ProcessTransaction(AccountDetail senderAccount, AccountDetail reciverAccount, NewTransactionViewModel newTransaction)
         {
             Transaction transaction = CreateTransaction(senderAccount, reciverAccount, newTransaction);
             UpdateBalanceForBothSides(senderAccount, reciverAccount, newTransaction);

@@ -45,14 +45,14 @@ namespace MyBankWebApp.Controllers
         {
             if (await accountDetailsRepository.AnyByIdAsync(id))
             {
-                return View(new NewTransactionDto() { SenderId = id });
+                return View(new NewTransactionViewModel() { SenderId = id });
             }
             return RedirectToAction(nameof(Index));
         }
 
         [HttpPost]
         [AutoValidateAntiforgeryToken]
-        public async Task<IActionResult> Transaction(NewTransactionDto newTransactionDto)
+        public async Task<IActionResult> Transaction(NewTransactionViewModel newTransactionDto)
         {
             if (newTransactionDto != null && newTransactionDto.Amount > 0)
             {

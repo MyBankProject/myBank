@@ -8,32 +8,29 @@ namespace MyBankWebApp.Data
     {
         public static void SeedData(IApplicationBuilder applicationBuilder)
         {
-            using (var serviceScope = applicationBuilder.ApplicationServices.CreateScope())
+            using IServiceScope serviceScope = applicationBuilder.ApplicationServices.CreateScope();
+            ApplicationDbContext context = serviceScope.ServiceProvider.GetService<ApplicationDbContext>() ?? 
+                throw new InvalidOperationException("Database context is not initialized.");
+            context?.Database.EnsureCreated();
+            if (!context!.Roles.Any())
             {
-                var context = serviceScope.ServiceProvider.GetService<ApplicationDbContext>();
+                IEnumerable<Role> roles = GetRoles();
+                context.Roles.AddRange(roles);
+                context.SaveChanges();
+            }
 
-                context.Database.EnsureCreated();
+            if (!context.AccountDetails.Any())
+            {
+                IEnumerable<AccountDetail> accountDetails = GetAccountDetails();
+                context.AccountDetails.AddRange(accountDetails);
+                context.SaveChanges();
+            }
 
-                if (!context.Roles.Any())
-                {
-                    var roles = GetRoles();
-                    context.Roles.AddRange(roles);
-                    context.SaveChanges();
-                }
-
-                if (!context.AccountDetails.Any())
-                {
-                    var accountDetails = GetAccountDetails();
-                    context.AccountDetails.AddRange(accountDetails);
-                    context.SaveChanges();
-                }
-
-                if (!context.Transactions.Any())
-                {
-                    var transactions = GetTransactions();
-                    context.Transactions.AddRange(transactions);
-                    context.SaveChanges();
-                }
+            if (!context.Transactions.Any())
+            {
+                IEnumerable<Transaction> transactions = GetTransactions();
+                context.Transactions.AddRange(transactions);
+                context.SaveChanges();
             }
         }
 
