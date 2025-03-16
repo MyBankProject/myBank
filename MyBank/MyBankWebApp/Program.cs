@@ -74,6 +74,12 @@ builder.Services.AddAuthentication(option =>
                 context.Token = context.Request.Cookies["AuthToken"];
             }
             return Task.CompletedTask;
+        },
+        OnChallenge = context =>
+        {
+            context.HandleResponse(); // Zapobiega domyœlnemu b³êdowi 401
+            context.Response.Redirect("/User/Login"); // Przekierowanie na stronê logowania
+            return Task.CompletedTask;
         }
     };
 });
