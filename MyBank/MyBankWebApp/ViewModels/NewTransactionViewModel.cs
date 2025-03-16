@@ -1,10 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.OpenApi.MicrosoftExtensions;
+using MyBankWebApp.Atributes;
+using System.ComponentModel.DataAnnotations;
 
-namespace MyBankWebApp.DTOs
+namespace MyBankWebApp.ViewModels
 {
-    public class NewTransactionDto
+    public class NewTransactionViewModel
     {
-        [Required]
         [DataType(DataType.Currency)]
         [DisplayFormat(DataFormatString = "{0:N2}", ApplyFormatInEditMode = true)]
         public decimal Amount { get; set; }
@@ -18,11 +19,10 @@ namespace MyBankWebApp.DTOs
         [Required]
         public string ReciverName { get; set; }
 
-        [Required]
         public int SenderId { get; set; }
 
         [Required]
-        //TODO: dodać walidację żeby nie dało się wysłać przelewu z przeszłości
-        public DateTime TransferDate { get; set; }
+        [PastDate(ErrorMessage = "Transaction date cannot be in the past.")]
+        public DateTime TransferDate { get; set; } = DateTime.Today;
     }
 }

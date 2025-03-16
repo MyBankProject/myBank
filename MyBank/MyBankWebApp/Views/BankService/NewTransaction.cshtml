@@ -1,14 +1,13 @@
-﻿@model MyBankWebApp.DTOs.NewTransactionDto
-
+﻿@model NewTransactionViewModel
 @{
-	ViewData["Title"] = "Transfer";
+	ViewData["Title"] = "New Transaction";
 }
 
-<h1>New Transfer</h1>
+<h1>New Transaction</h1>
 <hr />
 <div class="row">
 	<div class="col-md-4">
-		<form asp-action="Transaction">
+		<form asp-action="NewTransaction">
 			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
 			<div class="form-group">
 				<label asp-for="ReciverName" class="control-label">Reciver Name</label>
@@ -17,12 +16,12 @@
 			</div>
 			<div class="form-group">
 				<label asp-for="ReciverIBAN" class="control-label">Account Number</label>
-				<input asp-for="ReciverIBAN" class="form-control"></input>
+				<input asp-for="ReciverIBAN" id="reciverIban" class="form-control" maxlength="34"></input>
 				<span asp-validation-for="ReciverIBAN" class="text-danger"></span>
 			</div>
 			<div class="form-group">
 				<label asp-for="TransferDate" class="control-label"></label>
-				<input asp-for="TransferDate" class="form-control" />
+				<input asp-for="TransferDate" class="form-control" type="date" min="@DateTime.Today.ToString("yyyy-MM-dd")"/>
 				<span asp-validation-for="TransferDate" class="text-danger"></span>
 			</div>
 			<div class="form-group">
@@ -32,7 +31,7 @@
 			</div>
 			<div class="form-group">
 				<label asp-for="Amount" class="control-label"></label>
-				<input asp-for="Amount" class="form-control" />
+				<input type="number" asp-for="Amount" class="form-control"/>
 				<span asp-validation-for="Amount" class="text-danger"></span>
 			</div>
 			<br />
@@ -45,7 +44,19 @@
 </div>
 
 @section Scripts {
-	@{
-		await Html.RenderPartialAsync("_ValidationScriptsPartial");
-	}
+	<partial name="_ValidationScriptsPartial" />
+
+	<script>
+		document.getElementById("reciverIban").addEventListener("input", function(event) {
+			let value = event.target.value.replace(/\s/g, '');
+			let formattedValue = '';
+			for (let i = 0; i < value.length; i++) {
+				if (i === 2 || (i > 2 && (i - 2) % 4 === 0)) {
+					formattedValue += ' '; 
+				}
+				formattedValue += value[i];
+			}
+			event.target.value = formattedValue.trim(); 
+		});
+	</script>
 }

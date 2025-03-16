@@ -4,7 +4,6 @@
     {
         public BadReQuestException(string message) : base(message)
         {
-            
         }
     }
 }

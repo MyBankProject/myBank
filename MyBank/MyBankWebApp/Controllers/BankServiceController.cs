@@ -1,32 +1,24 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using MyBankWebApp.Data;
-using MyBankWebApp.DTOs;
 using MyBankWebApp.Models;
+using MyBankWebApp.Repositories.Abstractions;
 using MyBankWebApp.Services.Transactions.Abstractions;
+using MyBankWebApp.ViewModels;
 using System.Diagnostics;
 
 namespace MyBankWebApp.Controllers
 {
-    public class BankServiceController : Controller
+    public class BankServiceController(
+        IAccountDetailsRepository accountDetailsRepository,
+        IMapper mapper,
+        ILogger<BankServiceController> logger,
+        ITransactionService transactionService) : Controller
     {
-        private readonly ApplicationDbContext context;
-        private readonly ILogger<BankServiceController> logger;
-        private readonly IMapper mapper;
-        private readonly ITransactionService transactionService;
-
-        public BankServiceController(
-            ApplicationDbContext context,
-            IMapper mapper,
-            ILogger<BankServiceController> logger,
-            ITransactionService transactionService)
-        {
-            this.context = context;
-            this.mapper = mapper;
-            this.logger = logger;
-            this.transactionService = transactionService;
-        }
+        private readonly IAccountDetailsRepository accountDetailsRepository = accountDetailsRepository;
+        private readonly ILogger<BankServiceController> logger = logger;
+        private readonly IMapper mapper = mapper;
+        private readonly ITransactionService transactionService = transactionService;
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
@@ -34,34 +26,39 @@ namespace MyBankWebApp.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        public IActionResult Index(int id)
+        public async Task<IActionResult> Index(int id)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                //TODO: Usunąć przypisanie Id, kiedy już będzie logowanie na konto
-                id = 5;
-                AccountDetail? user = context.AccountDetails
-                    .Include(a => a.RecivedTransactions)
-                    .Include(a => a.SentTransactions)
-                    .FirstOrDefault(x => x.UserId == id);
-                var AccountDto = GetAccountDetailDto(user);
-                return View(AccountDto);
+                return Error();
             }
-            return Error();
+
+            // TODO: Usunąć przypisanie Id, kiedy już będzie logowanie na konto
+            id = 5;
+            var user = await accountDetailsRepository
+                .GetByIdAsync(id, query => query.Include(a => a.RecivedTransactions)
+                .Include(a => a.SentTransactions));
+
+            if (user == null)
+            {
+                return Error();
+            }
+
+            AccountDetailViewModel accountDto = GetAccountDetailDto(user);
+            return View(accountDto);
         }
 
-        public IActionResult Transaction(int id)
+        public async Task<IActionResult> NewTransaction(int id)
         {
-            if (context.AccountDetails.Any(user => user.UserId == id))
+            if (await accountDetailsRepository.AnyByIdAsync(id))
             {
-                return View(new NewTransactionDto() { SenderId = id });
+                return View(new NewTransactionViewModel() { SenderId = id });
             }
             return RedirectToAction(nameof(Index));
         }
 
         [HttpPost]
-        [AutoValidateAntiforgeryToken]
-        public async Task<IActionResult> Transaction(NewTransactionDto newTransactionDto)
+        public async Task<IActionResult> NewTransaction(NewTransactionViewModel newTransactionDto)
         {
             if (newTransactionDto != null && newTransactionDto.Amount > 0)
             {
@@ -92,11 +89,11 @@ namespace MyBankWebApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private AccountDetailDto GetAccountDetailDto(AccountDetail? user)
+        private AccountDetailViewModel GetAccountDetailDto(AccountDetail? user)
         {
             if (user != null)
             {
-                return mapper.Map<AccountDetailDto>(user);
+                return mapper.Map<AccountDetailViewModel>(user);
             }
             throw new ArgumentNullException(nameof(user), "User could not be found.");
         }

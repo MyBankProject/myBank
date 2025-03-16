@@ -12,6 +12,9 @@ using MyBankWebApp.Services.UserServices.Abstractions;
 using MyBankWebApp.Services.UserServices;
 using System.Text;
 using MyBankWebApp.Services.Transactions;
+using MyBankWebApp.Repositories.Abstractions;
+using MyBankWebApp.Repositories;
+using MyBankWebApp.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +29,9 @@ builder.Services.AddValidatorsFromAssemblyContaining<RegisterUserDtoValidator>()
 
 //Register Services
 builder.Services.AddScoped<ITransactionService, TransactionService>();
+builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
+builder.Services.AddScoped<IAccountDetailsRepository, AccountDetailsRepository>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 //Register Mappers
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

@@ -1,9 +1,9 @@
 ﻿using MyBankWebApp.Models;
 using static MyBankWebApp.Enums;
 
-namespace MyBankWebApp.DTOs
+namespace MyBankWebApp.ViewModels
 {
-    public class TransactionDto
+    public class TransactionViewModel
     {
         public decimal Amount { get; set; }
         public DateTime CreationTime { get; set; }

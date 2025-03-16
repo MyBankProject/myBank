@@ -1,33 +1,37 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore.Storage;
-using MyBankWebApp.Data;
-using MyBankWebApp.DTOs;
 using MyBankWebApp.Exceptions;
 using MyBankWebApp.Models;
+using MyBankWebApp.Repositories.Abstractions;
 using MyBankWebApp.Services.Transactions.Abstractions;
+using MyBankWebApp.ViewModels;
+using System.Text.RegularExpressions;
 
 namespace MyBankWebApp.Services.Transactions
 {
     public class TransactionService : ITransactionService
     {
-        private readonly ApplicationDbContext context;
+        private readonly IAccountDetailsRepository accountDetailsRepository;
         private readonly IMapper mapper;
+        private readonly ITransactionRepository transactionRepository;
 
-        public TransactionService(ApplicationDbContext context, IMapper mapper)
+        public TransactionService(ITransactionRepository transactionRepository, IAccountDetailsRepository accountDetailsRepository, IMapper mapper)
         {
-            this.context = context;
+            this.transactionRepository = transactionRepository;
+            this.accountDetailsRepository = accountDetailsRepository;
             this.mapper = mapper;
         }
 
-        public async Task AddTransactionAsync(NewTransactionDto newTransaction)
+        public async Task AddTransactionAsync(NewTransactionViewModel newTransaction)
         {
-            AccountDetail senderAccount = GetAccountById(newTransaction);
-            AccountDetail reciverAccount = GetAccountByIban(newTransaction);
-            ValidateTransaction(senderAccount, newTransaction);
-            using IDbContextTransaction dbTransaction = await context.Database.BeginTransactionAsync();
+            string filteredIban = Regex.Replace(newTransaction.ReciverIBAN, @"\D", "");
+            AccountDetail? reciverAccount = await accountDetailsRepository.GetAccountByIbanAsync(filteredIban);
+            AccountDetail? senderAccount = await accountDetailsRepository.GetByIdAsync(newTransaction.SenderId);
+            ValidateTransaction(senderAccount, reciverAccount, newTransaction);
+            using IDbContextTransaction dbTransaction = await transactionRepository.BeginTransactionAsync();
             try
             {
-                ProcessTransaction(senderAccount, reciverAccount, newTransaction);
+                await ProcessTransaction(senderAccount!, reciverAccount!, newTransaction);
                 await dbTransaction.CommitAsync();
             }
             catch
@@ -37,45 +41,42 @@ namespace MyBankWebApp.Services.Transactions
             }
         }
 
-        private static void UpdateBalanceForBothSides(AccountDetail senderAccount, AccountDetail reciverAccount, NewTransactionDto newTransaction)
+        private static void UpdateBalanceForBothSides(AccountDetail senderAccount, AccountDetail reciverAccount, NewTransactionViewModel newTransaction)
         {
             senderAccount.Balance -= newTransaction.Amount;
             reciverAccount.Balance += newTransaction.Amount;
         }
 
-        private static void ValidateTransaction(AccountDetail senderAccount, NewTransactionDto newTransaction)
+        private static void ValidateTransaction(AccountDetail? senderAccount, AccountDetail? reciverAccount, NewTransactionViewModel newTransaction)
         {
+            if (senderAccount == null)
+                throw new UserNotFoundException("Reciver not found");
+
+            if (reciverAccount == null)
+                throw new UserNotFoundException("Sender not found");
+
             if (senderAccount.Balance < newTransaction.Amount)
-            {
                 throw new LackOfFundsException("Not enough funds");
-            }
         }
 
-        private Transaction CreateTransaction(AccountDetail senderAccount, AccountDetail reciverAccount, NewTransactionDto newTransaction)
+        private Transaction CreateTransaction(AccountDetail senderAccount, AccountDetail reciverAccount, NewTransactionViewModel newTransaction)
         {
             Transaction transaction = mapper.Map<Transaction>(newTransaction);
-            //TODO: Trzeba kogoś dopytać o to czy trzeba wypełniać te property. EF sam tego nie zrobi?
+            //TODO: Muszę kogoś dopytać o to czy trzeba wypełniać te property. EF sam tego nie zrobi?
             transaction.SenderAccountDetails = senderAccount;
             transaction.ReciverAccountDetails = reciverAccount;
             transaction.Reciver = reciverAccount.UserId;
             transaction.Status = Enums.TransactionStatus.Completed;
+            transaction.TransactionType = Enums.TransactionTypes.Transfer;
             return transaction;
         }
 
-        private AccountDetail GetAccountByIban(NewTransactionDto newTransaction) =>
-            context.AccountDetails.FirstOrDefault(account => account.IBAN == newTransaction.ReciverIBAN)
-                ?? throw new UserNotFoundException("Reciver not found");
-
-        private AccountDetail GetAccountById(NewTransactionDto newTransaction) =>
-            context.AccountDetails.FirstOrDefault(account => account.UserId == newTransaction.SenderId)
-                ?? throw new UserNotFoundException("Sender not found");
-
-        private void ProcessTransaction(AccountDetail senderAccount, AccountDetail reciverAccount, NewTransactionDto newTransaction)
+        private async Task ProcessTransaction(AccountDetail senderAccount, AccountDetail reciverAccount, NewTransactionViewModel newTransaction)
         {
             Transaction transaction = CreateTransaction(senderAccount, reciverAccount, newTransaction);
             UpdateBalanceForBothSides(senderAccount, reciverAccount, newTransaction);
-            context.Transactions.Add(transaction);
-            context.SaveChanges();
+            await transactionRepository.AddAsync(transaction);
+            await transactionRepository.SaveAsync();
         }
     }
 }

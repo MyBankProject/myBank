@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using MyBankWebApp.DTOs;
 using MyBankWebApp.Models;
+using MyBankWebApp.ViewModels;
 using static MyBankWebApp.Enums;
 
 namespace MyBankWebApp.Mappers
@@ -9,9 +9,9 @@ namespace MyBankWebApp.Mappers
     {
         public AccountDetailsMapper()
         {
-            CreateMap<AccountDetail, AccountDetailDto>()
+            CreateMap<AccountDetail, AccountDetailViewModel>()
                 .ForMember(dest => dest.Transactions, opt =>
-                    opt.MapFrom(src => src.SentTransactions.Concat(src.RecivedTransactions).Select(t => new TransactionDto
+                    opt.MapFrom(src => src.SentTransactions.Concat(src.RecivedTransactions).Select(t => new TransactionViewModel
                     {
                         Amount = t.Amount,
                         CreationTime = t.CreationTime,
