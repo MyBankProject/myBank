@@ -1,13 +1,13 @@
-﻿using MyBankWebApp.Models.Abstractions;
+﻿using MyBankWebApp.Models;
 
 namespace MyBankWebApp.Repositories.Abstractions
 {
-    public interface IAccountDetailsRepository : IRepositoryBase<IAccountDetail>
+    public interface IAccountDetailsRepository : IRepositoryBase<AccountDetail>
     {
         Task<bool> AnyByIdAsync(int id);
 
-        Task<IAccountDetail?> GetAccountByIbanAsync(string iban);
+        Task<AccountDetail?> GetAccountByIbanAsync(string iban);
 
-        Task<IAccountDetail?> GetByIdAsync(int id, Func<IQueryable<IAccountDetail>, IQueryable<IAccountDetail>>? inclue = null);
+        Task<AccountDetail?> GetByIdAsync(int id, Func<IQueryable<AccountDetail>, IQueryable<AccountDetail>>? inclue = null);
     }
 }

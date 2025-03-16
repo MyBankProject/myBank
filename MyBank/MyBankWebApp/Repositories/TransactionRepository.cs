@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using MyBankWebApp.Data;
+﻿using MyBankWebApp.Data;
 using MyBankWebApp.Models;
 using MyBankWebApp.Repositories.Abstractions;
 

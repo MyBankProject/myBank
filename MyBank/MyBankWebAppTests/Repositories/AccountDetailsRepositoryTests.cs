@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore.Storage;
 using MyBankWebApp.Data;
 using MyBankWebApp.Models;
-using MyBankWebApp.Models.Abstractions;
 using MyBankWebApp.Repositories;
 using MyBankWebApp.Repositories.Abstractions;
 using System.Linq;
@@ -49,7 +48,7 @@ namespace MyBankWebAppTests.Repositories
         {
             //Arrange
             const string input_Iban = "121241234123412341234";
-            AccountDetail input_AccountDetail = new AccountDetail()
+            var input_AccountDetail = new AccountDetail()
             {
                 CountryCode = "PL",
                 IBAN = input_Iban,
@@ -61,9 +60,9 @@ namespace MyBankWebAppTests.Repositories
             await sut.SaveAsync();
 
             //Assert
-            var result = await context.AccountDetails.FirstOrDefaultAsync(account => account.IBAN == input_Iban);
+            AccountDetail result = await context.AccountDetails.FirstOrDefaultAsync(account => account.IBAN == input_Iban);
             Assert.IsNotNull(result);
-            Assert.IsInstanceOfType<IAccountDetail>(result);
+            Assert.IsInstanceOfType<AccountDetail>(result);
             Assert.AreEqual(input_AccountDetail, result);
         }
 
@@ -77,7 +76,7 @@ namespace MyBankWebAppTests.Repositories
         private static async Task<ApplicationDbContext> GetDbContext()
         {
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString()) // Unikalna nazwa bazy
+                .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
                 .Options;
 
             var context = new ApplicationDbContext(options);

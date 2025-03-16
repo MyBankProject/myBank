@@ -4,7 +4,6 @@ using Moq;
 using MyBankWebApp.Exceptions;
 using MyBankWebApp.Mappers;
 using MyBankWebApp.Models;
-using MyBankWebApp.Models.Abstractions;
 using MyBankWebApp.Repositories.Abstractions;
 using MyBankWebApp.Services.Transactions;
 using MyBankWebApp.ViewModels;
@@ -16,10 +15,11 @@ namespace MyBankWebAppTests.Services.Transactions
     {
         private const string default_Iban = "PL12 1234 1234 1234 1234 1234";
         private const string IbanNumbersOnly = "1212341234123412341234";
+        private const string default_CountryCode = "PL";
         private Mock<IAccountDetailsRepository> accountDetailsRepository;
         private IMapper mapper;
-        private Mock<IAccountDetail> reciver;
-        private Mock<IAccountDetail> sender;
+        private AccountDetail reciver;
+        private AccountDetail sender;
         private TransactionService sut;
         private Mock<ITransactionRepository> transactionRepository;
 
@@ -27,8 +27,6 @@ namespace MyBankWebAppTests.Services.Transactions
         public async Task AddTransactionAsync_CreatesTransactionCorrectly()
         {
             //Arrange
-            sender.SetupProperty(_ => _.Balance, 100);
-            reciver.SetupProperty(_ => _.Balance, 100);
             var transaction = new Mock<IDbContextTransaction>();
             transactionRepository.Setup(_ => _.BeginTransactionAsync()).ReturnsAsync(transaction.Object);
             Transaction resultTransaction = null;
@@ -54,21 +52,19 @@ namespace MyBankWebAppTests.Services.Transactions
             accountDetailsRepository.Verify(_ => _.GetByIdAsync(It.IsAny<int>(), null), Times.Once);
             accountDetailsRepository.Verify(_ => _.GetByIdAsync(senderId, null), Times.Once);
             transactionRepository.Verify(_ => _.BeginTransactionAsync(), Times.Once);
-            sender.VerifySet(_ => _.Balance = 0.00m, Times.Once());
-            reciver.VerifySet(_ => _.Balance = 200.00m, Times.Once());
+            Assert.AreEqual(0.00m, sender.Balance);
+            Assert.AreEqual(200.00m, reciver.Balance);
             transaction.Verify(_ => _.CommitAsync(It.IsAny<CancellationToken>()), Times.Once);
             transactionRepository.Verify(_ => _.AddAsync(It.IsAny<Transaction>()), Times.Once);
             transactionRepository.Verify(_ => _.SaveAsync(), Times.Once);
             Assert.IsNotNull(resultTransaction);
-            Assert.AreSame(sender.Object, resultTransaction.SenderAccountDetails);
+            Assert.AreSame(sender, resultTransaction.SenderAccountDetails);
         }
 
         [TestMethod]
         public async Task AddTransactionAsync_ErrorDuringTransaction_RollsBackAndThrowsException()
         {
             //Arrange
-            sender.SetupProperty(_ => _.Balance, 100);
-            reciver.SetupProperty(_ => _.Balance, 100);
             var transaction = new Mock<IDbContextTransaction>();
             transactionRepository.Setup(_ => _.BeginTransactionAsync()).ReturnsAsync(transaction.Object);
             transactionRepository.Setup(_ => _.AddAsync(It.IsAny<Transaction>())).ThrowsAsync(new Exception());
@@ -97,8 +93,6 @@ namespace MyBankWebAppTests.Services.Transactions
         public async Task AddTransactionAsync_NotEnoughBalance_ThrowsException()
         {
             //Arrange
-            sender.Setup(_ => _.Balance).Returns(100);
-
             const int senderId = 1;
             var transactionVM = new NewTransactionViewModel()
             {
@@ -122,10 +116,20 @@ namespace MyBankWebAppTests.Services.Transactions
         {
             transactionRepository = new Mock<ITransactionRepository>();
             accountDetailsRepository = new Mock<IAccountDetailsRepository>();
-            reciver = new Mock<IAccountDetail>();
-            sender = new Mock<IAccountDetail>();
-            accountDetailsRepository.Setup(_ => _.GetByIdAsync(It.IsAny<int>(), null)).ReturnsAsync(sender.Object);
-            accountDetailsRepository.Setup(_ => _.GetAccountByIbanAsync(It.IsAny<string>())).ReturnsAsync(reciver.Object);
+            reciver = new AccountDetail() 
+            {
+                Balance = 100,
+                IBAN = default_Iban,
+                CountryCode = default_CountryCode
+            };
+            sender = new AccountDetail() 
+            {
+                Balance = 100,
+                IBAN = default_Iban,
+                CountryCode = default_CountryCode
+            };
+            accountDetailsRepository.Setup(_ => _.GetByIdAsync(It.IsAny<int>(), null)).ReturnsAsync(sender);
+            accountDetailsRepository.Setup(_ => _.GetAccountByIbanAsync(It.IsAny<string>())).ReturnsAsync(reciver);
 
             var config = new MapperConfiguration(cfg =>
             {

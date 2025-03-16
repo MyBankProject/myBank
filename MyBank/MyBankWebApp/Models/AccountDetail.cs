@@ -1,10 +1,9 @@
-﻿using MyBankWebApp.Models.Abstractions;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyBankWebApp.Models
 {
-    public class AccountDetail : IAccountDetail
+    public class AccountDetail
     {
         [Key]
         public int UserId { get; set; }
