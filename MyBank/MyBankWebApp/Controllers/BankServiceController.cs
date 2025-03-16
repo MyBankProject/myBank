@@ -28,17 +28,24 @@ namespace MyBankWebApp.Controllers
 
         public async Task<IActionResult> Index(int id)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                //TODO: Usunąć przypisanie Id, kiedy już będzie logowanie na konto
-                id = 5;
-                AccountDetail user = await accountDetailsRepository
-                    .GetByIdAsync(id, query => query.Include(a => a.RecivedTransactions)
-                    .Include(a => a.SentTransactions));
-                AccountDetailViewModel AccountDto = GetAccountDetailDto(user);
-                return View(AccountDto);
+                return Error();
             }
-            return Error();
+
+            // TODO: Usunąć przypisanie Id, kiedy już będzie logowanie na konto
+            id = 5;
+            var user = await accountDetailsRepository
+                .GetByIdAsync(id, query => query.Include(a => a.RecivedTransactions)
+                .Include(a => a.SentTransactions));
+
+            if (user == null)
+            {
+                return Error();
+            }
+
+            AccountDetailViewModel accountDto = GetAccountDetailDto(user);
+            return View(accountDto);
         }
 
         public async Task<IActionResult> NewTransaction(int id)

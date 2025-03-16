@@ -1,47 +1,26 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
 using MyBankWebApp.Data;
 using MyBankWebApp.Models;
 using MyBankWebApp.Repositories;
-using MyBankWebApp.Repositories.Abstractions;
-using System.Linq;
 
 namespace MyBankWebAppTests.Repositories
 {
     [TestClass()]
     public class AccountDetailsRepositoryTests
     {
+        private const string default_Iban = "61109010140000071219812874";
+        private const int default_Id = 1;
+
+        private readonly AccountDetail input_AccountDetailRecord = new()
+        {
+            CountryCode = "PL",
+            UserId = default_Id,
+            IBAN = default_Iban,
+            Balance = 2500.00m
+        };
+
         private ApplicationDbContext context;
-        private IAccountDetailsRepository sut;
-
-        [TestMethod()]
-        public void AnyByIdAsync_ReturnsCorrect()
-        {
-            throw new NotImplementedException();
-        }
-
-        [TestMethod()]
-        public void BeginTransactionAsync_ReturnsTransaction()
-        {
-            //Act
-            var result = sut.BeginTransactionAsync();
-
-            //Assert
-            Assert.IsNotNull(result);
-            Assert.IsInstanceOfType<IDbContextTransaction>(result);
-        }
-
-        [TestMethod()]
-        public void GetAccountByIbanAsync_ReturnsCorrect()
-        {
-            throw new NotImplementedException();
-        }
-
-        [TestMethod()]
-        public void GetByIdAsync_ReturnsCorrect()
-        {
-            throw new NotImplementedException();
-        }
+        private AccountDetailsRepository sut;
 
         [TestMethod()]
         public async Task AddRecordToDatabase_Success()
@@ -66,6 +45,60 @@ namespace MyBankWebAppTests.Repositories
             Assert.AreEqual(input_AccountDetail, result);
         }
 
+        [TestMethod()]
+        public async Task AnyByIdAsync_False_ReturnsCorrect()
+        {
+            //Act
+            bool result = await sut.AnyByIdAsync(101);
+
+            //Assert
+            Assert.IsNotNull(result);
+            Assert.IsFalse(result);
+        }
+
+        [TestMethod()]
+        public async Task AnyByIdAsync_True_ReturnsCorrect()
+        {
+            //Act
+            bool result = await sut.AnyByIdAsync(default_Id);
+
+            //Assert
+            Assert.IsNotNull(result);
+            Assert.IsTrue(result);
+        }
+
+        [TestMethod()]
+        public async Task GetAccountByIbanAsync_DbContainsIban_ReturnsCorrect()
+        {
+            //Act
+            var result = await sut.GetAccountByIbanAsync(default_Iban);
+
+            //Assert
+            Assert.IsNotNull(result);
+            Assert.AreSame(input_AccountDetailRecord, result);
+        }
+
+        [TestMethod()]
+        public async Task GetAccountByIbanAsync_DbDoesNotContainsIban_ReturnsNull()
+        {
+            //Act
+            var result = await sut.GetAccountByIbanAsync("111111111111111111");
+
+            //Assert
+            Assert.IsNull(result);
+        }
+
+        [TestMethod()]
+        public async Task GetByIdAsync_ReturnsCorrect()
+        {
+            //Act
+            var result = await sut.GetByIdAsync(default_Id);
+
+            //Assert
+            Assert.IsNotNull(result);
+            Assert.AreSame(input_AccountDetailRecord, result);
+        }
+
         [TestInitialize]
         public async Task XInitialize()
         {
@@ -73,24 +106,17 @@ namespace MyBankWebAppTests.Repositories
             sut = new AccountDetailsRepository(context);
         }
 
-        private static async Task<ApplicationDbContext> GetDbContext()
+        private async Task<ApplicationDbContext> GetDbContext()
         {
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
                 .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
                 .Options;
-
             var context = new ApplicationDbContext(options);
             await context.Database.EnsureCreatedAsync();
 
             if (!await context.AccountDetails.AnyAsync())
             {
-                context.AccountDetails.Add(new AccountDetail
-                {
-                    CountryCode = "PL",
-                    UserId = 1,
-                    IBAN = "61109010140000071219812874",
-                    Balance = 2500.00m
-                });
+                context.AccountDetails.Add(input_AccountDetailRecord);
                 await context.SaveChangesAsync();
             }
             return context;
