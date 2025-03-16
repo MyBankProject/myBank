@@ -4,7 +4,7 @@ using MyBankWebApp.Data;
 
 namespace MyBankWebApp.Repositories.Abstractions
 {
-    internal abstract class RepositoryBase<T>(ApplicationDbContext context) : IRepositoryBase<T> where T : class
+    public abstract class RepositoryBase<T>(ApplicationDbContext context) : IRepositoryBase<T> where T : class
     {
         protected readonly ApplicationDbContext context = context;
         protected DbSet<T> DbSet => context.Set<T>();

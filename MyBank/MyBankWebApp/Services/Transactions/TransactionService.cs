@@ -28,7 +28,7 @@ namespace MyBankWebApp.Services.Transactions
             string filteredIban = Regex.Replace(newTransaction.ReciverIBAN, @"\D", "");
             IAccountDetail reciverAccount = await accountDetailsRepository.GetAccountByIbanAsync(filteredIban);
             IAccountDetail senderAccount = await accountDetailsRepository.GetByIdAsync(newTransaction.SenderId);
-            ValidateTransaction(senderAccount, newTransaction);
+            ValidateTransaction(senderAccount, reciverAccount, newTransaction);
             using IDbContextTransaction dbTransaction = await transactionRepository.BeginTransactionAsync();
             try
             {
@@ -48,12 +48,16 @@ namespace MyBankWebApp.Services.Transactions
             reciverAccount.Balance += newTransaction.Amount;
         }
 
-        private static void ValidateTransaction(IAccountDetail senderAccount, NewTransactionViewModel newTransaction)
+        private static void ValidateTransaction(IAccountDetail senderAccount, IAccountDetail reciverAccount, NewTransactionViewModel newTransaction)
         {
+            if (senderAccount == null)
+                throw new UserNotFoundException("Reciver not found");
+
+            if (reciverAccount == null)
+                throw new UserNotFoundException("Sender not found");
+
             if (senderAccount.Balance < newTransaction.Amount)
-            {
                 throw new LackOfFundsException("Not enough funds");
-            }
         }
 
         private Transaction CreateTransaction(IAccountDetail senderAccount, IAccountDetail reciverAccount, NewTransactionViewModel newTransaction)
