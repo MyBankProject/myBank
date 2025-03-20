@@ -18,8 +18,8 @@ namespace MyBankWebAppTests.Services.Transactions
         private const string default_CountryCode = "PL";
         private Mock<IAccountDetailsRepository> accountDetailsRepository;
         private IMapper mapper;
-        private AccountDetail reciver;
-        private AccountDetail sender;
+        private Account reciver;
+        private Account sender;
         private TransactionService sut;
         private Mock<ITransactionRepository> transactionRepository;
 
@@ -58,7 +58,7 @@ namespace MyBankWebAppTests.Services.Transactions
             transactionRepository.Verify(_ => _.AddAsync(It.IsAny<Transaction>()), Times.Once);
             transactionRepository.Verify(_ => _.SaveAsync(), Times.Once);
             Assert.IsNotNull(resultTransaction);
-            Assert.AreSame(sender, resultTransaction.SenderAccountDetails);
+            Assert.AreSame(sender, resultTransaction.SenderAccount);
         }
 
         [TestMethod]
@@ -116,13 +116,13 @@ namespace MyBankWebAppTests.Services.Transactions
         {
             transactionRepository = new Mock<ITransactionRepository>();
             accountDetailsRepository = new Mock<IAccountDetailsRepository>();
-            reciver = new AccountDetail() 
+            reciver = new Account() 
             {
                 Balance = 100,
                 IBAN = default_Iban,
                 CountryCode = default_CountryCode
             };
-            sender = new AccountDetail() 
+            sender = new Account() 
             {
                 Balance = 100,
                 IBAN = default_Iban,

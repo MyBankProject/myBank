@@ -11,10 +11,10 @@ namespace MyBankWebAppTests.Repositories
         private const string default_Iban = "61109010140000071219812874";
         private const int default_Id = 1;
 
-        private readonly AccountDetail input_AccountDetailRecord = new()
+        private readonly Account input_AccountDetailRecord = new()
         {
             CountryCode = "PL",
-            UserId = default_Id,
+            Id = default_Id,
             IBAN = default_Iban,
             Balance = 2500.00m
         };
@@ -27,7 +27,7 @@ namespace MyBankWebAppTests.Repositories
         {
             //Arrange
             const string input_Iban = "121241234123412341234";
-            var input_AccountDetail = new AccountDetail()
+            var input_AccountDetail = new Account()
             {
                 CountryCode = "PL",
                 IBAN = input_Iban,
@@ -39,9 +39,9 @@ namespace MyBankWebAppTests.Repositories
             await sut.SaveAsync();
 
             //Assert
-            AccountDetail result = await context.AccountDetails.FirstOrDefaultAsync(account => account.IBAN == input_Iban);
+            Account result = await context.Accounts.FirstOrDefaultAsync(account => account.IBAN == input_Iban);
             Assert.IsNotNull(result);
-            Assert.IsInstanceOfType<AccountDetail>(result);
+            Assert.IsInstanceOfType<Account>(result);
             Assert.AreEqual(input_AccountDetail, result);
         }
 
@@ -114,9 +114,9 @@ namespace MyBankWebAppTests.Repositories
             var context = new ApplicationDbContext(options);
             await context.Database.EnsureCreatedAsync();
 
-            if (!await context.AccountDetails.AnyAsync())
+            if (!await context.Accounts.AnyAsync())
             {
-                context.AccountDetails.Add(input_AccountDetailRecord);
+                context.Accounts.Add(input_AccountDetailRecord);
                 await context.SaveChangesAsync();
             }
             return context;

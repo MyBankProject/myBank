@@ -2,12 +2,12 @@
 
 namespace MyBankWebApp.Repositories.Abstractions
 {
-    public interface IAccountDetailsRepository : IRepositoryBase<AccountDetail>
+    public interface IAccountDetailsRepository : IRepositoryBase<Account>
     {
         Task<bool> AnyByIdAsync(int id);
 
-        Task<AccountDetail?> GetAccountByIbanAsync(string iban);
+        Task<Account?> GetAccountByIbanAsync(string iban);
 
-        Task<AccountDetail?> GetByIdAsync(int id, Func<IQueryable<AccountDetail>, IQueryable<AccountDetail>>? inclue = null);
+        Task<Account?> GetByIdAsync(int id, Func<IQueryable<Account>, IQueryable<Account>>? inclue = null);
     }
 }

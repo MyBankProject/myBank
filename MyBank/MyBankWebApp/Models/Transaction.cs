@@ -7,23 +7,18 @@ namespace MyBankWebApp.Models
     {
         [Key]
         public int Id { get; set; }
-
         public decimal Amount { get; set; }
-
         public DateTime CreationTime { get; set; }
 
+        //UStawić max length
         public string? Description { get; set; }
-
-        public int Reciver { get; set; }
-
-        public int Sender { get; set; }
-
         public TransactionStatus Status { get; set; }
-        
         public TransactionTypes TransactionType { get; set; }
 
-        public AccountDetail? ReciverAccountDetails { get; set; }
+        public Account? ReceiverAccount { get; set; }
+        public int ReceiverId { get; set; }
 
-        public AccountDetail? SenderAccountDetails { get; set; }
+        public Account? SenderAccount { get; set; }
+        public int SenderId { get; set; }
     }
 }

@@ -25,8 +25,8 @@ namespace MyBankWebApp.Services.Transactions
         public async Task AddTransactionAsync(NewTransactionViewModel newTransaction)
         {
             string filteredIban = Regex.Replace(newTransaction.ReciverIBAN, @"\D", "");
-            AccountDetail? reciverAccount = await accountDetailsRepository.GetAccountByIbanAsync(filteredIban);
-            AccountDetail? senderAccount = await accountDetailsRepository.GetByIdAsync(newTransaction.SenderId);
+            Account? reciverAccount = await accountDetailsRepository.GetAccountByIbanAsync(filteredIban);
+            Account? senderAccount = await accountDetailsRepository.GetByIdAsync(newTransaction.SenderId);
             ValidateTransaction(senderAccount, reciverAccount, newTransaction);
             using IDbContextTransaction dbTransaction = await transactionRepository.BeginTransactionAsync();
             try
@@ -41,13 +41,13 @@ namespace MyBankWebApp.Services.Transactions
             }
         }
 
-        private static void UpdateBalanceForBothSides(AccountDetail senderAccount, AccountDetail reciverAccount, NewTransactionViewModel newTransaction)
+        private static void UpdateBalanceForBothSides(Account senderAccount, Account reciverAccount, NewTransactionViewModel newTransaction)
         {
             senderAccount.Balance -= newTransaction.Amount;
             reciverAccount.Balance += newTransaction.Amount;
         }
 
-        private static void ValidateTransaction(AccountDetail? senderAccount, AccountDetail? reciverAccount, NewTransactionViewModel newTransaction)
+        private static void ValidateTransaction(Account? senderAccount, Account? reciverAccount, NewTransactionViewModel newTransaction)
         {
             if (senderAccount == null)
                 throw new UserNotFoundException("Reciver not found");
@@ -59,19 +59,19 @@ namespace MyBankWebApp.Services.Transactions
                 throw new LackOfFundsException("Not enough funds");
         }
 
-        private Transaction CreateTransaction(AccountDetail senderAccount, AccountDetail reciverAccount, NewTransactionViewModel newTransaction)
+        private Transaction CreateTransaction(Account senderAccount, Account reciverAccount, NewTransactionViewModel newTransaction)
         {
             Transaction transaction = mapper.Map<Transaction>(newTransaction);
             //TODO: Muszę kogoś dopytać o to czy trzeba wypełniać te property. EF sam tego nie zrobi?
-            transaction.SenderAccountDetails = senderAccount;
-            transaction.ReciverAccountDetails = reciverAccount;
-            transaction.Reciver = reciverAccount.UserId;
+            transaction.SenderAccount = senderAccount;
+            transaction.ReceiverAccount = reciverAccount;
+            transaction.ReceiverId = reciverAccount.Id;
             transaction.Status = Enums.TransactionStatus.Completed;
             transaction.TransactionType = Enums.TransactionTypes.Transfer;
             return transaction;
         }
 
-        private async Task ProcessTransaction(AccountDetail senderAccount, AccountDetail reciverAccount, NewTransactionViewModel newTransaction)
+        private async Task ProcessTransaction(Account senderAccount, Account reciverAccount, NewTransactionViewModel newTransaction)
         {
             Transaction transaction = CreateTransaction(senderAccount, reciverAccount, newTransaction);
             UpdateBalanceForBothSides(senderAccount, reciverAccount, newTransaction);

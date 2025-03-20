@@ -6,7 +6,7 @@ namespace MyBankWebApp.Data
 {
     public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : DbContext(options)
     {
-        public DbSet<AccountDetail> AccountDetails { get; set; }
+        public DbSet<Account> Accounts { get; set; }
 
         public DbSet<Role> Roles { get; set; }
 
@@ -26,16 +26,24 @@ namespace MyBankWebApp.Data
                 .Property(u => u.Name)
                 .IsRequired();
 
+            modelBuilder.Entity<Account>()
+                .Property(a => a.Balance)
+                .HasColumnType("decimal(18, 2)");
+
             modelBuilder.Entity<Transaction>()
-                .HasOne(t => t.SenderAccountDetails)
+                .Property(a => a.Amount)
+                .HasColumnType("decimal(18, 2)");
+
+            modelBuilder.Entity<Transaction>()
+                .HasOne(t => t.SenderAccount)
                 .WithMany(a => a.SentTransactions)
-                .HasForeignKey(t => t.Sender)
+                .HasForeignKey(t => t.SenderId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Transaction>()
-                .HasOne(t => t.ReciverAccountDetails)
-                .WithMany(a => a.RecivedTransactions)
-                .HasForeignKey(t => t.Reciver)
+                .HasOne(t => t.ReceiverAccount)
+                .WithMany(a => a.ReceivedTransactions)
+                .HasForeignKey(t => t.ReceiverId)
                 .OnDelete(DeleteBehavior.Restrict);
         }
     }

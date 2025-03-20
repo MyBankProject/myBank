@@ -19,10 +19,10 @@ namespace MyBankWebApp.Data
                 context.SaveChanges();
             }
 
-            if (!context.AccountDetails.Any())
+            if (!context.Accounts.Any())
             {
-                IEnumerable<AccountDetail> accountDetails = GetAccountDetails();
-                context.AccountDetails.AddRange(accountDetails);
+                IEnumerable<Account> accountDetails = GetAccountDetails();
+                context.Accounts.AddRange(accountDetails);
                 context.SaveChanges();
             }
 
@@ -43,8 +43,8 @@ namespace MyBankWebApp.Data
                             Amount = 100.00m,
                             CreationTime = DateTime.Now.AddDays(-5),
                             Description = "Payment for services",
-                            Reciver = 1,
-                            Sender = 2,
+                            ReceiverId = 1,
+                            SenderId = 2,
                             Status = TransactionStatus.Completed,
                             TransactionType = TransactionTypes.Transfer
                         },
@@ -53,8 +53,8 @@ namespace MyBankWebApp.Data
                             Amount = 50.50m,
                             CreationTime = DateTime.Now.AddDays(-3),
                             Description = "Invoice payment",
-                            Reciver = 3,
-                            Sender = 4,
+                            ReceiverId = 3,
+                            SenderId = 4,
                             Status = TransactionStatus.Completed,
                             TransactionType = TransactionTypes.Transfer
                         },
@@ -63,8 +63,8 @@ namespace MyBankWebApp.Data
                             Amount = 200.00m,
                             CreationTime = DateTime.Now.AddDays(-7),
                             Description = "Refund for purchase",
-                            Reciver = 5,
-                            Sender = 1,
+                            ReceiverId = 5,
+                            SenderId = 1,
                             Status = TransactionStatus.Completed,
                             TransactionType = TransactionTypes.Transfer
                         },
@@ -73,8 +73,8 @@ namespace MyBankWebApp.Data
                             Amount = 120.00m,
                             CreationTime = DateTime.Now.AddDays(-10),
                             Description = "Monthly subscription",
-                            Reciver = 2,
-                            Sender = 3,
+                            ReceiverId = 2,
+                            SenderId = 3,
                             Status = TransactionStatus.Failed,
                             TransactionType = TransactionTypes.Deposit
                         },
@@ -83,43 +83,43 @@ namespace MyBankWebApp.Data
                             Amount = 300.00m,
                             CreationTime = DateTime.Now.AddDays(-2),
                             Description = "Salary payment",
-                            Reciver = 4,
-                            Sender = 5,
+                            ReceiverId = 4,
+                            SenderId = 5,
                             Status = TransactionStatus.Completed,
                             TransactionType = TransactionTypes.Deposit
                         }
                     };
         }
 
-        private static IEnumerable<AccountDetail> GetAccountDetails()
+        private static IEnumerable<Account> GetAccountDetails()
         {
-            return new List<AccountDetail>()
+            return new List<Account>()
                     {
-                        new AccountDetail()
+                        new Account()
                         {
                             IBAN = "61109010140000071219812874",
                             CountryCode = "PL",
                             Balance = 1500.75m
                         },
-                        new AccountDetail()
+                        new Account()
                          {
                              IBAN = "27114020040000300201355387",
                              CountryCode = "PL",
                              Balance = 240.50m
                          },
-                         new AccountDetail()
+                         new Account()
                          {
                              IBAN = "46116022020000000231710798",
                              CountryCode = "PL",
                              Balance = 320000.00m
                          },
-                         new AccountDetail()
+                         new Account()
                          {
                              IBAN = "10105000997603123456789123",
                              CountryCode = "PL",
                              Balance = 50.25m
                          },
-                         new AccountDetail()
+                         new Account()
                          {
                              IBAN = "27113000000000123456789123",
                              CountryCode = "PL",

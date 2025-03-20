@@ -9,16 +9,16 @@ namespace MyBankWebApp.Mappers
     {
         public AccountDetailsMapper()
         {
-            CreateMap<AccountDetail, AccountDetailViewModel>()
+            CreateMap<Account, AccountDetailViewModel>()
                 .ForMember(dest => dest.Transactions, opt =>
-                    opt.MapFrom(src => src.SentTransactions.Concat(src.RecivedTransactions).Select(t => new TransactionViewModel
+                    opt.MapFrom(src => src.SentTransactions.Concat(src.ReceivedTransactions).Select(t => new TransactionViewModel
                     {
                         Amount = t.Amount,
                         CreationTime = t.CreationTime,
                         Description = t.Description,
                         Id = t.Id,
-                        OtherSideOfTransaction = t.Reciver == src.UserId ? t.Sender : t.Reciver,
-                        TransactionDirection = t.Reciver == src.UserId ? TransactionDirections.Incoming : TransactionDirections.Outgoing,
+                        OtherSideOfTransaction = t.ReceiverId == src.Id ? t.SenderId : t.ReceiverId,
+                        TransactionDirection = t.ReceiverId == src.Id ? TransactionDirections.Incoming : TransactionDirections.Outgoing,
                         Status = t.Status,
                         TransactionType = t.TransactionType
                     })));

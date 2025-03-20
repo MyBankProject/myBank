@@ -10,7 +10,7 @@ namespace MyBankWebApp.Mappers
         {
             CreateMap<NewTransactionViewModel, Transaction>()
                 .ForMember(dest => dest.CreationTime, opt => opt.MapFrom(src => src.TransferDate))
-                .ForMember(dest => dest.Sender, opt => opt.MapFrom(src => src.SenderId));
+                .ForMember(dest => dest.SenderId, opt => opt.MapFrom(src => src.SenderId));
         }
     }
 }

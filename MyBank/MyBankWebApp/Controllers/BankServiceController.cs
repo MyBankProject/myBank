@@ -36,7 +36,7 @@ namespace MyBankWebApp.Controllers
             // TODO: Usunąć przypisanie Id, kiedy już będzie logowanie na konto
             id = 5;
             var user = await accountDetailsRepository
-                .GetByIdAsync(id, query => query.Include(a => a.RecivedTransactions)
+                .GetByIdAsync(id, query => query.Include(a => a.ReceivedTransactions)
                 .Include(a => a.SentTransactions));
 
             if (user == null)
@@ -89,7 +89,7 @@ namespace MyBankWebApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private AccountDetailViewModel GetAccountDetailDto(AccountDetail? user)
+        private AccountDetailViewModel GetAccountDetailDto(Account? user)
         {
             if (user != null)
             {
