@@ -10,12 +10,12 @@ using System.Diagnostics;
 namespace MyBankWebApp.Controllers
 {
     public class BankServiceController(
-        IAccountDetailsRepository accountDetailsRepository,
+        IAccountRepository accountDetailsRepository,
         IMapper mapper,
         ILogger<BankServiceController> logger,
         ITransactionService transactionService) : Controller
     {
-        private readonly IAccountDetailsRepository accountDetailsRepository = accountDetailsRepository;
+        private readonly IAccountRepository accountDetailsRepository = accountDetailsRepository;
         private readonly ILogger<BankServiceController> logger = logger;
         private readonly IMapper mapper = mapper;
         private readonly ITransactionService transactionService = transactionService;
@@ -44,7 +44,7 @@ namespace MyBankWebApp.Controllers
                 return Error();
             }
 
-            AccountDetailViewModel accountDto = GetAccountDetailDto(user);
+            AccountViewModel accountDto = GetAccountDto(user);
             return View(accountDto);
         }
 
@@ -70,8 +70,8 @@ namespace MyBankWebApp.Controllers
                 //    return Unauthorized();
                 //}
                 //newTransactionDto.SenderId = userId;
-                newTransactionDto.SenderId = 5;
 
+                newTransactionDto.SenderId = 5;
                 try
                 {
                     await transactionService.AddTransactionAsync(newTransactionDto);
@@ -89,11 +89,11 @@ namespace MyBankWebApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private AccountDetailViewModel GetAccountDetailDto(Account? user)
+        private AccountViewModel GetAccountDto(Account? user)
         {
             if (user != null)
             {
-                return mapper.Map<AccountDetailViewModel>(user);
+                return mapper.Map<AccountViewModel>(user);
             }
             throw new ArgumentNullException(nameof(user), "User could not be found.");
         }

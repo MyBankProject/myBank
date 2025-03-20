@@ -16,7 +16,7 @@ namespace MyBankWebAppTests.Services.Transactions
         private const string default_Iban = "PL12 1234 1234 1234 1234 1234";
         private const string IbanNumbersOnly = "1212341234123412341234";
         private const string default_CountryCode = "PL";
-        private Mock<IAccountDetailsRepository> accountDetailsRepository;
+        private Mock<IAccountRepository> accountDetailsRepository;
         private IMapper mapper;
         private Account reciver;
         private Account sender;
@@ -58,7 +58,7 @@ namespace MyBankWebAppTests.Services.Transactions
             transactionRepository.Verify(_ => _.AddAsync(It.IsAny<Transaction>()), Times.Once);
             transactionRepository.Verify(_ => _.SaveAsync(), Times.Once);
             Assert.IsNotNull(resultTransaction);
-            Assert.AreSame(sender, resultTransaction.SenderAccount);
+            Assert.AreEqual(sender.Id, resultTransaction.SenderId);
         }
 
         [TestMethod]
@@ -115,7 +115,7 @@ namespace MyBankWebAppTests.Services.Transactions
         public void XInitialize()
         {
             transactionRepository = new Mock<ITransactionRepository>();
-            accountDetailsRepository = new Mock<IAccountDetailsRepository>();
+            accountDetailsRepository = new Mock<IAccountRepository>();
             reciver = new Account() 
             {
                 Balance = 100,

@@ -2,7 +2,7 @@
 
 namespace MyBankWebApp.Repositories.Abstractions
 {
-    public interface IAccountDetailsRepository : IRepositoryBase<Account>
+    public interface IAccountRepository : IRepositoryBase<Account>
     {
         Task<bool> AnyByIdAsync(int id);
 

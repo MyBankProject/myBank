@@ -30,7 +30,7 @@ builder.Services.AddValidatorsFromAssemblyContaining<RegisterUserDtoValidator>()
 //Register Services
 builder.Services.AddScoped<ITransactionService, TransactionService>();
 builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
-builder.Services.AddScoped<IAccountDetailsRepository, AccountDetailsRepository>();
+builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 
 //Register Mappers

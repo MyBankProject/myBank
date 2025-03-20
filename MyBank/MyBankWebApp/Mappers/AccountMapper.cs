@@ -5,11 +5,11 @@ using static MyBankWebApp.Enums;
 
 namespace MyBankWebApp.Mappers
 {
-    public class AccountDetailsMapper : Profile
+    public class AccountMapper : Profile
     {
-        public AccountDetailsMapper()
+        public AccountMapper()
         {
-            CreateMap<Account, AccountDetailViewModel>()
+            CreateMap<Account, AccountViewModel>()
                 .ForMember(dest => dest.Transactions, opt =>
                     opt.MapFrom(src => src.SentTransactions
                         .Concat(src.ReceivedTransactions)

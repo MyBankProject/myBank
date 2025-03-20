@@ -1,4 +1,4 @@
-﻿@model AccountDetailViewModel
+﻿@model AccountViewModel
 @{
 	ViewData["Title"] = "Bank Service";
 	<link rel="stylesheet" href="~/css/BankServiceStyle.css" asp-append-version="true"/>
@@ -51,7 +51,7 @@
 				<h1 id="currency">$</h1>
 			</div>
 			<div class="buttons-container">
-				<a asp-controller="BankService" asp-action="NewTransaction" asp-route-id="@Model.UserId">New Transaction</a>
+				<a asp-controller="BankService" asp-action="NewTransaction" asp-route-id="@Model.Id">New Transaction</a>
 				<a>Internal</a>
 			</div>
 		</div>

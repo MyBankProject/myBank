@@ -12,11 +12,11 @@ namespace MyBankWebApp.Services.Transactions
 {
     public class TransactionService : ITransactionService
     {
-        private readonly IAccountDetailsRepository accountDetailsRepository;
+        private readonly IAccountRepository accountDetailsRepository;
         private readonly IMapper mapper;
         private readonly ITransactionRepository transactionRepository;
 
-        public TransactionService(ITransactionRepository transactionRepository, IAccountDetailsRepository accountDetailsRepository, IMapper mapper)
+        public TransactionService(ITransactionRepository transactionRepository, IAccountRepository accountDetailsRepository, IMapper mapper)
         {
             this.transactionRepository = transactionRepository;
             this.accountDetailsRepository = accountDetailsRepository;

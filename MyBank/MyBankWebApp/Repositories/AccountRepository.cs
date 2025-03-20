@@ -5,8 +5,8 @@ using MyBankWebApp.Repositories.Abstractions;
 
 namespace MyBankWebApp.Repositories
 {
-    public class AccountDetailsRepository(ApplicationDbContext context) :
-        RepositoryBase<Account>(context), IAccountDetailsRepository
+    public class AccountRepository(ApplicationDbContext context) :
+        RepositoryBase<Account>(context), IAccountRepository
     {
         public async Task<bool> AnyByIdAsync(int id) => await context.Accounts.AnyAsync(account => account.Id == id);
 
