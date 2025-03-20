@@ -11,17 +11,20 @@ namespace MyBankWebApp.Mappers
         {
             CreateMap<Account, AccountDetailViewModel>()
                 .ForMember(dest => dest.Transactions, opt =>
-                    opt.MapFrom(src => src.SentTransactions.Concat(src.ReceivedTransactions).Select(t => new TransactionViewModel
-                    {
-                        Amount = t.Amount,
-                        CreationTime = t.CreationTime,
-                        Description = t.Description,
-                        Id = t.Id,
-                        OtherSideOfTransaction = t.ReceiverId == src.Id ? t.SenderId : t.ReceiverId,
-                        TransactionDirection = t.ReceiverId == src.Id ? TransactionDirections.Incoming : TransactionDirections.Outgoing,
-                        Status = t.Status,
-                        TransactionType = t.TransactionType
-                    })));
+                    opt.MapFrom(src => src.SentTransactions
+                        .Concat(src.ReceivedTransactions)
+                        .OrderBy(t => t.CreationTime)
+                        .Select(t => new TransactionViewModel
+                        {
+                            Amount = t.Amount,
+                            CreationTime = t.CreationTime,
+                            Description = t.Description,
+                            Id = t.Id,
+                            OtherSideOfTransaction = t.ReceiverId == src.Id ? t.SenderId : t.ReceiverId,
+                            TransactionDirection = t.ReceiverId == src.Id ? TransactionDirections.Incoming : TransactionDirections.Outgoing,
+                            Status = Enum.IsDefined(typeof(TransactionStatuses), t.StatusId) ? (TransactionStatuses)t.StatusId : default,
+                            TransactionType = Enum.IsDefined(typeof(TransactionTypes), t.TransactionTypeId) ? (TransactionTypes)t.TransactionTypeId : default
+                        })));
         }
     }
 }

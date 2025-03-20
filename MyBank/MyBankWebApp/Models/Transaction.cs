@@ -1,5 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
-using static MyBankWebApp.Enums;
+﻿using MyBankWebApp.Models.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace MyBankWebApp.Models
 {
@@ -12,8 +12,12 @@ namespace MyBankWebApp.Models
 
         [MaxLength(200)]
         public string? Description { get; set; }
+
+        public required int StatusId {  get; set; }
         public TransactionStatus Status { get; set; }
-        public TransactionTypes TransactionType { get; set; }
+
+        public required int TransactionTypeId {  get; set; }
+        public TransactionType TransactionType { get; set; }
 
         public Account? ReceiverAccount { get; set; }
         public int ReceiverId { get; set; }

@@ -6,6 +6,7 @@ using MyBankWebApp.Repositories.Abstractions;
 using MyBankWebApp.Services.Transactions.Abstractions;
 using MyBankWebApp.ViewModels;
 using System.Text.RegularExpressions;
+using static MyBankWebApp.Enums;
 
 namespace MyBankWebApp.Services.Transactions
 {
@@ -63,11 +64,14 @@ namespace MyBankWebApp.Services.Transactions
         {
             Transaction transaction = mapper.Map<Transaction>(newTransaction);
             //TODO: Muszę kogoś dopytać o to czy trzeba wypełniać te property. EF sam tego nie zrobi?
-            transaction.SenderAccount = senderAccount;
-            transaction.ReceiverAccount = reciverAccount;
             transaction.ReceiverId = reciverAccount.Id;
-            transaction.Status = Enums.TransactionStatus.Completed;
-            transaction.TransactionType = Enums.TransactionTypes.Transfer;
+            transaction.SenderId = senderAccount.Id;
+            transaction.StatusId = Enum.IsDefined(typeof(Enums.TransactionStatuses), Enums.TransactionStatuses.Completed)
+                        ? (int)Enums.TransactionStatuses.Completed
+                        : default;
+            transaction.TransactionTypeId = Enum.IsDefined(typeof(TransactionTypes), Enums.TransactionTypes.Transfer)
+                        ? (int)Enums.TransactionTypes.Transfer
+                        : default;
             return transaction;
         }
 

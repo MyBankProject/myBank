@@ -10,7 +10,7 @@ namespace MyBankWebApp.ViewModels
         public string? Description { get; set; }
         public int Id { get; set; }
         public int OtherSideOfTransaction { get; set; }
-        public TransactionStatus Status { get; set; }
+        public TransactionStatuses Status { get; set; }
         public TransactionDirections TransactionDirection { get; set; }
         public TransactionTypes TransactionType { get; set; }
     }

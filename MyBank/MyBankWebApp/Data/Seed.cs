@@ -45,8 +45,8 @@ namespace MyBankWebApp.Data
                             Description = "Payment for services",
                             ReceiverId = 1,
                             SenderId = 2,
-                            Status = TransactionStatus.Completed,
-                            TransactionType = TransactionTypes.Transfer
+                            StatusId = (int)TransactionStatuses.Completed,
+                            TransactionTypeId = (int)TransactionTypes.Transfer
                         },
                         new Transaction()
                         {
@@ -55,8 +55,8 @@ namespace MyBankWebApp.Data
                             Description = "Invoice payment",
                             ReceiverId = 3,
                             SenderId = 4,
-                            Status = TransactionStatus.Completed,
-                            TransactionType = TransactionTypes.Transfer
+                            StatusId = (int)TransactionStatuses.Completed,
+                            TransactionTypeId = (int)TransactionTypes.Transfer
                         },
                         new Transaction()
                         {
@@ -65,8 +65,8 @@ namespace MyBankWebApp.Data
                             Description = "Refund for purchase",
                             ReceiverId = 5,
                             SenderId = 1,
-                            Status = TransactionStatus.Completed,
-                            TransactionType = TransactionTypes.Transfer
+                            StatusId = (int)TransactionStatuses.Completed,
+                            TransactionTypeId = (int)TransactionTypes.Transfer
                         },
                         new Transaction()
                         {
@@ -75,8 +75,8 @@ namespace MyBankWebApp.Data
                             Description = "Monthly subscription",
                             ReceiverId = 2,
                             SenderId = 3,
-                            Status = TransactionStatus.Failed,
-                            TransactionType = TransactionTypes.Deposit
+                            StatusId = (int)TransactionStatuses.Failed,
+                            TransactionTypeId = (int)TransactionTypes.Deposit
                         },
                         new Transaction()
                         {
@@ -85,8 +85,8 @@ namespace MyBankWebApp.Data
                             Description = "Salary payment",
                             ReceiverId = 4,
                             SenderId = 5,
-                            Status = TransactionStatus.Completed,
-                            TransactionType = TransactionTypes.Deposit
+                            StatusId = (int)TransactionStatuses.Completed,
+                            TransactionTypeId = (int)TransactionTypes.Deposit
                         }
                     };
         }
