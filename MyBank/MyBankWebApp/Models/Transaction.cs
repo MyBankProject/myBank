@@ -10,7 +10,7 @@ namespace MyBankWebApp.Models
         public decimal Amount { get; set; }
         public DateTime CreationTime { get; set; }
 
-        //UStawić max length
+        [MaxLength(200)]
         public string? Description { get; set; }
         public TransactionStatus Status { get; set; }
         public TransactionTypes TransactionType { get; set; }

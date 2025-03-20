@@ -9,12 +9,12 @@ namespace MyBankWebApp.Models
         public int Id { get; set; }
 
         [Required]
-        [Column(TypeName = "nvarchar(34)")]
+        [Column(TypeName = "varchar(34)")]
         [MaxLength(34)]
         public required string IBAN { get; set; }
 
         [Required]
-        [Column(TypeName = "nvarchar(2)")]
+        [Column(TypeName = "varchar(2)")]
         [MaxLength(2)]
         public required string CountryCode { get; set; }
 
