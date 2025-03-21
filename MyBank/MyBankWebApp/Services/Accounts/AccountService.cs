@@ -11,7 +11,9 @@ namespace MyBankWebApp.Services.Accounts
 
         public AccountViewModel GetAccountVM(Account user)
         {
-            return mapper.Map<AccountViewModel>(user);
+            AccountViewModel accountVM = mapper.Map<AccountViewModel>(user);
+            accountVM.Transactions = accountVM.Transactions?.OrderByDescending(x => x.CreationTime).ToList();
+            return accountVM;
         }
     }
 }

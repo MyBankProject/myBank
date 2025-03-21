@@ -232,3 +232,11 @@ li {
         text-align: left;
         white-space: nowrap;
     }
+
+        li span.incoming {
+            color: var(--secondary-color);
+        }
+
+        li span.outgoing {
+            color: var(--cancel-color);
+        }
