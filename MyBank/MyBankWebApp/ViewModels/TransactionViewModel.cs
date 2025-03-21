@@ -12,6 +12,5 @@ namespace MyBankWebApp.ViewModels
         public int OtherSideOfTransaction { get; set; }
         public TransactionStatuses Status { get; set; }
         public TransactionDirections TransactionDirection { get; set; }
-        public TransactionTypes TransactionType { get; set; }
     }
 }

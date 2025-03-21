@@ -15,6 +15,8 @@ using MyBankWebApp.Services.Transactions;
 using MyBankWebApp.Repositories.Abstractions;
 using MyBankWebApp.Repositories;
 using MyBankWebApp.Models;
+using MyBankWebApp.Services.Accounts.Abstractions;
+using MyBankWebApp.Services.Accounts;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,6 +34,7 @@ builder.Services.AddScoped<ITransactionService, TransactionService>();
 builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IAccountService, AccountService>();
 
 //Register Mappers
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

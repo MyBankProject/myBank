@@ -69,6 +69,7 @@
 			@{
 				var culture = new CultureInfo("en-US");
 				culture.NumberFormat.CurrencyPositivePattern = 3;
+				culture.NumberFormat.CurrencyNegativePattern = 8;
 			}
 			<ul>
 				@foreach (var transfer in Model.Transactions)
