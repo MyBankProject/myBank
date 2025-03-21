@@ -5,6 +5,6 @@ namespace MyBankWebApp.Services.Accounts.Abstractions
 {
     public interface IAccountService
     {
-        AccountViewModel GetAccountVM(Account user);
+        Task<AccountViewModel> GetAccountVmAsync(int id);
     }
 }

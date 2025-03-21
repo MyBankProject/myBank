@@ -38,13 +38,8 @@ namespace MyBankWebApp.Controllers
             id = 5;
             try
             {
-                Account? user = await accountRepository
-                    .GetByIdAsync(id, query => query
-                    .Include(a => a.ReceivedTransactions)
-                    .Include(a => a.SentTransactions)) ??
-                    throw new UserNotFoundException($"Could not find the user");
-                AccountViewModel accountVM = accountService.GetAccountVM(user);
-                return View(accountVM);
+                Task<AccountViewModel> accountVM = accountService.GetAccountVmAsync(id);
+                return View(await accountVM);
             }
             catch (Exception ex)
             {

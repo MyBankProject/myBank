@@ -20,8 +20,9 @@ namespace MyBankWebApp.Mappers
                             CreationTime = t.CreationTime,
                             Description = t.Description,
                             Id = t.Id,
-                            OtherSideOfTransaction = t.ReceiverId == src.Id ? t.SenderId : t.ReceiverId,
                             TransactionDirection = t.ReceiverId == src.Id ? TransactionDirections.Incoming : TransactionDirections.Outgoing,
+                            OtherSideOfTransactionId = t.ReceiverId == src.Id ? t.SenderId : t.ReceiverId,
+                            OtherSideOfTransaction = default,
                             Status = Enum.IsDefined(typeof(TransactionStatuses), t.StatusId) ? (TransactionStatuses)t.StatusId : default,
                         })));
         }
