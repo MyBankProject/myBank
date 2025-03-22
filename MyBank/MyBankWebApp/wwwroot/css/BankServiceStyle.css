@@ -10,15 +10,15 @@
 }
 
 body {
-    background: var(--background-color);
-    color: var(--white-color);
+  background: var(--background-color);
+  color: var(--white-color);
 }
 
 .main {
-    font-family: "Bebas Neue", sans-serif;
-    display: flex;
-    flex-direction: column;
-    padding: 10px 0 30px;
+  font-family: "Bebas Neue", sans-serif;
+  display: flex;
+  flex-direction: column;
+  padding: 10px 0 30px;
 }
 
 .main h1 {
@@ -33,16 +33,15 @@ body {
   overflow: hidden;
 }
 
-.main .zoom-animation {
+.zoom-animation {
   transition: transform 0.3s ease-in-out;
 }
 
-.main .zoom-animation:hover {
+.zoom-animation:hover {
   transform: scale(1.05);
 }
 
-
-.main #top-box {
+#top-box {
   display: flex;
   border: 1px solid var(--main-color);
   background: transparent;
@@ -51,17 +50,17 @@ body {
   width: 100%;
 }
 
-.main #top-box div {
+#top-box div {
   flex: 1;
   text-align: center;
   height: 40px;
 }
 
-.main #top-box div:nth-child(3) {
+#top-box div:nth-child(3) {
   text-align: right;
 }
 
-.main #top-box h2 {
+#top-box h2 {
   font-size: 40px;
   color: var(--main-color);
 }
@@ -71,18 +70,18 @@ body {
   display: block;
 }
 
-.main #settings-button {
+#settings-button {
   color: var(--main-color);
   font-size: 35px;
   transition: transform 0.3s ease-in-out, color 0.3s ease-in-out;
 }
 
-.main #settings-button:hover {
+#settings-button:hover {
   cursor: pointer;
   transform: scale(1.1);
 }
 
-.main .greeting-container {
+.greeting-container {
   display: flex;
   justify-content: center;
   text-align: center;
@@ -90,24 +89,24 @@ body {
   cursor: default;
 }
 
-.main .greeting-container img {
+.greeting-container img {
   width: 200px;
   margin-top: 20px;
   transition: transform 0.3s ease-in-out;
 }
 
-.main .greeting-container img:hover {
+.greeting-container img:hover {
   transform: scale(1.07);
 }
 
-.main #greeting-box {
+#greeting-box {
   display: inline;
   background: transparent;
   color: var(--main-color);
   border: none;
 }
 
-.main .fancy-text {
+.fancy-text {
   --a: -45deg;
   --t: 0.23em;
   color: var(--third-color);
@@ -117,57 +116,68 @@ body {
   text-transform: capitalize;
 }
 
-.main .fancy-text span {
+.fancy-text span {
   --_s: calc(var(--t) * cos(var(--a)));
-  background: linear-gradient( var(--a), #0000 var(--_s), currentColor 0 calc(100% - var(--_s)), #0000 0 ) bottom/var(--i, 90%) var(--t) no-repeat;
+  background: linear-gradient(
+      var(--a),
+      #0000 var(--_s),
+      currentColor 0 calc(100% - var(--_s)),
+      #0000 0
+    )
+    bottom/var(--i, 90%) var(--t) no-repeat;
   padding: 0 0.25em calc(var(--t) * 0.5);
   box-decoration-break: clone;
   transition: 0.3s;
 }
 
-.main .fancy-text:hover span {
+.fancy-text:hover span {
   --i: 100%;
 }
 
-.main .balance-cards-container {
+.balance-cards-container {
   display: flex;
   width: 100%;
   margin-top: 20px;
-  height: 200px;
+  height: auto;
 }
 
-.main #balance-box {
+#balance-box {
   flex-basis: 50%;
   margin-right: 15px;
   display: flex;
   flex-direction: column;
 }
 
-.main #balance-box div {
+#balance-box div {
   display: flex;
   color: var(--third-color);
 }
 
-.main #currency {
+#currency {
   margin-left: 10px;
   color: var(--fourth-color);
   opacity: 0.75;
 }
 
 .main a {
-  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   text-align: center;
+  text-decoration: none;
   box-shadow: 0 0 0 0.1em inset var(--main-color);
   color: var(--white-color);
   --_g: linear-gradient(var(--main-color) 0 0) no-repeat;
-  background: var(--_g) calc(var(--_p, 0%) - 100%) 0%, var(--_g) calc(200% - var(--_p, 0%)) 0%, var(--_g) calc(var(--_p, 0%) - 100%) 100%, var(--_g) calc(200% - var(--_p, 0%)) 100%;
+  background: var(--_g) calc(var(--_p, 0%) - 100%) 0%,
+    var(--_g) calc(200% - var(--_p, 0%)) 0%,
+    var(--_g) calc(var(--_p, 0%) - 100%) 100%,
+    var(--_g) calc(200% - var(--_p, 0%)) 100%;
   background-size: 50.5% calc(var(--_p, 0%) / 2 + 0.5%);
   outline-offset: 0.1em;
   transition: background-size 0.4s, background-position 0s 0.4s, color 1s;
   font-size: 1.6rem;
   cursor: pointer;
   padding: 0.1em 0.6em;
-  border: none;
 }
 
 .main a:hover {
@@ -189,6 +199,7 @@ body {
 
 .buttons-container a {
   flex-basis: 45%;
+  font-size: 24px;
 }
 
 #cards-box {
@@ -196,7 +207,7 @@ body {
   display: flex;
 }
 
-.main .bottom-container {
+.bottom-container {
   display: flex;
   justify-content: center;
   width: 100%;
@@ -205,12 +216,12 @@ body {
   gap: 5px;
 }
 
-.main #calculations-box {
+#calculations-box {
   flex-basis: 30%;
   margin-right: 10px;
 }
 
-.main #history-box {
+#history-box {
   flex-grow: 1;
   flex-direction: column;
 }
@@ -222,21 +233,41 @@ body {
 }
 
 .main li {
-  display: grid;
-  grid-template-columns: 1fr 1fr 2fr 1fr; /* Dostosuj szerokości */
+  display: flex;
+  justify-content: space-between;
   align-items: center;
   border-top: 0.5px solid var(--main-color);
+  width: 100%;
 }
 
 .main li span {
-  text-align: left;
-  white-space: nowrap;
+    text-align: left;
+    flex: 1;
+}
+
+.main li span:first-child {
+    text-align: left;
+}
+
+.main li span:nth-child(2) {
+    text-align: left;
+}
+
+.main li span:nth-child(3) {
+    text-align: center;
+    flex-wrap: nowrap;
+}
+
+.main li span:last-child {
+    text-align: right; 
+}
+
+.main li span.outgoing {
+    color: var(--cancel-color);
+    margin-right: 6px;
 }
 
 .main li span.incoming {
   color: var(--secondary-color);
-}
-
-.main li span.outgoing {
-  color: var(--cancel-color);
+  margin-left: 6px;
 }
