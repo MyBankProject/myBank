@@ -28,7 +28,7 @@ namespace MyBankWebApp.Controllers
         }
 
         [HttpPost]
-        public IActionResult SendRegister(UserViewModel model)
+        public IActionResult Register(UserViewModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -59,7 +59,7 @@ namespace MyBankWebApp.Controllers
         }
 
         [HttpPost]
-        public IActionResult SendLogin(LoginDto dto)
+        public IActionResult Login(LoginDto dto)
         {
             string token = userService.GenerateJwt(dto);
 

@@ -1,7 +1,7 @@
 ﻿<html>
 <body>
 	<h1>Register new user</h1>
-	<form method="post" action="/User/SendRegister">
+	<form asp-action="Register" method="post">
 		<div asp-validation-summary="All" class="text-danger"></div>
 		<label for="firstName">First name:</label>
 		<input type="text" id="firstName" name="FirstName" required>
@@ -24,7 +24,7 @@
 		<label for="dateOfBirth">Date Of Birth:</label>
 		<input type="date" id="dateOfBirth" name="DateOfBirth" required>
 		<br />
-		<button type="submit">Submit</button>
+		<button asp-for="Submit" class="btn btn-primary">Submit</button>
 	</form>
 </body>
 </html>

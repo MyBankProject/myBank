@@ -57,7 +57,7 @@ namespace MyBankWebApp.Services.UserServices
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authenticationSettings.JwtKey));
-            var credentional = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            var credential = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             var expires = DateTime.Now.AddDays(authenticationSettings.JwtExpireDays);
 
             var token = new JwtSecurityToken(
@@ -65,7 +65,7 @@ namespace MyBankWebApp.Services.UserServices
                 authenticationSettings.JwtIssuer,
                 claims,
                 expires: expires,
-                signingCredentials: credentional);
+                signingCredentials: credential);
 
             var tokenHandler = new JwtSecurityTokenHandler();
             return tokenHandler.WriteToken(token);
