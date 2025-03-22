@@ -3,18 +3,18 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyBankWebApp.Models
 {
-    public class AccountDetail
+    public class Account
     {
         [Key]
-        public int UserId { get; set; }
+        public int Id { get; set; }
 
         [Required]
-        [Column(TypeName = "nvarchar(34)")]
+        [Column(TypeName = "varchar(34)")]
         [MaxLength(34)]
         public required string IBAN { get; set; }
 
         [Required]
-        [Column(TypeName = "nvarchar(2)")]
+        [Column(TypeName = "varchar(2)")]
         [MaxLength(2)]
         public required string CountryCode { get; set; }
 
@@ -22,6 +22,6 @@ namespace MyBankWebApp.Models
 
         public ICollection<Transaction>? SentTransactions { get; set; }
 
-        public ICollection<Transaction>? RecivedTransactions { get; set; }
+        public ICollection<Transaction>? ReceivedTransactions { get; set; }
     }
 }

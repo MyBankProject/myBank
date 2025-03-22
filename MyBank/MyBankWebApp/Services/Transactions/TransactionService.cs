@@ -6,16 +6,17 @@ using MyBankWebApp.Repositories.Abstractions;
 using MyBankWebApp.Services.Transactions.Abstractions;
 using MyBankWebApp.ViewModels;
 using System.Text.RegularExpressions;
+using static MyBankWebApp.Enums;
 
 namespace MyBankWebApp.Services.Transactions
 {
     public class TransactionService : ITransactionService
     {
-        private readonly IAccountDetailsRepository accountDetailsRepository;
+        private readonly IAccountRepository accountDetailsRepository;
         private readonly IMapper mapper;
         private readonly ITransactionRepository transactionRepository;
 
-        public TransactionService(ITransactionRepository transactionRepository, IAccountDetailsRepository accountDetailsRepository, IMapper mapper)
+        public TransactionService(ITransactionRepository transactionRepository, IAccountRepository accountDetailsRepository, IMapper mapper)
         {
             this.transactionRepository = transactionRepository;
             this.accountDetailsRepository = accountDetailsRepository;
@@ -25,8 +26,8 @@ namespace MyBankWebApp.Services.Transactions
         public async Task AddTransactionAsync(NewTransactionViewModel newTransaction)
         {
             string filteredIban = Regex.Replace(newTransaction.ReciverIBAN, @"\D", "");
-            AccountDetail? reciverAccount = await accountDetailsRepository.GetAccountByIbanAsync(filteredIban);
-            AccountDetail? senderAccount = await accountDetailsRepository.GetByIdAsync(newTransaction.SenderId);
+            Account? reciverAccount = await accountDetailsRepository.GetAccountByIbanAsync(filteredIban);
+            Account? senderAccount = await accountDetailsRepository.GetByIdAsync(newTransaction.SenderId);
             ValidateTransaction(senderAccount, reciverAccount, newTransaction);
             using IDbContextTransaction dbTransaction = await transactionRepository.BeginTransactionAsync();
             try
@@ -41,13 +42,13 @@ namespace MyBankWebApp.Services.Transactions
             }
         }
 
-        private static void UpdateBalanceForBothSides(AccountDetail senderAccount, AccountDetail reciverAccount, NewTransactionViewModel newTransaction)
+        private static void UpdateBalanceForBothSides(Account senderAccount, Account reciverAccount, NewTransactionViewModel newTransaction)
         {
             senderAccount.Balance -= newTransaction.Amount;
             reciverAccount.Balance += newTransaction.Amount;
         }
 
-        private static void ValidateTransaction(AccountDetail? senderAccount, AccountDetail? reciverAccount, NewTransactionViewModel newTransaction)
+        private static void ValidateTransaction(Account? senderAccount, Account? reciverAccount, NewTransactionViewModel newTransaction)
         {
             if (senderAccount == null)
                 throw new UserNotFoundException("Reciver not found");
@@ -59,19 +60,22 @@ namespace MyBankWebApp.Services.Transactions
                 throw new LackOfFundsException("Not enough funds");
         }
 
-        private Transaction CreateTransaction(AccountDetail senderAccount, AccountDetail reciverAccount, NewTransactionViewModel newTransaction)
+        private Transaction CreateTransaction(Account senderAccount, Account reciverAccount, NewTransactionViewModel newTransaction)
         {
             Transaction transaction = mapper.Map<Transaction>(newTransaction);
             //TODO: Muszę kogoś dopytać o to czy trzeba wypełniać te property. EF sam tego nie zrobi?
-            transaction.SenderAccountDetails = senderAccount;
-            transaction.ReciverAccountDetails = reciverAccount;
-            transaction.Reciver = reciverAccount.UserId;
-            transaction.Status = Enums.TransactionStatus.Completed;
-            transaction.TransactionType = Enums.TransactionTypes.Transfer;
+            transaction.ReceiverId = reciverAccount.Id;
+            transaction.SenderId = senderAccount.Id;
+            transaction.StatusId = Enum.IsDefined(typeof(Enums.TransactionStatuses), Enums.TransactionStatuses.Completed)
+                        ? (int)Enums.TransactionStatuses.Completed
+                        : default;
+            transaction.TransactionTypeId = Enum.IsDefined(typeof(TransactionTypes), Enums.TransactionTypes.Transfer)
+                        ? (int)Enums.TransactionTypes.Transfer
+                        : default;
             return transaction;
         }
 
-        private async Task ProcessTransaction(AccountDetail senderAccount, AccountDetail reciverAccount, NewTransactionViewModel newTransaction)
+        private async Task ProcessTransaction(Account senderAccount, Account reciverAccount, NewTransactionViewModel newTransaction)
         {
             Transaction transaction = CreateTransaction(senderAccount, reciverAccount, newTransaction);
             UpdateBalanceForBothSides(senderAccount, reciverAccount, newTransaction);

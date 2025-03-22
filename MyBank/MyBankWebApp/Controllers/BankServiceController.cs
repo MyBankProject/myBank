@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using MyBankWebApp.Exceptions;
 using MyBankWebApp.Models;
 using MyBankWebApp.Repositories.Abstractions;
+using MyBankWebApp.Services.Accounts.Abstractions;
 using MyBankWebApp.Services.Transactions.Abstractions;
 using MyBankWebApp.ViewModels;
 using System.Diagnostics;
@@ -10,15 +12,15 @@ using System.Diagnostics;
 namespace MyBankWebApp.Controllers
 {
     public class BankServiceController(
-        IAccountDetailsRepository accountDetailsRepository,
-        IMapper mapper,
+        IAccountRepository accountRepository,
         ILogger<BankServiceController> logger,
-        ITransactionService transactionService) : Controller
+        ITransactionService transactionService,
+        IAccountService accountService) : Controller
     {
-        private readonly IAccountDetailsRepository accountDetailsRepository = accountDetailsRepository;
+        private readonly IAccountRepository accountRepository = accountRepository;
         private readonly ILogger<BankServiceController> logger = logger;
-        private readonly IMapper mapper = mapper;
         private readonly ITransactionService transactionService = transactionService;
+        private readonly IAccountService accountService = accountService;
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
@@ -32,25 +34,23 @@ namespace MyBankWebApp.Controllers
             {
                 return Error();
             }
-
             // TODO: Usunąć przypisanie Id, kiedy już będzie logowanie na konto
             id = 5;
-            var user = await accountDetailsRepository
-                .GetByIdAsync(id, query => query.Include(a => a.RecivedTransactions)
-                .Include(a => a.SentTransactions));
-
-            if (user == null)
+            try
             {
+                Task<AccountViewModel> accountVM = accountService.GetAccountVmAsync(id);
+                return View(await accountVM);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, ex.Message);
                 return Error();
             }
-
-            AccountDetailViewModel accountDto = GetAccountDetailDto(user);
-            return View(accountDto);
         }
 
         public async Task<IActionResult> NewTransaction(int id)
         {
-            if (await accountDetailsRepository.AnyByIdAsync(id))
+            if (await accountRepository.AnyByIdAsync(id))
             {
                 return View(new NewTransactionViewModel() { SenderId = id });
             }
@@ -70,8 +70,8 @@ namespace MyBankWebApp.Controllers
                 //    return Unauthorized();
                 //}
                 //newTransactionDto.SenderId = userId;
-                newTransactionDto.SenderId = 5;
 
+                newTransactionDto.SenderId = 5;
                 try
                 {
                     await transactionService.AddTransactionAsync(newTransactionDto);
@@ -87,15 +87,6 @@ namespace MyBankWebApp.Controllers
             }
             TempData["ErrorMessage"] = "Transaction Failed";
             return RedirectToAction(nameof(Index));
-        }
-
-        private AccountDetailViewModel GetAccountDetailDto(AccountDetail? user)
-        {
-            if (user != null)
-            {
-                return mapper.Map<AccountDetailViewModel>(user);
-            }
-            throw new ArgumentNullException(nameof(user), "User could not be found.");
         }
     }
 }

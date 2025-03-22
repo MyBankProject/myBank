@@ -6,28 +6,28 @@ using MyBankWebApp.Repositories;
 namespace MyBankWebAppTests.Repositories
 {
     [TestClass()]
-    public class AccountDetailsRepositoryTests
+    public class AccountRepositoryTests
     {
         private const string default_Iban = "61109010140000071219812874";
         private const int default_Id = 1;
 
-        private readonly AccountDetail input_AccountDetailRecord = new()
+        private readonly Account input_AccountRecord = new()
         {
             CountryCode = "PL",
-            UserId = default_Id,
+            Id = default_Id,
             IBAN = default_Iban,
             Balance = 2500.00m
         };
 
         private ApplicationDbContext context;
-        private AccountDetailsRepository sut;
+        private AccountRepository sut;
 
         [TestMethod()]
         public async Task AddRecordToDatabase_Success()
         {
             //Arrange
             const string input_Iban = "121241234123412341234";
-            var input_AccountDetail = new AccountDetail()
+            var input_Account = new Account()
             {
                 CountryCode = "PL",
                 IBAN = input_Iban,
@@ -35,14 +35,14 @@ namespace MyBankWebAppTests.Repositories
             };
 
             //Act
-            await sut.AddAsync(input_AccountDetail);
+            await sut.AddAsync(input_Account);
             await sut.SaveAsync();
 
             //Assert
-            AccountDetail result = await context.AccountDetails.FirstOrDefaultAsync(account => account.IBAN == input_Iban);
+            Account result = await context.Accounts.FirstOrDefaultAsync(account => account.IBAN == input_Iban);
             Assert.IsNotNull(result);
-            Assert.IsInstanceOfType<AccountDetail>(result);
-            Assert.AreEqual(input_AccountDetail, result);
+            Assert.IsInstanceOfType<Account>(result);
+            Assert.AreEqual(input_Account, result);
         }
 
         [TestMethod()]
@@ -75,7 +75,7 @@ namespace MyBankWebAppTests.Repositories
 
             //Assert
             Assert.IsNotNull(result);
-            Assert.AreSame(input_AccountDetailRecord, result);
+            Assert.AreSame(input_AccountRecord, result);
         }
 
         [TestMethod()]
@@ -96,14 +96,14 @@ namespace MyBankWebAppTests.Repositories
 
             //Assert
             Assert.IsNotNull(result);
-            Assert.AreSame(input_AccountDetailRecord, result);
+            Assert.AreSame(input_AccountRecord, result);
         }
 
         [TestInitialize]
         public async Task XInitialize()
         {
             context = await GetDbContext();
-            sut = new AccountDetailsRepository(context);
+            sut = new AccountRepository(context);
         }
 
         private async Task<ApplicationDbContext> GetDbContext()
@@ -114,9 +114,9 @@ namespace MyBankWebAppTests.Repositories
             var context = new ApplicationDbContext(options);
             await context.Database.EnsureCreatedAsync();
 
-            if (!await context.AccountDetails.AnyAsync())
+            if (!await context.Accounts.AnyAsync())
             {
-                context.AccountDetails.Add(input_AccountDetailRecord);
+                context.Accounts.Add(input_AccountRecord);
                 await context.SaveChangesAsync();
             }
             return context;

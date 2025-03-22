@@ -1,13 +1,13 @@
-﻿@model AccountDetailViewModel
+﻿@model AccountViewModel
 @{
 	ViewData["Title"] = "Bank Service";
-	<link rel="stylesheet" href="~/css/BankServiceStyle.css" asp-append-version="true"/>
-	<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
-	<link rel="stylesheet"
-		  href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=settings" />
 
 	var successMessage = TempData["SuccessMessage"];
 	var errorMessage = TempData["ErrorMessage"];
+	<link rel="stylesheet" href="~/css/bankServiceStyle.css" asp-append-version="true"/>
+	<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+	<link rel="stylesheet"
+		  href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=settings" />
 	if (successMessage != null)
 	{
 		<div class="alert alert-success">
@@ -22,7 +22,7 @@
 	}
 }
 
-<div class="main-container">
+<div class="main">
 	<div class="box" id="top-box">
 		<div>
 			<img src="~/img/Logos/Logo-green.png" alt="Logo" class="logo zoom-animation">
@@ -51,7 +51,7 @@
 				<h1 id="currency">$</h1>
 			</div>
 			<div class="buttons-container">
-				<a asp-controller="BankService" asp-action="NewTransaction" asp-route-id="@Model.UserId">New Transaction</a>
+				<a asp-controller="BankService" asp-action="NewTransaction" asp-route-id="@Model.Id">New Transaction</a>
 				<a>Internal</a>
 			</div>
 		</div>
@@ -69,15 +69,16 @@
 			@{
 				var culture = new CultureInfo("en-US");
 				culture.NumberFormat.CurrencyPositivePattern = 3;
+				culture.NumberFormat.CurrencyNegativePattern = 8;
 			}
 			<ul>
 				@foreach (var transfer in Model.Transactions)
 				{
 					<li>
-						<span>@transfer.Amount.ToString("C", culture)</span>
+						<span class="@(transfer.Amount > 0 ? "incoming" : "outgoing")">@transfer.Amount.ToString("C", culture)</span>
 						<span>@transfer.CreationTime.ToString("dd-MM-yyyy")</span>
 						<span>@transfer.Description</span>
-						<span>@transfer.OtherSideOfTransaction</span>
+						<span>@transfer.OtherSideOfTransaction.Id</span>
 					</li>
 				}
 			</ul>
