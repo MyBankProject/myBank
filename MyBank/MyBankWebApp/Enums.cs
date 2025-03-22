@@ -8,7 +8,7 @@
             Outgoing
         }
 
-        public enum TransactionStatus
+        public enum TransactionStatuses
         {
             Pending,
             Completed,
