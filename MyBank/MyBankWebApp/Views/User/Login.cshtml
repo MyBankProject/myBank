@@ -1,6 +1,13 @@
 ﻿<html>
 <body>
-	<h1>Register new user</h1>
+	<h1>Log in</h1>
+	<!-- Błąd logowania -->
+	@if (ViewBag.LoginError != null)
+	{
+		<div style="color:red;">
+			@ViewBag.LoginError
+		</div>
+	}
 	<form asp-action="Login" method="post">
 		<div asp-validation-summary="All" class="text-danger"></div>
 		<label for="email">Email:</label>
