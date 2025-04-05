@@ -7,6 +7,8 @@ using MyBankWebApp.DTOs;
 using MyBankWebApp.DTOs.Creates;
 using MyBankWebApp.Entities;
 using MyBankWebApp.Exceptions;
+using MyBankWebApp.Models;
+using MyBankWebApp.Services.Accounts.Abstractions;
 using MyBankWebApp.Services.UserServices.Abstractions;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -16,21 +18,25 @@ namespace MyBankWebApp.Services.UserServices
 {
     public class UserService : IUserService
     {
+        private readonly IAccountService accountService;
         private readonly AuthenticationSettings authenticationSettings;
         private readonly ApplicationDbContext dbContext;
         private readonly IPasswordHasher<User> passwordHasher;
         private readonly IValidator<RegisterUserDto> validator;
+        private readonly ILogger<UserService> logger;
 
         public UserService(
             ApplicationDbContext dbContext,
             IPasswordHasher<User> passwordHasher,
             AuthenticationSettings authenticationSettings,
-            IValidator<RegisterUserDto> validator)
+            IValidator<RegisterUserDto> validator,
+            IAccountService accountService)
         {
             this.dbContext = dbContext;
             this.passwordHasher = passwordHasher;
             this.authenticationSettings = authenticationSettings;
             this.validator = validator;
+            this.accountService = accountService;
         }
 
         public string GenerateJwt(LoginDto dto)
@@ -71,7 +77,7 @@ namespace MyBankWebApp.Services.UserServices
             return tokenHandler.WriteToken(token);
         }
 
-        public List<string> RegisterUser(RegisterUserDto dto)
+        public async Task<List<string>> RegisterUser(RegisterUserDto dto)
         {
             var result = validator.Validate(dto);
             if (!result.IsValid)
@@ -79,19 +85,32 @@ namespace MyBankWebApp.Services.UserServices
                 return result.Errors.Select(e => e.ErrorMessage).ToList();
             }
 
-            var newUser = new User()
+            var transaction = dbContext.Database.BeginTransaction();
+            try
             {
-                Email = dto.Email,
-                DateOfBirth = dto.DateOfBirth,
-                Nationality = dto.Nationality,
-                RoleId = dto.RoleId,
-                FirstName = dto.FirstName,
-                LastName = dto.LastName,
-            };
-            newUser.PasswordHash = passwordHasher.HashPassword(newUser, dto.Password);
-            dbContext.Users.Add(newUser);
-            dbContext.SaveChanges();
-            return null;
+                var newUser = new User()
+                {
+                    Email = dto.Email,
+                    DateOfBirth = dto.DateOfBirth,
+                    Nationality = dto.Nationality,
+                    RoleId = dto.RoleId,
+                    FirstName = dto.FirstName,
+                    LastName = dto.LastName,
+                };
+                newUser.PasswordHash = passwordHasher.HashPassword(newUser, dto.Password);
+                Account newAccount = await accountService.CreateAccount(dto.Nationality);
+                newUser.AccountId = newAccount.Id;
+                dbContext.Users.Add(newUser);
+                await dbContext.SaveChangesAsync();
+                transaction.Commit();
+                return null;
+            }
+            catch (Exception ex)
+            {
+                dbContext.Database.RollbackTransaction();
+                logger.LogError(ex, ex.Message);
+                return ["An error occurred while registering the user."];
+            }
         }
     }
 }

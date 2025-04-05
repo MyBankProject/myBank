@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using IbanNet.Registry;
 using Microsoft.EntityFrameworkCore;
 using MyBankWebApp.Exceptions;
 using MyBankWebApp.Models;
@@ -12,6 +13,20 @@ namespace MyBankWebApp.Services.Accounts
     {
         private readonly IMapper mapper = mapper;
         private readonly IAccountRepository accountRepository = accountRepository;
+        private readonly IbanGenerator ibanGenerator = new IbanGenerator();
+
+        public async Task<Account> CreateAccount(string countryCode)
+        {
+            var account = new Account()
+            {
+                CountryCode = countryCode,
+                IBAN = ibanGenerator.Generate(countryCode).ToString(),
+                Balance = 0
+            };
+            await accountRepository.AddAsync(account);
+            await accountRepository.SaveAsync();
+            return account;
+        }
 
         public async Task<AccountViewModel> GetAccountVmAsync(int id)
         {

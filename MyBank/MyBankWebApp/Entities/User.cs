@@ -1,4 +1,6 @@
-﻿namespace MyBankWebApp.Entities
+﻿using MyBankWebApp.Models;
+
+namespace MyBankWebApp.Entities
 {
     public class User
     {
@@ -11,5 +13,6 @@
         public DateTime DateOfBirth { get; set; }
         public int RoleId { get; set; }
         public virtual Role Role { get; set; }
+        public int AccountId { get; set; }
     }
 }

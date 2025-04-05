@@ -1,16 +1,17 @@
-﻿using AutoMapper;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using MyBankWebApp.Exceptions;
-using MyBankWebApp.Models;
 using MyBankWebApp.Repositories.Abstractions;
 using MyBankWebApp.Services.Accounts.Abstractions;
 using MyBankWebApp.Services.Transactions.Abstractions;
 using MyBankWebApp.ViewModels;
 using System.Diagnostics;
+using System.Security.Claims;
+using static MyBankWebApp.Enums;
 
 namespace MyBankWebApp.Controllers
 {
+    [Authorize(Roles = nameof(Roles.User))]
     public class BankServiceController(
         IAccountRepository accountRepository,
         ILogger<BankServiceController> logger,
@@ -18,9 +19,9 @@ namespace MyBankWebApp.Controllers
         IAccountService accountService) : Controller
     {
         private readonly IAccountRepository accountRepository = accountRepository;
+        private readonly IAccountService accountService = accountService;
         private readonly ILogger<BankServiceController> logger = logger;
         private readonly ITransactionService transactionService = transactionService;
-        private readonly IAccountService accountService = accountService;
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
@@ -28,18 +29,26 @@ namespace MyBankWebApp.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        public async Task<IActionResult> Index(int id)
+        public async Task<IActionResult> Index()
         {
             if (!ModelState.IsValid)
             {
                 return Error();
             }
-            // TODO: Usunąć przypisanie Id, kiedy już będzie logowanie na konto
-            id = 5;
             try
             {
-                Task<AccountViewModel> accountVM = accountService.GetAccountVmAsync(id);
-                return View(await accountVM);
+                string? idString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                if (int.TryParse(idString, out int id))
+                {
+                    AccountViewModel accountVM = await accountService.GetAccountVmAsync(id);
+                    return View(accountVM);
+                }
+                throw new InvalidUserIdException("Could not get user Id");
+            }
+            catch (InvalidUserIdException ex)
+            {
+                logger.LogError(ex, ex.Message);
+                return Error();
             }
             catch (Exception ex)
             {

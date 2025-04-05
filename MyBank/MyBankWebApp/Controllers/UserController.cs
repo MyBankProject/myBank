@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MyBankWebApp.DTOs;
 using MyBankWebApp.DTOs.Creates;
-using MyBankWebApp.Models;
 using MyBankWebApp.Services.UserServices.Abstractions;
+using MyBankWebApp.ViewModels;
 
 namespace MyBankWebApp.Controllers
 {
@@ -36,7 +36,6 @@ namespace MyBankWebApp.Controllers
             return RedirectToAction("Index", "BankService");
         }
 
-        // [HttpPost] bedzie potrzebne zeby wylogowac sie poprzez klikniecie guzika.. poki co dziala przez link
         public IActionResult Logout()
         {
             Response.Cookies.Delete("AuthToken");
