@@ -19,14 +19,12 @@ namespace MyBankWebApp.Controllers
         ILogger<BankServiceController> logger,
         ITransactionService transactionService,
         IUserService userService,
-        IMapper mapper,
         IAccountService accountService,
         IAccountRepository accountRepository) : Controller
     {
         private readonly IAccountService accountService = accountService;
         private readonly IAccountRepository accountRepository = accountRepository;
         private readonly ILogger<BankServiceController> logger = logger;
-        private readonly IMapper mapper = mapper;
         private readonly ITransactionService transactionService = transactionService;
         private readonly IUserService userService = userService;
 
