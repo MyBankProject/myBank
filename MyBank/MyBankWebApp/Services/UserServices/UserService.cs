@@ -77,6 +77,17 @@ namespace MyBankWebApp.Services.UserServices
             return tokenHandler.WriteToken(token);
         }
 
+        public async Task<User> GetUserAsync(int id, Func<IQueryable<User>, IQueryable<User>>? include = null)
+        {
+            IQueryable<User> query = dbContext.Users;
+            if (include != null)
+            {
+                query = include(query);
+            }
+            User? user = await query.FirstOrDefaultAsync(user => user.Id == id);
+            return user ?? throw new InvalidUserIdException($"Cound not find user with id {id}");
+        }
+
         public async Task<List<string>> RegisterUser(RegisterUserDto dto)
         {
             var result = validator.Validate(dto);

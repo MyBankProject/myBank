@@ -1,9 +1,12 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using MyBankWebApp.Entities;
 using MyBankWebApp.Exceptions;
 using MyBankWebApp.Repositories.Abstractions;
-using MyBankWebApp.Services.Accounts.Abstractions;
 using MyBankWebApp.Services.Transactions.Abstractions;
+using MyBankWebApp.Services.UserServices.Abstractions;
 using MyBankWebApp.ViewModels;
 using System.Diagnostics;
 using System.Security.Claims;
@@ -16,10 +19,12 @@ namespace MyBankWebApp.Controllers
         IAccountRepository accountRepository,
         ILogger<BankServiceController> logger,
         ITransactionService transactionService,
-        IAccountService accountService) : Controller
+        IUserService userService,
+        IMapper mapper) : Controller
     {
         private readonly IAccountRepository accountRepository = accountRepository;
-        private readonly IAccountService accountService = accountService;
+        private readonly IUserService userService = userService;
+        private readonly IMapper mapper = mapper;
         private readonly ILogger<BankServiceController> logger = logger;
         private readonly ITransactionService transactionService = transactionService;
 
@@ -40,7 +45,8 @@ namespace MyBankWebApp.Controllers
                 string? idString = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 if (int.TryParse(idString, out int id))
                 {
-                    AccountViewModel accountVM = await accountService.GetAccountVmAsync(id);
+                    User user = await userService.GetUserAsync(id, query => query.Include(u => u.Account));
+                    AccountViewModel accountVM = mapper.Map<AccountViewModel>(user.Account);
                     return View(accountVM);
                 }
                 throw new InvalidUserIdException("Could not get user Id");
