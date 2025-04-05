@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using MyBankWebApp.Entities;
 using MyBankWebApp.Exceptions;
 using MyBankWebApp.Repositories.Abstractions;
+using MyBankWebApp.Services.Accounts.Abstractions;
 using MyBankWebApp.Services.Transactions.Abstractions;
 using MyBankWebApp.Services.UserServices.Abstractions;
 using MyBankWebApp.ViewModels;
@@ -16,17 +16,19 @@ namespace MyBankWebApp.Controllers
 {
     [Authorize(Roles = nameof(Roles.User))]
     public class BankServiceController(
-        IAccountRepository accountRepository,
         ILogger<BankServiceController> logger,
         ITransactionService transactionService,
         IUserService userService,
-        IMapper mapper) : Controller
+        IMapper mapper,
+        IAccountService accountService,
+        IAccountRepository accountRepository) : Controller
     {
+        private readonly IAccountService accountService = accountService;
         private readonly IAccountRepository accountRepository = accountRepository;
-        private readonly IUserService userService = userService;
-        private readonly IMapper mapper = mapper;
         private readonly ILogger<BankServiceController> logger = logger;
+        private readonly IMapper mapper = mapper;
         private readonly ITransactionService transactionService = transactionService;
+        private readonly IUserService userService = userService;
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
@@ -45,13 +47,18 @@ namespace MyBankWebApp.Controllers
                 string? idString = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 if (int.TryParse(idString, out int id))
                 {
-                    User user = await userService.GetUserAsync(id, query => query.Include(u => u.Account));
-                    AccountViewModel accountVM = mapper.Map<AccountViewModel>(user.Account);
-                    return View(accountVM);
+                    User user = await userService.GetUserAsync(id);
+                    if (user.AccountId != null)
+                    {
+                        int accountId = (int)user.AccountId;
+                        AccountViewModel account = await accountService.GetAccountVmAsync(accountId);
+                        return View(account);
+                    }
+                    throw new AccountNotFountException($"Could not find account asigned to user. accountId: {user.AccountId}, user: {user.Email}");
                 }
-                throw new InvalidUserIdException("Could not get user Id");
+                throw new InvalidIdException("Could not get user Id");
             }
-            catch (InvalidUserIdException ex)
+            catch (InvalidIdException ex)
             {
                 logger.LogError(ex, ex.Message);
                 return Error();

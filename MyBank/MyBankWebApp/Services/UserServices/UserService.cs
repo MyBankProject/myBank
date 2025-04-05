@@ -85,7 +85,7 @@ namespace MyBankWebApp.Services.UserServices
                 query = include(query);
             }
             User? user = await query.FirstOrDefaultAsync(user => user.Id == id);
-            return user ?? throw new InvalidUserIdException($"Cound not find user with id {id}");
+            return user ?? throw new InvalidIdException($"Cound not find user with id {id}");
         }
 
         public async Task<List<string>> RegisterUser(RegisterUserDto dto)
