@@ -3,6 +3,7 @@ using MyBankWebApp.DTOs;
 using MyBankWebApp.DTOs.Creates;
 using MyBankWebApp.Services.UserServices.Abstractions;
 using MyBankWebApp.ViewModels;
+using System.Threading.Tasks;
 
 namespace MyBankWebApp.Controllers
 {
@@ -48,7 +49,7 @@ namespace MyBankWebApp.Controllers
         }
 
         [HttpPost]
-        public IActionResult Register(UserViewModel model)
+        public async Task<IActionResult> Register(UserViewModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -66,7 +67,7 @@ namespace MyBankWebApp.Controllers
                 DateOfBirth = model.DateOfBirth
             };
 
-            var errors = userService.RegisterUser(dto);
+            var errors = await userService.RegisterUser(dto);
             if (errors != null)
             {
                 foreach (var error in errors)
