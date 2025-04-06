@@ -22,8 +22,10 @@ namespace MyBankWebApp.Controllers
             return View();
         }
 
-        public IActionResult Login()
+        [HttpGet]
+        public IActionResult Login(string? error = null)
         {
+            ViewBag.LoginError = error;
             return View();
         }
 
@@ -57,6 +59,7 @@ namespace MyBankWebApp.Controllers
             }
             return RedirectToAction("SuccessRegister");
         }
+
 
         [HttpPost]
         public IActionResult Login(LoginDto dto)
