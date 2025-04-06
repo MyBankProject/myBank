@@ -21,9 +21,9 @@ namespace MyBankWebApp.Services.UserServices
         private readonly IAccountService accountService;
         private readonly AuthenticationSettings authenticationSettings;
         private readonly ApplicationDbContext dbContext;
+        private readonly ILogger<UserService> logger;
         private readonly IPasswordHasher<User> passwordHasher;
         private readonly IValidator<RegisterUserDto> validator;
-        private readonly ILogger<UserService> logger;
 
         public UserService(
             ApplicationDbContext dbContext,

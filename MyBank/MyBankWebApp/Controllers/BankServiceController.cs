@@ -1,7 +1,5 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using MyBankWebApp.Entities;
 using MyBankWebApp.Exceptions;
 using MyBankWebApp.Repositories.Abstractions;
@@ -23,8 +21,8 @@ namespace MyBankWebApp.Controllers
         IAccountService accountService,
         IAccountRepository accountRepository) : Controller
     {
-        private readonly IAccountService accountService = accountService;
         private readonly IAccountRepository accountRepository = accountRepository;
+        private readonly IAccountService accountService = accountService;
         private readonly ILogger<BankServiceController> logger = logger;
         private readonly ITransactionService transactionService = transactionService;
         private readonly IUserService userService = userService;
@@ -76,18 +74,12 @@ namespace MyBankWebApp.Controllers
         {
             if (newTransactionDto != null && newTransactionDto.Amount > 0)
             {
-                //TODO: Odkomentować po zrobieniu logowania (Id użytkownika, który wysyła przelew jest dla bezpieczeństwa pobierany dopiero tutaj, żeby nie można było wpisać tego
-                //z inspektora w przeglądarce i robić za kogoś przelewów z jego konta XD
-                var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                if (!int.TryParse(userIdClaim, out int userId))
-                {
-                    return Unauthorized();
-                }
-                newTransactionDto.SenderId = userId;
-
-                newTransactionDto.SenderId = 5;
                 try
                 {
+                    string? stringId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                    User senderAccount = await userService.GetUserByStringIdAsync(stringId);
+                    newTransactionDto.SenderId = senderAccount.AccountId
+                        ?? throw new AccountNotFountException($"Could not find account for user {senderAccount.Email}");
                     await transactionService.AddTransactionAsync(newTransactionDto);
                 }
                 catch (Exception ex)
