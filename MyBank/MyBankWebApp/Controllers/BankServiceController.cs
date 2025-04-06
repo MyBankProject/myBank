@@ -45,7 +45,7 @@ namespace MyBankWebApp.Controllers
                 string? idString = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 if (int.TryParse(idString, out int id))
                 {
-                    User user = await userService.GetUserAsync(id);
+                    User user = await userService.GetUserByIdAsync(id);
                     if (user.AccountId != null)
                     {
                         int accountId = (int)user.AccountId;

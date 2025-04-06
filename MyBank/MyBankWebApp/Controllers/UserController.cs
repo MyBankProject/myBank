@@ -3,7 +3,7 @@ using MyBankWebApp.DTOs;
 using MyBankWebApp.DTOs.Creates;
 using MyBankWebApp.Services.UserServices.Abstractions;
 using MyBankWebApp.ViewModels;
-using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace MyBankWebApp.Controllers
 {
@@ -14,6 +14,20 @@ namespace MyBankWebApp.Controllers
         public UserController(IUserService userService)
         {
             this.userService = userService;
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> IsEmailTaken()
+        {
+            using (var reader = new System.IO.StreamReader(Request.Body))
+            {
+                var body = await reader.ReadToEndAsync();
+                var emailData = JsonConvert.DeserializeObject<Dictionary<string, string>>(body);
+                var email = emailData["email"];
+                bool isEmailTaken = await userService.AnyUserByQuerryAsync(query => query.Where(u => u.Email == email));
+                return Json(isEmailTaken);
+            }
         }
 
         [HttpGet]

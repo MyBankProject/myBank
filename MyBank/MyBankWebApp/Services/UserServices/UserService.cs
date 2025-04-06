@@ -21,9 +21,9 @@ namespace MyBankWebApp.Services.UserServices
         private readonly IAccountService accountService;
         private readonly AuthenticationSettings authenticationSettings;
         private readonly ApplicationDbContext dbContext;
+        private readonly ILogger<UserService> logger;
         private readonly IPasswordHasher<User> passwordHasher;
         private readonly IValidator<RegisterUserDto> validator;
-        private readonly ILogger<UserService> logger;
 
         public UserService(
             ApplicationDbContext dbContext,
@@ -37,6 +37,16 @@ namespace MyBankWebApp.Services.UserServices
             this.authenticationSettings = authenticationSettings;
             this.validator = validator;
             this.accountService = accountService;
+        }
+
+        public async Task<bool> AnyUserByQuerryAsync(Func<IQueryable<User>, IQueryable<User>> query)
+        {
+            if (query == null)
+            {
+                return false;
+            }
+            IQueryable<User> queryToCheck = query(dbContext.Users);
+            return await queryToCheck.AnyAsync();
         }
 
         public string GenerateJwt(LoginDto dto)
@@ -77,7 +87,7 @@ namespace MyBankWebApp.Services.UserServices
             return tokenHandler.WriteToken(token);
         }
 
-        public async Task<User> GetUserAsync(int id, Func<IQueryable<User>, IQueryable<User>>? include = null)
+        public async Task<User> GetUserByIdAsync(int id, Func<IQueryable<User>, IQueryable<User>>? include = null)
         {
             IQueryable<User> query = dbContext.Users;
             if (include != null)
