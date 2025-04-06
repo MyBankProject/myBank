@@ -88,6 +88,15 @@ namespace MyBankWebApp.Services.UserServices
             return user ?? throw new InvalidIdException($"Cound not find user with id {id}");
         }
 
+        public async Task<User> GetUserByStringIdAsync(string? stringId, Func<IQueryable<User>, IQueryable<User>>? include = null)
+        {
+            if (!int.TryParse(stringId, out int id))
+            {
+                throw new InvalidIdException($"Could not get user Id {id}");
+            }
+            return await GetUserAsync(id, include);
+        }
+
         public async Task<List<string>> RegisterUser(RegisterUserDto dto)
         {
             var result = validator.Validate(dto);

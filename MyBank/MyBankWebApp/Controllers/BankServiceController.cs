@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MyBankWebApp.Entities;
 using MyBankWebApp.Exceptions;
 using MyBankWebApp.Repositories.Abstractions;
@@ -43,18 +44,11 @@ namespace MyBankWebApp.Controllers
             try
             {
                 string? idString = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                if (int.TryParse(idString, out int id))
-                {
-                    User user = await userService.GetUserAsync(id);
-                    if (user.AccountId != null)
-                    {
-                        int accountId = (int)user.AccountId;
-                        AccountViewModel account = await accountService.GetAccountVmAsync(accountId);
-                        return View(account);
-                    }
-                    throw new AccountNotFountException($"Could not find account asigned to user. accountId: {user.AccountId}, user: {user.Email}");
-                }
-                throw new InvalidIdException("Could not get user Id");
+                User user = await userService.GetUserByStringIdAsync(idString);
+                AccountViewModel accountVm = user.AccountId != null
+                    ? await accountService.GetAccountVmByIdAsync((int)user.AccountId)
+                    : throw new AccountNotFountException($"Could not fount account for User {user.Email}");
+                return View(accountVm);
             }
             catch (InvalidIdException ex)
             {
@@ -84,12 +78,12 @@ namespace MyBankWebApp.Controllers
             {
                 //TODO: Odkomentować po zrobieniu logowania (Id użytkownika, który wysyła przelew jest dla bezpieczeństwa pobierany dopiero tutaj, żeby nie można było wpisać tego
                 //z inspektora w przeglądarce i robić za kogoś przelewów z jego konta XD
-                //var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                //if (!int.TryParse(userIdClaim, out int userId))
-                //{
-                //    return Unauthorized();
-                //}
-                //newTransactionDto.SenderId = userId;
+                var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                if (!int.TryParse(userIdClaim, out int userId))
+                {
+                    return Unauthorized();
+                }
+                newTransactionDto.SenderId = userId;
 
                 newTransactionDto.SenderId = 5;
                 try

@@ -6,6 +6,6 @@ namespace MyBankWebApp.Services.Accounts.Abstractions
     public interface IAccountService
     {
         Task<Account> CreateAccount(string countryCode);
-        Task<AccountViewModel> GetAccountVmAsync(int id);
+        Task<AccountViewModel> GetAccountVmByIdAsync(int id);
     }
 }
