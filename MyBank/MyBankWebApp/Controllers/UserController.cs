@@ -74,17 +74,18 @@ namespace MyBankWebApp.Controllers
             {
                 return View(model);
             }
-
-            var dto = mapper.Map<RegisterUserDto>(model);
             try
             {
+                var dto = mapper.Map<RegisterUserDto>(model);
                 await userService.RegisterUser(dto);
+                TempData["SuccessMessage"] = "Registration Successful!";
                 return RedirectToAction("Index", "Home");
             }
             catch (Exception ex)
             {
-                logger.LogError(ex.Message, ex);
-                return View(model);
+                logger.LogError(ex, "Unable to register: {UserViewModel}", model);
+                TempData["ErrorMessage"] = $"Register Failed: {ex.Message}";
+                return RedirectToAction("Index", "Home");
             }
         }
 
