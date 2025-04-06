@@ -1,5 +1,4 @@
-﻿using FluentValidation;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using MyBankWebApp.Data;
@@ -23,19 +22,16 @@ namespace MyBankWebApp.Services.UserServices
         private readonly ApplicationDbContext dbContext;
         private readonly ILogger<UserService> logger;
         private readonly IPasswordHasher<User> passwordHasher;
-        private readonly IValidator<RegisterUserDto> validator;
 
         public UserService(
             ApplicationDbContext dbContext,
             IPasswordHasher<User> passwordHasher,
             AuthenticationSettings authenticationSettings,
-            IValidator<RegisterUserDto> validator,
             IAccountService accountService)
         {
             this.dbContext = dbContext;
             this.passwordHasher = passwordHasher;
             this.authenticationSettings = authenticationSettings;
-            this.validator = validator;
             this.accountService = accountService;
         }
 
@@ -98,17 +94,11 @@ namespace MyBankWebApp.Services.UserServices
             return user ?? throw new InvalidIdException($"Cound not find user with id {id}");
         }
 
-        public async Task<List<string>> RegisterUser(RegisterUserDto dto)
+        public async Task RegisterUser(RegisterUserDto dto)
         {
-            var result = validator.Validate(dto);
-            if (!result.IsValid)
-            {
-                return result.Errors.Select(e => e.ErrorMessage).ToList();
-            }
-
-            var transaction = dbContext.Database.BeginTransaction();
             try
             {
+                var transaction = await dbContext.Database.BeginTransactionAsync();
                 var newUser = new User()
                 {
                     Email = dto.Email,
@@ -123,14 +113,13 @@ namespace MyBankWebApp.Services.UserServices
                 newUser.AccountId = newAccount.Id;
                 dbContext.Users.Add(newUser);
                 await dbContext.SaveChangesAsync();
-                transaction.Commit();
-                return null;
+                await transaction.CommitAsync();
             }
             catch (Exception ex)
             {
-                dbContext.Database.RollbackTransaction();
+                await dbContext.Database.RollbackTransactionAsync();
                 logger.LogError(ex, ex.Message);
-                return ["An error occurred while registering the user."];
+                throw;
             }
         }
     }

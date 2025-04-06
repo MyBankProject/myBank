@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using MyBankWebApp.DTOs;
 using MyBankWebApp.DTOs.Creates;
 using MyBankWebApp.Services.UserServices.Abstractions;
@@ -10,10 +11,14 @@ namespace MyBankWebApp.Controllers
     public class UserController : Controller
     {
         private readonly IUserService userService;
+        private readonly ILogger<UserController> logger;
+        private readonly IMapper mapper;
 
-        public UserController(IUserService userService)
+        public UserController(IUserService userService, ILogger<UserController> logger, IMapper mapper)
         {
             this.userService = userService;
+            this.logger = logger;
+            this.mapper = mapper;
         }
 
         [HttpPost]
@@ -70,27 +75,17 @@ namespace MyBankWebApp.Controllers
                 return View(model);
             }
 
-            var dto = new RegisterUserDto
+            var dto = mapper.Map<RegisterUserDto>(model);
+            try
             {
-                FirstName = model.FirstName,
-                LastName = model.LastName,
-                Email = model.Email,
-                Password = model.Password,
-                ConfirmPassword = model.ConfirmPassword,
-                Nationality = model.Nationality,
-                DateOfBirth = model.DateOfBirth
-            };
-
-            var errors = await userService.RegisterUser(dto);
-            if (errors != null)
-            {
-                foreach (var error in errors)
-                {
-                    ModelState.AddModelError(string.Empty, error);
-                }
-                return View("Register", model);
+                await userService.RegisterUser(dto);
+                return RedirectToAction("Index", "Home");
             }
-            return RedirectToAction("Index", "Home");
+            catch (Exception ex)
+            {
+                logger.LogError(ex.Message, ex);
+                return View(model);
+            }
         }
 
         public IActionResult SuccessLogin()

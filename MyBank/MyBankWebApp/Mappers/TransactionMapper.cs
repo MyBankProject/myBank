@@ -4,9 +4,9 @@ using MyBankWebApp.ViewModels;
 
 namespace MyBankWebApp.Mappers
 {
-    public class NewTransactionVMToTransactionMapper : Profile
+    public class TransactionMapper : Profile
     {
-        public NewTransactionVMToTransactionMapper()
+        public TransactionMapper()
         {
             CreateMap<NewTransactionViewModel, Transaction>()
                 .ForMember(dest => dest.CreationTime, opt => opt.MapFrom(src => src.TransferDate))

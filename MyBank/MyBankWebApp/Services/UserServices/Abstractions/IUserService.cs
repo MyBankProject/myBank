@@ -12,6 +12,6 @@ namespace MyBankWebApp.Services.UserServices.Abstractions
 
         Task<User> GetUserByIdAsync(int id, Func<IQueryable<User>, IQueryable<User>>? include = null);
 
-        Task<List<string>> RegisterUser(RegisterUserDto dto);
+        Task RegisterUser(RegisterUserDto dto);
     }
 }
