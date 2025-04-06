@@ -1,10 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using MyBankWebApp.DTOs;
 using MyBankWebApp.DTOs.Creates;
-using MyBankWebApp.Models;
-using MyBankWebApp.Services;
 using MyBankWebApp.Services.UserServices.Abstractions;
+using MyBankWebApp.ViewModels;
+using System.Threading.Tasks;
 
 namespace MyBankWebApp.Controllers
 {
@@ -17,11 +16,6 @@ namespace MyBankWebApp.Controllers
             this.userService = userService;
         }
 
-        public IActionResult Register()
-        {
-            return View();
-        }
-
         [HttpGet]
         public IActionResult Login(string? error = null)
         {
@@ -30,7 +24,32 @@ namespace MyBankWebApp.Controllers
         }
 
         [HttpPost]
-        public IActionResult Register(UserViewModel model)
+        public IActionResult Login(LoginDto dto)
+        {
+            string token = userService.GenerateJwt(dto);
+
+            Response.Cookies.Append("AuthToken", token, new CookieOptions
+            {
+                HttpOnly = true, // Zabezpiecza przed dostępem przez JavaScript
+                Secure = true, // Włączone dla HTTPS
+                Expires = DateTime.UtcNow.AddHours(1) // Token ważny przez 1 godzinę
+            });
+            return RedirectToAction("Index", "BankService");
+        }
+
+        public IActionResult Logout()
+        {
+            Response.Cookies.Delete("AuthToken");
+            return RedirectToAction("Index", "Home");
+        }
+
+        public IActionResult Register()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Register(UserViewModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -48,7 +67,7 @@ namespace MyBankWebApp.Controllers
                 DateOfBirth = model.DateOfBirth
             };
 
-            var errors = userService.RegisterUser(dto);
+            var errors = await userService.RegisterUser(dto);
             if (errors != null)
             {
                 foreach (var error in errors)
@@ -57,29 +76,6 @@ namespace MyBankWebApp.Controllers
                 }
                 return View("Register", model);
             }
-            return RedirectToAction("SuccessRegister");
-        }
-
-
-        [HttpPost]
-        public IActionResult Login(LoginDto dto)
-        {
-            string token = userService.GenerateJwt(dto);
-
-            Response.Cookies.Append("AuthToken", token, new CookieOptions
-            {
-                HttpOnly = true, // Zabezpiecza przed dostępem przez JavaScript
-                Secure = true, // Włączone dla HTTPS
-                Expires = DateTime.UtcNow.AddHours(1) // Token ważny przez 1 godzinę
-            });
-            //return RedirectToAction("SuccessLogin"); // trzeba bedzie gdzies przekierowac zamiast wyswietlac tokena xD
-            return Content(token);
-        }
-
-       // [HttpPost] bedzie potrzebne zeby wylogowac sie poprzez klikniecie guzika.. poki co dziala przez link
-        public IActionResult Logout()
-        {
-            Response.Cookies.Delete("AuthToken");
             return RedirectToAction("Index", "Home");
         }
 

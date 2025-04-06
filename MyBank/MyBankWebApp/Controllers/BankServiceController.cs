@@ -1,26 +1,32 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using MyBankWebApp.Entities;
 using MyBankWebApp.Exceptions;
-using MyBankWebApp.Models;
 using MyBankWebApp.Repositories.Abstractions;
 using MyBankWebApp.Services.Accounts.Abstractions;
 using MyBankWebApp.Services.Transactions.Abstractions;
+using MyBankWebApp.Services.UserServices.Abstractions;
 using MyBankWebApp.ViewModels;
 using System.Diagnostics;
+using System.Security.Claims;
+using static MyBankWebApp.Enums;
 
 namespace MyBankWebApp.Controllers
 {
+    [Authorize(Roles = nameof(Roles.User))]
     public class BankServiceController(
-        IAccountRepository accountRepository,
         ILogger<BankServiceController> logger,
         ITransactionService transactionService,
-        IAccountService accountService) : Controller
+        IUserService userService,
+        IAccountService accountService,
+        IAccountRepository accountRepository) : Controller
     {
+        private readonly IAccountService accountService = accountService;
         private readonly IAccountRepository accountRepository = accountRepository;
         private readonly ILogger<BankServiceController> logger = logger;
         private readonly ITransactionService transactionService = transactionService;
-        private readonly IAccountService accountService = accountService;
+        private readonly IUserService userService = userService;
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
@@ -28,18 +34,32 @@ namespace MyBankWebApp.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        public async Task<IActionResult> Index(int id)
+        public async Task<IActionResult> Index()
         {
             if (!ModelState.IsValid)
             {
                 return Error();
             }
-            // TODO: Usunąć przypisanie Id, kiedy już będzie logowanie na konto
-            id = 5;
             try
             {
-                Task<AccountViewModel> accountVM = accountService.GetAccountVmAsync(id);
-                return View(await accountVM);
+                string? idString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                if (int.TryParse(idString, out int id))
+                {
+                    User user = await userService.GetUserAsync(id);
+                    if (user.AccountId != null)
+                    {
+                        int accountId = (int)user.AccountId;
+                        AccountViewModel account = await accountService.GetAccountVmAsync(accountId);
+                        return View(account);
+                    }
+                    throw new AccountNotFountException($"Could not find account asigned to user. accountId: {user.AccountId}, user: {user.Email}");
+                }
+                throw new InvalidIdException("Could not get user Id");
+            }
+            catch (InvalidIdException ex)
+            {
+                logger.LogError(ex, ex.Message);
+                return Error();
             }
             catch (Exception ex)
             {
