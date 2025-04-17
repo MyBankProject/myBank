@@ -1,8 +1,23 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
+
+	var successMessage = TempData["SuccessMessage"];
+	var errorMessage = TempData["ErrorMessage"];
+	if (successMessage != null)
+	{
+		<div class="alert alert-success">
+			@successMessage
+		</div>
+	}
+	if (errorMessage != null)
+	{
+		<div class="alert alert-danger">
+			@errorMessage
+		</div>
+	}
 }
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+	<h3 class="display-6"> to MyBank</h3>
 </div>
