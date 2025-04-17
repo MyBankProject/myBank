@@ -95,7 +95,7 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddAuthorization();
 var app = builder.Build();
 
-//Uncomment to send default data to database
+//Setup default data to database
 Seed.SeedData(app);
 
 // Configure the HTTP request pipeline.

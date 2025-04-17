@@ -10,8 +10,10 @@ namespace MyBankWebApp.Services.UserServices.Abstractions
 
         string GenerateJwt(LoginDto dto);
 
-        Task<User> GetUserByIdAsync(int id, Func<IQueryable<User>, IQueryable<User>>? include = null);
+        Task<User> GetUserAsync(int id, Func<IQueryable<User>, IQueryable<User>>? include = null);
 
-        Task RegisterUser(RegisterUserDto dto);
+        Task<User> GetUserByStringIdAsync(string? stringId, Func<IQueryable<User>, IQueryable<User>>? include = null);
+
+        Task<List<string>> RegisterUser(RegisterUserDto dto);
     }
 }

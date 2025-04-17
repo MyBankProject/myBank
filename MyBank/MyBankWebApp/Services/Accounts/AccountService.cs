@@ -28,12 +28,12 @@ namespace MyBankWebApp.Services.Accounts
             return account;
         }
 
-        public async Task<AccountViewModel> GetAccountVmAsync(int id)
+        public async Task<AccountViewModel> GetAccountVmByIdAsync(int id)
         {
-            Account? user = await accountRepository.GetByIdAsync(id, query => query
+            Account? account = await accountRepository.GetByIdAsync(id, query => query
                     .Include(a => a.ReceivedTransactions)
                     .Include(a => a.SentTransactions)) ?? throw new UserNotFoundException($"Could not find user {id}");
-            AccountViewModel accountVM = mapper.Map<AccountViewModel>(user);
+            AccountViewModel accountVM = mapper.Map<AccountViewModel>(account);
             if (accountVM.Transactions != null)
             {
                 foreach (TransactionViewModel t in accountVM.Transactions)
