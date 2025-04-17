@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using IbanNet.Registry;
 using Microsoft.EntityFrameworkCore;
 using MyBankWebApp.Exceptions;
 using MyBankWebApp.Models;
@@ -12,13 +13,27 @@ namespace MyBankWebApp.Services.Accounts
     {
         private readonly IMapper mapper = mapper;
         private readonly IAccountRepository accountRepository = accountRepository;
+        private readonly IbanGenerator ibanGenerator = new IbanGenerator();
 
-        public async Task<AccountViewModel> GetAccountVmAsync(int id)
+        public async Task<Account> CreateAccount(string countryCode)
         {
-            Account? user = await accountRepository.GetByIdAsync(id, query => query
+            var account = new Account()
+            {
+                CountryCode = countryCode,
+                IBAN = ibanGenerator.Generate(countryCode).ToString(),
+                Balance = 0
+            };
+            await accountRepository.AddAsync(account);
+            await accountRepository.SaveAsync();
+            return account;
+        }
+
+        public async Task<AccountViewModel> GetAccountVmByIdAsync(int id)
+        {
+            Account? account = await accountRepository.GetByIdAsync(id, query => query
                     .Include(a => a.ReceivedTransactions)
                     .Include(a => a.SentTransactions)) ?? throw new UserNotFoundException($"Could not find user {id}");
-            AccountViewModel accountVM = mapper.Map<AccountViewModel>(user);
+            AccountViewModel accountVM = mapper.Map<AccountViewModel>(account);
             if (accountVM.Transactions != null)
             {
                 foreach (TransactionViewModel t in accountVM.Transactions)

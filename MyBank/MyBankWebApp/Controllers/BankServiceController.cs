@@ -1,26 +1,31 @@
-﻿using AutoMapper;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using MyBankWebApp.Entities;
 using MyBankWebApp.Exceptions;
-using MyBankWebApp.Models;
 using MyBankWebApp.Repositories.Abstractions;
 using MyBankWebApp.Services.Accounts.Abstractions;
 using MyBankWebApp.Services.Transactions.Abstractions;
+using MyBankWebApp.Services.UserServices.Abstractions;
 using MyBankWebApp.ViewModels;
 using System.Diagnostics;
+using System.Security.Claims;
+using static MyBankWebApp.Enums;
 
 namespace MyBankWebApp.Controllers
 {
+    [Authorize(Roles = nameof(Roles.User))]
     public class BankServiceController(
-        IAccountRepository accountRepository,
         ILogger<BankServiceController> logger,
         ITransactionService transactionService,
-        IAccountService accountService) : Controller
+        IUserService userService,
+        IAccountService accountService,
+        IAccountRepository accountRepository) : Controller
     {
         private readonly IAccountRepository accountRepository = accountRepository;
+        private readonly IAccountService accountService = accountService;
         private readonly ILogger<BankServiceController> logger = logger;
         private readonly ITransactionService transactionService = transactionService;
-        private readonly IAccountService accountService = accountService;
+        private readonly IUserService userService = userService;
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
@@ -28,18 +33,25 @@ namespace MyBankWebApp.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        public async Task<IActionResult> Index(int id)
+        public async Task<IActionResult> Index()
         {
             if (!ModelState.IsValid)
             {
                 return Error();
             }
-            // TODO: Usunąć przypisanie Id, kiedy już będzie logowanie na konto
-            id = 5;
             try
             {
-                Task<AccountViewModel> accountVM = accountService.GetAccountVmAsync(id);
-                return View(await accountVM);
+                string? idString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                User user = await userService.GetUserByStringIdAsync(idString);
+                AccountViewModel accountVm = user.AccountId != null
+                    ? await accountService.GetAccountVmByIdAsync((int)user.AccountId)
+                    : throw new AccountNotFountException($"Could not fount account for User {user.Email}");
+                return View(accountVm);
+            }
+            catch (InvalidIdException ex)
+            {
+                logger.LogError(ex, ex.Message);
+                return Error();
             }
             catch (Exception ex)
             {
@@ -62,18 +74,12 @@ namespace MyBankWebApp.Controllers
         {
             if (newTransactionDto != null && newTransactionDto.Amount > 0)
             {
-                //TODO: Odkomentować po zrobieniu logowania (Id użytkownika, który wysyła przelew jest dla bezpieczeństwa pobierany dopiero tutaj, żeby nie można było wpisać tego
-                //z inspektora w przeglądarce i robić za kogoś przelewów z jego konta XD
-                //var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                //if (!int.TryParse(userIdClaim, out int userId))
-                //{
-                //    return Unauthorized();
-                //}
-                //newTransactionDto.SenderId = userId;
-
-                newTransactionDto.SenderId = 5;
                 try
                 {
+                    string? stringId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                    User senderAccount = await userService.GetUserByStringIdAsync(stringId);
+                    newTransactionDto.SenderId = senderAccount.AccountId
+                        ?? throw new AccountNotFountException($"Could not find account for user {senderAccount.Email}");
                     await transactionService.AddTransactionAsync(newTransactionDto);
                 }
                 catch (Exception ex)

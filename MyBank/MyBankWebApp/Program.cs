@@ -17,6 +17,7 @@ using MyBankWebApp.Repositories;
 using MyBankWebApp.Models;
 using MyBankWebApp.Services.Accounts.Abstractions;
 using MyBankWebApp.Services.Accounts;
+using MyBankWebApp.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -94,7 +95,7 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddAuthorization();
 var app = builder.Build();
 
-//Uncomment to send default data to database
+//Setup default data to database
 Seed.SeedData(app);
 
 // Configure the HTTP request pipeline.
@@ -104,7 +105,6 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
-
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
@@ -114,6 +114,7 @@ app.UseSwaggerUI(c =>
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "MyBank Api");
 });
 
+app.UseMiddleware<ErrorHandlingMiddleware>();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();

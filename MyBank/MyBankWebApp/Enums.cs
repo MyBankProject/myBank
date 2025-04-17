@@ -20,5 +20,12 @@
             Deposit,
             Transfer
         };
+
+        public enum Roles
+        {
+            User,
+            Menager,
+            Admin
+        }
     }
 }

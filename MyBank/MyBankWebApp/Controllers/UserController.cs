@@ -1,61 +1,45 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using MyBankWebApp.DTOs;
 using MyBankWebApp.DTOs.Creates;
-using MyBankWebApp.Models;
-using MyBankWebApp.Services;
 using MyBankWebApp.Services.UserServices.Abstractions;
+using MyBankWebApp.ViewModels;
+using Newtonsoft.Json;
 
 namespace MyBankWebApp.Controllers
 {
     public class UserController : Controller
     {
         private readonly IUserService userService;
+        private readonly ILogger<UserController> logger;
+        private readonly IMapper mapper;
 
-        public UserController(IUserService userService)
+        public UserController(IUserService userService, ILogger<UserController> logger, IMapper mapper)
         {
             this.userService = userService;
-        }
-
-        public IActionResult Register()
-        {
-            return View();
-        }
-
-        public IActionResult Login()
-        {
-            return View();
+            this.logger = logger;
+            this.mapper = mapper;
         }
 
         [HttpPost]
-        public IActionResult Register(UserViewModel model)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> IsEmailTaken()
         {
-            if (!ModelState.IsValid)
+            using (var reader = new System.IO.StreamReader(Request.Body))
             {
-                return View(model);
+                var body = await reader.ReadToEndAsync();
+                var emailData = JsonConvert.DeserializeObject<Dictionary<string, string>>(body);
+                var email = emailData["email"];
+                bool isEmailTaken = await userService.AnyUserByQuerryAsync(query => query.Where(u => u.Email == email));
+                return Json(isEmailTaken);
             }
+        }
 
-            var dto = new RegisterUserDto
-            {
-                FirstName = model.FirstName,
-                LastName = model.LastName,
-                Email = model.Email,
-                Password = model.Password,
-                ConfirmPassword = model.ConfirmPassword,
-                Nationality = model.Nationality,
-                DateOfBirth = model.DateOfBirth
-            };
-
-            var errors = userService.RegisterUser(dto);
-            if (errors != null)
-            {
-                foreach (var error in errors)
-                {
-                    ModelState.AddModelError(string.Empty, error);
-                }
-                return View("Register", model);
-            }
-            return RedirectToAction("SuccessRegister");
+        [HttpGet]
+        public IActionResult Login(string? error = null)
+        {
+            ViewBag.LoginError = error;
+            return View();
         }
 
         [HttpPost]
@@ -69,15 +53,40 @@ namespace MyBankWebApp.Controllers
                 Secure = true, // Włączone dla HTTPS
                 Expires = DateTime.UtcNow.AddHours(1) // Token ważny przez 1 godzinę
             });
-            //return RedirectToAction("SuccessLogin"); // trzeba bedzie gdzies przekierowac zamiast wyswietlac tokena xD
-            return Content(token);
+            return RedirectToAction("Index", "BankService");
         }
 
-       // [HttpPost] bedzie potrzebne zeby wylogowac sie poprzez klikniecie guzika.. poki co dziala przez link
         public IActionResult Logout()
         {
             Response.Cookies.Delete("AuthToken");
             return RedirectToAction("Index", "Home");
+        }
+
+        public IActionResult Register()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Register(UserViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            try
+            {
+                var dto = mapper.Map<RegisterUserDto>(model);
+                await userService.RegisterUser(dto);
+                TempData["SuccessMessage"] = "Registration Successful!";
+                return RedirectToAction("Index", "Home");
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Unable to register: {UserViewModel}", model);
+                TempData["ErrorMessage"] = $"Register Failed: {ex.Message}";
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         public IActionResult SuccessLogin()

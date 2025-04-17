@@ -133,7 +133,7 @@ namespace MyBankWebAppTests.Services.Transactions
 
             var config = new MapperConfiguration(cfg =>
             {
-                cfg.AddProfile<NewTransactionVMToTransactionMapper>();
+                cfg.AddProfile<TransactionMapper>();
             });
             mapper = config.CreateMapper();
 
