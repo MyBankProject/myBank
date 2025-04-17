@@ -1,19 +1,38 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using MyBankWebApp.DTOs;
 using MyBankWebApp.DTOs.Creates;
 using MyBankWebApp.Services.UserServices.Abstractions;
 using MyBankWebApp.ViewModels;
-using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace MyBankWebApp.Controllers
 {
     public class UserController : Controller
     {
         private readonly IUserService userService;
+        private readonly ILogger<UserController> logger;
+        private readonly IMapper mapper;
 
-        public UserController(IUserService userService)
+        public UserController(IUserService userService, ILogger<UserController> logger, IMapper mapper)
         {
             this.userService = userService;
+            this.logger = logger;
+            this.mapper = mapper;
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> IsEmailTaken()
+        {
+            using (var reader = new System.IO.StreamReader(Request.Body))
+            {
+                var body = await reader.ReadToEndAsync();
+                var emailData = JsonConvert.DeserializeObject<Dictionary<string, string>>(body);
+                var email = emailData["email"];
+                bool isEmailTaken = await userService.AnyUserByQuerryAsync(query => query.Where(u => u.Email == email));
+                return Json(isEmailTaken);
+            }
         }
 
         [HttpGet]
@@ -55,28 +74,19 @@ namespace MyBankWebApp.Controllers
             {
                 return View(model);
             }
-
-            var dto = new RegisterUserDto
+            try
             {
-                FirstName = model.FirstName,
-                LastName = model.LastName,
-                Email = model.Email,
-                Password = model.Password,
-                ConfirmPassword = model.ConfirmPassword,
-                Nationality = model.Nationality,
-                DateOfBirth = model.DateOfBirth
-            };
-
-            var errors = await userService.RegisterUser(dto);
-            if (errors != null)
-            {
-                foreach (var error in errors)
-                {
-                    ModelState.AddModelError(string.Empty, error);
-                }
-                return View("Register", model);
+                var dto = mapper.Map<RegisterUserDto>(model);
+                await userService.RegisterUser(dto);
+                TempData["SuccessMessage"] = "Registration Successful!";
+                return RedirectToAction("Index", "Home");
             }
-            return RedirectToAction("Index", "Home");
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Unable to register: {UserViewModel}", model);
+                TempData["ErrorMessage"] = $"Register Failed: {ex.Message}";
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         public IActionResult SuccessLogin()

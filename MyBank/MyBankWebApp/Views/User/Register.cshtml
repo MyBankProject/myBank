@@ -1,31 +1,85 @@
-﻿<html>
+﻿@using MyBankWebApp.ViewModels
+@model UserViewModel
+
+<html>
 <body>
 	<h1>Register new user</h1>
-	<form asp-action="Register" method="post">
-		<div asp-validation-summary="All" class="text-danger"></div>
-		<label for="firstName">First name:</label>
-		<input type="text" id="firstName" name="FirstName" required>
-		<br />
-		<label for="lastName">Last name:</label>
-		<input type="text" id="lastName" name="LastName" required>
-		<br />
-		<label for="email">Email:</label>
-		<input type="text" id="email" name="Email" required>
-		<br />
-		<label for="password">Password:</label>
-		<input type="password" id="password" name="Password" required>
-		<br />
-		<label for="confirmPassword">Confirm Password:</label>
-		<input type="password" id="confirmPassword" name="ConfirmPassword" required>
-		<br />
-		<label for="nationality">Nationality:</label>
-		<input type="text" id="nationality" name="Nationality" required>
-		<br />
-		<label for="dateOfBirth">Date Of Birth:</label>
-		<input type="date" id="dateOfBirth" name="DateOfBirth" required>
-		<br />
-		<button asp-for="Submit" class="btn btn-primary">Submit</button>
-	</form>
+	<hr />
+	<div class="row">
+		<div class="col-md-4">
+			<form id="registerForm" asp-controller="User" asp-action="Register" method="post">
+				<div class="form-group mb-1">
+					<label asp-for="FirstName" class="control-label">First Name</label>
+					<input asp-for="FirstName" type="text" class="form-control" placeholder="John">
+					<span asp-validation-for="FirstName" class="text-danger"></span>
+				</div>
+				<div class="form-group mb-1">
+					<label asp-for="LastName" class="control-label">Last name</label>
+					<input asp-for="LastName" type="text" class="form-control" placeholder="Smith">
+					<span asp-validation-for="LastName" class="text-danger"></span>
+				</div>
+				<div class="form-group mb-1">
+					<label asp-for="Email" class="control-label"></label>
+					<input asp-for="Email" type="text" class="form-control" placeholder="john.smith@gmail.com" id="email">
+					<span asp-validation-for="Email" class="text-danger" id="emailError"></span>
+				</div>
+				<div class="form-group mb-1">
+					<label asp-for="Password" class="control-label"></label>
+					<input asp-for="Password" type="password" class="form-control">
+					<span asp-validation-for="Password" class="text-danger"></span>
+				</div>
+				<div class="form-group mb-1">
+					<label asp-for="ConfirmPassword" class="control-label"></label>
+					<input asp-for="ConfirmPassword" type="password" class="form-control">
+					<span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+				</div>
+				<div class="form-group mb-1">
+					<label asp-for="Nationality" class="control-label"></label>
+					<input asp-for="Nationality" class="form-control" placeholder="PL">
+					<span asp-validation-for="Nationality" class="text-danger"></span>
+				</div>
+				<div class="form-group">
+					<label asp-for="DateOfBirth" class="control-label">Date Of Birth</label>
+					<input asp-for="DateOfBirth" type="date" class="form-control" max="@DateTime.Today.AddYears(-18).ToString("yyyy-MM-dd")">
+					<span asp-validation-for="DateOfBirth" class="text-danger"></span>
+				</div>
+				<div class="form-group mb-3">
+					<input type="submit" value="Submit" class="btn btn-primary mt-3" id="submitButton" />
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<script>
+		document.getElementById('submitButton').addEventListener('click', function(event) {
+			event.preventDefault();
+
+			var email = document.getElementById('email').value;
+			var emailError = document.getElementById('emailError');
+
+			fetch('@Url.Action("IsEmailTaken", "User")', {
+				method: 'POST',
+				body: JSON.stringify({ email: email }),
+				headers: {
+					'Content-Type': 'application/json',
+					'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+				}
+			})
+			.then(response => response.json())
+			.then(data => {
+				if (data === true) {
+					emailError.textContent = 'This email is already taken';
+					emailError.style.display = 'block';
+				} else {
+					emailError.style.display = 'none';
+					document.getElementById('registerForm').submit();
+				}
+			})
+			.catch(error => {
+				console.error('Error:', error);
+			});
+		});
+	</script>
 </body>
 </html>
 

@@ -1,5 +1,4 @@
-﻿using FluentValidation;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using MyBankWebApp.Data;
@@ -29,14 +28,22 @@ namespace MyBankWebApp.Services.UserServices
             ApplicationDbContext dbContext,
             IPasswordHasher<User> passwordHasher,
             AuthenticationSettings authenticationSettings,
-            IValidator<RegisterUserDto> validator,
             IAccountService accountService)
         {
             this.dbContext = dbContext;
             this.passwordHasher = passwordHasher;
             this.authenticationSettings = authenticationSettings;
-            this.validator = validator;
             this.accountService = accountService;
+        }
+
+        public async Task<bool> AnyUserByQuerryAsync(Func<IQueryable<User>, IQueryable<User>> query)
+        {
+            if (query == null)
+            {
+                return false;
+            }
+            IQueryable<User> queryToCheck = query(dbContext.Users);
+            return await queryToCheck.AnyAsync();
         }
 
         public string GenerateJwt(LoginDto dto)
@@ -77,7 +84,7 @@ namespace MyBankWebApp.Services.UserServices
             return tokenHandler.WriteToken(token);
         }
 
-        public async Task<User> GetUserAsync(int id, Func<IQueryable<User>, IQueryable<User>>? include = null)
+        public async Task<User> GetUserByIdAsync(int id, Func<IQueryable<User>, IQueryable<User>>? include = null)
         {
             IQueryable<User> query = dbContext.Users;
             if (include != null)
@@ -108,6 +115,7 @@ namespace MyBankWebApp.Services.UserServices
             var transaction = dbContext.Database.BeginTransaction();
             try
             {
+                var transaction = await dbContext.Database.BeginTransactionAsync();
                 var newUser = new User()
                 {
                     Email = dto.Email,
@@ -122,14 +130,13 @@ namespace MyBankWebApp.Services.UserServices
                 newUser.AccountId = newAccount.Id;
                 dbContext.Users.Add(newUser);
                 await dbContext.SaveChangesAsync();
-                transaction.Commit();
-                return null;
+                await transaction.CommitAsync();
             }
             catch (Exception ex)
             {
-                dbContext.Database.RollbackTransaction();
+                await dbContext.Database.RollbackTransactionAsync();
                 logger.LogError(ex, ex.Message);
-                return ["An error occurred while registering the user."];
+                throw;
             }
         }
     }
