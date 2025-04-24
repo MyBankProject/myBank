@@ -57,7 +57,7 @@ namespace MyBankWebApp.Services.UserServices
                 .FirstOrDefault(u => u.Email == dto.Email);
             if (user == null)
             {
-                throw new BadReQuestException("Invalid username or password"); // trzeba bedzie zrobic middleware ktory bedzie lapal wyjatki
+                throw new BadReQuestException("Invalid username or password"); 
             }
 
             var result = passwordHasher.VerifyHashedPassword(user, user.PasswordHash, dto.Password);
