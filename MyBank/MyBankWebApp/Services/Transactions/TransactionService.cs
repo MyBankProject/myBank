@@ -23,6 +23,28 @@ namespace MyBankWebApp.Services.Transactions
             this.mapper = mapper;
         }
 
+        public async Task AddDepositAsync(DepositViewModel newDeposit)
+        {
+            string filteredIban = Regex.Replace(newDeposit.ReciverIBAN, @"\D", "");
+            Account? reciverAccount = await accountDetailsRepository.GetAccountByIbanAsync(filteredIban);
+            if (reciverAccount == null)
+            {
+                throw new UserNotFoundException("Reciver not found");
+            }
+
+            using IDbContextTransaction dbTransaction = await transactionRepository.BeginTransactionAsync();
+            try
+            {
+                await ProcessDeposit(reciverAccount!, newDeposit);
+                await dbTransaction.CommitAsync();
+            }
+            catch
+            {
+                await dbTransaction.RollbackAsync();
+                throw;
+            }
+        }
+
         public async Task AddTransactionAsync(NewTransactionViewModel newTransaction)
         {
             string filteredIban = Regex.Replace(newTransaction.ReciverIBAN, @"\D", "");
@@ -63,7 +85,6 @@ namespace MyBankWebApp.Services.Transactions
         private Transaction CreateTransaction(Account senderAccount, Account reciverAccount, NewTransactionViewModel newTransaction)
         {
             Transaction transaction = mapper.Map<Transaction>(newTransaction);
-            //TODO: Muszę kogoś dopytać o to czy trzeba wypełniać te property. EF sam tego nie zrobi?
             transaction.ReceiverId = reciverAccount.Id;
             transaction.SenderId = senderAccount.Id;
             transaction.StatusId = Enum.IsDefined(typeof(Enums.TransactionStatuses), Enums.TransactionStatuses.Completed)
@@ -75,10 +96,31 @@ namespace MyBankWebApp.Services.Transactions
             return transaction;
         }
 
+        private Transaction CreateTransaction(Account reciverAccount, DepositViewModel newDeposit)
+        {
+            Transaction transaction = mapper.Map<Transaction>(newDeposit);
+            transaction.ReceiverId = reciverAccount.Id;
+            transaction.StatusId = Enum.IsDefined(typeof(Enums.TransactionStatuses), Enums.TransactionStatuses.Completed)
+                        ? (int)Enums.TransactionStatuses.Completed
+                        : default;
+            transaction.TransactionTypeId = Enum.IsDefined(typeof(TransactionTypes), Enums.TransactionTypes.Transfer)
+                        ? (int)Enums.TransactionTypes.Deposit
+                        : default;
+            return transaction;
+        }
+
         private async Task ProcessTransaction(Account senderAccount, Account reciverAccount, NewTransactionViewModel newTransaction)
         {
             Transaction transaction = CreateTransaction(senderAccount, reciverAccount, newTransaction);
             UpdateBalanceForBothSides(senderAccount, reciverAccount, newTransaction);
+            await transactionRepository.AddAsync(transaction);
+            await transactionRepository.SaveAsync();
+        }
+
+        private async Task ProcessDeposit(Account reciverAccount, DepositViewModel newDeposit)
+        {
+            Transaction transaction = CreateTransaction(reciverAccount, newDeposit);
+            reciverAccount.Balance += newDeposit.Amount;
             await transactionRepository.AddAsync(transaction);
             await transactionRepository.SaveAsync();
         }

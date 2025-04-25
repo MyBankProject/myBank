@@ -1,0 +1,10 @@
+﻿@model DepositViewModel
+
+<form asp-action="Deposit">
+	<div>
+		<label asp-for="Amount" class="control-label">Amount</label>
+		<input asp-for="Amount" class="form-control" />
+		<span asp-validation-for="Amount" class="text-danger"></span>
+	</div>
+	<a type="submit" onclick="this.closest('form').submit(); return false;">Submit</a>
+</form>

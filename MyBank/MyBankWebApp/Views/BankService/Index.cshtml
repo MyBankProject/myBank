@@ -71,7 +71,10 @@
 
 	<div class="bottom-container">
 		<div class="box" id="calculations-box">
-			<h2>Calculations / How much did you spend this month?</h2>
+			<h2>Empty account? <br /> need some money? <br /> <span style="color: aquamarine">Ask Your mom for some!</span></h2>
+
+			@Html.Partial("_DepositForm", new DepositViewModel());
+
 		</div>
 		<div class="box" id="history-box">
 			<h2>History of transactions</h2>
