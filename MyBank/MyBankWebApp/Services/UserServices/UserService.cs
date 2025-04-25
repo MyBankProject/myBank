@@ -116,7 +116,7 @@ namespace MyBankWebApp.Services.UserServices
                 return result.Errors.Select(e => e.ErrorMessage).ToList();
             }
 
-            var transaction = dbContext.Database.BeginTransaction();
+            var transaction = await dbContext.Database.BeginTransactionAsync();
             try
             {
                 var newUser = new User()

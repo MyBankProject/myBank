@@ -12,6 +12,8 @@ namespace MyBankWebApp.Services.Transactions
 {
     public class TransactionService : ITransactionService
     {
+        private const string DEPOSIT_DESCRIPTION_STRING = "Deposit";
+        private const int DEPOSIT_SENDER_DEFAULT = 1;
         private readonly IAccountRepository accountDetailsRepository;
         private readonly IMapper mapper;
         private readonly ITransactionRepository transactionRepository;
@@ -100,6 +102,8 @@ namespace MyBankWebApp.Services.Transactions
         {
             Transaction transaction = mapper.Map<Transaction>(newDeposit);
             transaction.ReceiverId = reciverAccount.Id;
+            transaction.Description = DEPOSIT_DESCRIPTION_STRING;
+            transaction.SenderId  = DEPOSIT_SENDER_DEFAULT;
             transaction.StatusId = Enum.IsDefined(typeof(Enums.TransactionStatuses), Enums.TransactionStatuses.Completed)
                         ? (int)Enums.TransactionStatuses.Completed
                         : default;
