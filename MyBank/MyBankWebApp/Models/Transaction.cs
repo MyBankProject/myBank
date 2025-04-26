@@ -23,6 +23,7 @@ namespace MyBankWebApp.Models
         public int ReceiverId { get; set; }
 
         public Account? SenderAccount { get; set; }
+        //TODO: Zmienić na nullowalny
         public int SenderId { get; set; }
     }
 }

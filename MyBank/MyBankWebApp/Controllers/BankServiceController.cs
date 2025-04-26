@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MyBankWebApp.Entities;
 using MyBankWebApp.Exceptions;
 using MyBankWebApp.Repositories.Abstractions;
@@ -72,7 +73,7 @@ namespace MyBankWebApp.Controllers
         [HttpPost]
         public async Task<IActionResult> NewTransaction(NewTransactionViewModel newTransactionDto)
         {
-            if (newTransactionDto != null && newTransactionDto.Amount > 0)
+            if (newTransactionDto.Amount > 0)
             {
                 try
                 {
@@ -85,6 +86,31 @@ namespace MyBankWebApp.Controllers
                 catch (Exception ex)
                 {
                     logger.LogError(ex, "Unable to create transaction: {Transaction}.", newTransactionDto);
+                    TempData["ErrorMessage"] = $"Transaction Failed: {ex.Message}";
+                    return RedirectToAction(nameof(Index));
+                }
+                TempData["SuccessMessage"] = "Transaction Successful!";
+                return RedirectToAction(nameof(Index));
+            }
+            TempData["ErrorMessage"] = "Transaction Failed";
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Deposit(DepositViewModel depositViewModel)
+        {
+            if (depositViewModel.Amount > 0)
+            {
+                try
+                {
+                    string? stringId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                    User reciverAccount = await userService.GetUserByStringIdAsync(stringId, q => q.Include(u => u.Account));
+                    depositViewModel.ReceiverIBAN = reciverAccount?.Account?.IBAN;
+                    await transactionService.AddDepositAsync(depositViewModel);
+                }
+                catch (Exception ex)
+                {
+                    logger.LogError(ex, "Unable to create deposit: {deposit}.", depositViewModel);
                     TempData["ErrorMessage"] = $"Transaction Failed: {ex.Message}";
                     return RedirectToAction(nameof(Index));
                 }

@@ -20,7 +20,7 @@ namespace MyBankWebApp.Services.Accounts
             var account = new Account()
             {
                 CountryCode = countryCode,
-                IBAN = ibanGenerator.Generate(countryCode).ToString(),
+                IBAN = ibanGenerator.Generate(countryCode).ToString().Remove(0, 2),
                 Balance = 0
             };
             await accountRepository.AddAsync(account);
