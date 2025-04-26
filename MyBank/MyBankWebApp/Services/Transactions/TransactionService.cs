@@ -27,7 +27,7 @@ namespace MyBankWebApp.Services.Transactions
 
         public async Task AddDepositAsync(DepositViewModel newDeposit)
         {
-            string filteredIban = Regex.Replace(newDeposit.ReciverIBAN, @"\D", "");
+            string filteredIban = Regex.Replace(newDeposit.ReceiverIBAN, @"\D", "");
             Account? reciverAccount = await accountDetailsRepository.GetAccountByIbanAsync(filteredIban);
             if (reciverAccount == null)
             {
@@ -49,7 +49,7 @@ namespace MyBankWebApp.Services.Transactions
 
         public async Task AddTransactionAsync(NewTransactionViewModel newTransaction)
         {
-            string filteredIban = Regex.Replace(newTransaction.ReciverIBAN, @"\D", "");
+            string filteredIban = Regex.Replace(newTransaction.ReceiverIBAN, @"\D", "");
             Account? reciverAccount = await accountDetailsRepository.GetAccountByIbanAsync(filteredIban);
             Account? senderAccount = await accountDetailsRepository.GetByIdAsync(newTransaction.SenderId);
             ValidateTransaction(senderAccount, reciverAccount, newTransaction);

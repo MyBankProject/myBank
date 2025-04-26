@@ -52,8 +52,7 @@
 				<h1 id="currency">$</h1>
 			</div>
 			@{
-				var ibanDigits = Model.IBAN.Substring(2);
-				var formattedIban = Regex.Replace(ibanDigits, @"(\d{2})(\d{4})(\d{4})(\d{4})(\d{4})(\d{4})(\d{0,4})",
+				var formattedIban = Regex.Replace(Model.IBAN, @"(\d{2})(\d{4})(\d{4})(\d{4})(\d{4})(\d{4})(\d{0,4})",
 				m => string.Join(" ", m.Groups.Cast<Group>().Skip(1).Where(g => g.Length > 0).Select(g => g.Value)));
 			}
 			<h3>
@@ -72,9 +71,8 @@
 	<div class="bottom-container">
 		<div class="box" id="calculations-box">
 			<h2>Empty account? <br /> need some money? <br /> <span style="color: aquamarine">Ask Your mom for some!</span></h2>
-
-			@Html.Partial("_DepositForm", new DepositViewModel());
-
+			<br />
+			@Html.Partial("_DepositForm", new DepositViewModel())
 		</div>
 		<div class="box" id="history-box">
 			<h2>History of transactions</h2>
@@ -100,6 +98,7 @@
 </div>
 
 <script>
+
 	function onCopyIbanToClipboard() {
 		const ibanElement = document.getElementById("ibanBtn");
 
@@ -107,13 +106,13 @@
 			const text = ibanElement.innerText;
 
 			navigator.clipboard.writeText(text).then(() => {
-				ibanElement.innerText = "Copied!"; 
+				ibanElement.innerText = "Copied!";
 
 				setTimeout(() => {
 					ibanElement.innerText = text;
 				}, 1000);
 			}).catch(err => {
-				console.error("Błąd kopiowania: ", err); 
+				console.error("Błąd kopiowania: ", err);
 			});
 		}
 	}

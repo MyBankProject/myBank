@@ -11,12 +11,10 @@ namespace MyBankWebApp.ViewModels
         [Range(0.01, double.MaxValue, ErrorMessage = "The deposit value must be greater than zero")]
         public decimal Amount { get; set; }
 
-        public string Description { get; set; }
+        public string Description { get; set; } = string.Empty;
 
-        public string ReciverIBAN { get; set; }
+        public string ReceiverIBAN { get; set; } = string.Empty;
 
-        [Required]
-        [PastDate(ErrorMessage = "Transaction date cannot be in the past.")]
         public DateTime TransferDate { get; set; } = DateTime.Today;
     }
 }

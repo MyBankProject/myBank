@@ -105,7 +105,7 @@ namespace MyBankWebApp.Controllers
                 {
                     string? stringId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                     User reciverAccount = await userService.GetUserByStringIdAsync(stringId, q => q.Include(u => u.Account));
-                    depositViewModel.ReciverIBAN = reciverAccount?.Account?.IBAN;
+                    depositViewModel.ReceiverIBAN = reciverAccount?.Account?.IBAN;
                     await transactionService.AddDepositAsync(depositViewModel);
                 }
                 catch (Exception ex)

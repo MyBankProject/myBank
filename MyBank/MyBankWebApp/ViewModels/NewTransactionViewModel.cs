@@ -1,6 +1,4 @@
-﻿using Microsoft.OpenApi.MicrosoftExtensions;
-using MyBankWebApp.Atributes;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace MyBankWebApp.ViewModels
 {
@@ -8,23 +6,20 @@ namespace MyBankWebApp.ViewModels
     {
         [DataType(DataType.Currency)]
         [DisplayFormat(DataFormatString = "{0:N2}", ApplyFormatInEditMode = true)]
-
         [Required]
         public decimal Amount { get; set; }
 
         [Required]
-        public string Description { get; set; }
+        public string Description { get; set; } = string.Empty;
 
         [Required]
-        public string ReciverIBAN { get; set; }
+        public string ReceiverIBAN { get; set; } = string.Empty;
 
         [Required]
-        public string ReciverName { get; set; }
+        public string ReceiverName { get; set; } = string.Empty;
 
         public int SenderId { get; set; }
 
-        [Required]
-        [PastDate(ErrorMessage = "Transaction date cannot be in the past.")]
-        public DateTime TransferDate { get; set; } = DateTime.Today;
+        public DateTime TransferDate { get; set; } = DateTime.Now;
     }
 }

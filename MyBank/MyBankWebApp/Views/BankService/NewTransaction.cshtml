@@ -10,19 +10,14 @@
 		<form asp-action="NewTransaction">
 			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
 			<div class="form-group">
-				<label asp-for="ReciverName" class="control-label">Reciver Name</label>
-				<input asp-for="ReciverName" class="form-control"></input>
-				<span asp-validation-for="ReciverName" class="text-danger"></span>
+				<label asp-for="ReceiverName" class="control-label">Receiver Name</label>
+				<input asp-for="ReceiverName" class="form-control"></input>
+				<span asp-validation-for="ReceiverName" class="text-danger"></span>
 			</div>
 			<div class="form-group">
-				<label asp-for="ReciverIBAN" class="control-label">Account Number</label>
-				<input asp-for="ReciverIBAN" id="reciverIban" class="form-control" maxlength="34"></input>
-				<span asp-validation-for="ReciverIBAN" class="text-danger"></span>
-			</div>
-			<div class="form-group">
-				<label asp-for="TransferDate" class="control-label"></label>
-				<input asp-for="TransferDate" class="form-control" type="date" min="@DateTime.Today.ToString("yyyy-MM-dd")"/>
-				<span asp-validation-for="TransferDate" class="text-danger"></span>
+				<label asp-for="ReceiverIBAN" class="control-label">Account Number</label>
+				<input asp-for="ReceiverIBAN" id="reciverIban" class="form-control" maxlength="34"></input>
+				<span asp-validation-for="ReceiverIBAN" class="text-danger"></span>
 			</div>
 			<div class="form-group">
 				<label asp-for="Description" class="control-label"></label>
@@ -31,12 +26,12 @@
 			</div>
 			<div class="form-group">
 				<label asp-for="Amount" class="control-label"></label>
-				<input type="number" asp-for="Amount" class="form-control"/>
+				<input type="number" asp-for="Amount" class="form-control" />
 				<span asp-validation-for="Amount" class="text-danger"></span>
 			</div>
 			<br />
 			<div class="form-group" style="display: flex; gap: 15px;">
-				<input type="submit" value="Create" class="btn btn-primary" />
+				<input type="submit" value="Send" class="btn btn-primary" />
 				<a asp-action="Index" class="btn btn-danger">Cancel</a>
 			</div>
 		</form>
@@ -52,11 +47,11 @@
 			let formattedValue = '';
 			for (let i = 0; i < value.length; i++) {
 				if (i === 2 || (i > 2 && (i - 2) % 4 === 0)) {
-					formattedValue += ' '; 
+					formattedValue += ' ';
 				}
 				formattedValue += value[i];
 			}
-			event.target.value = formattedValue.trim(); 
+			event.target.value = formattedValue.trim();
 		});
 	</script>
 }
