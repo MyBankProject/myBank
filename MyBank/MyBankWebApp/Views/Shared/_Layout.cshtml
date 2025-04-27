@@ -11,22 +11,22 @@
 </head>
 <body>
 	<header id="custom-header">
-		<div class="logo">
+		<a asp-controller="Home" asp-action="Index" class="logo">
 			<img src="~/img/Logos/Logo-green.png" alt="Logo" class="logo zoom-animation">
-		</div>
+		</a>
 		<div class="nav-list">
 			<ul class="navbar-nav flex-row">
 				<li class="nav-item">
-					<a class="btn btn-link nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+					<a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
 				</li>
 				<li class="nav-item">
-					<a class="btn btn-link nav-link" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+					<a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
 				</li>
 				<li class="nav-item">
-					<a class="btn btn-link nav-link" asp-area="" asp-controller="BankService" asp-action="Index">Bank Service</a>
+					<a class="nav-link" asp-area="" asp-controller="BankService" asp-action="Index">Bank Service</a>
 				</li>
 				<li class="nav-item">
-					<a class="btn btn-link nav-link" asp-area="" asp-controller="Admin" asp-action="Index">Admin Only</a>
+					<a class="nav-link" asp-area="" asp-controller="Admin" asp-action="Index">Admin Only</a>
 				</li>
 			</ul>
 		</div>

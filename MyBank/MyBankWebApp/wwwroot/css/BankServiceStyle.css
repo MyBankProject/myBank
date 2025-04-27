@@ -1,6 +1,6 @@
 ﻿:root {
     --main-color: #3ae8a4;
-    --secondary-color: #0fe419;
+    --secondary-color: navajowhite;
     --third-color: #e9ba4d;
     --fourth-color: #ce6aec;
     --cancel-color: #e8563a;
@@ -13,6 +13,21 @@ body {
     background: var(--background-color);
     color: var(--white-color);
 }
+
+#show-more {
+    all: unset;
+    text-decoration: underline;
+    cursor: pointer;
+    position: absolute;
+    right: 25px;
+    bottom: 15px;
+    font-size: 1.1rem;
+}
+
+    #show-more:hover {
+        color: var(--select-color);
+    }
+
 
 .main {
     font-family: "Bebas Neue", sans-serif;

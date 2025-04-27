@@ -1,15 +1,10 @@
 ﻿:root {
-    --main-color: #3ae8a4;
-    --secondary-color: #0fe419;
-    --third-color: #e9ba4d;
-    --fourth-color: #ce6aec;
-    --cancel-color: #e8563a;
-    --white-color: #f0e6d9;
-    --background-color: #19181f;
-    --scd-background-color: #262b30;
+    --main-color: #33d797;
+    --secondary-color: navajowhite;
 }
 
 #custom-header {
+    font-weight: 600;
     background: transparent;
     display: flex;
     align-items: center;
@@ -47,7 +42,7 @@
         }
 
             #custom-header .nav-list ul li a:hover {
-                color: navajowhite
+                color: var(--secondary-color);
             }
 
     #custom-header .auth-btns {
@@ -78,5 +73,5 @@
 
                 #custom-header .auth-btns ul li a:hover,
                 #custom-header .auth-btns ul li button:hover {
-                    color: mediumaquamarine;
+                    color: var(--secondary-color);
                 }
