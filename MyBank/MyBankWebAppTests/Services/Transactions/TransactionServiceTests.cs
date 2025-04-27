@@ -35,10 +35,10 @@ namespace MyBankWebAppTests.Services.Transactions
             const int senderId = 1;
             var transactionVM = new NewTransactionViewModel()
             {
-                ReciverIBAN = default_Iban,
+                ReceiverIBAN = default_Iban,
                 Amount = 100.00m,
                 Description = "description",
-                ReciverName = "Reciver Name",
+                ReceiverName = "Reciver Name",
                 TransferDate = DateTime.Now,
                 SenderId = senderId
             };
@@ -72,7 +72,7 @@ namespace MyBankWebAppTests.Services.Transactions
             const int senderId = 1;
             var transactionVM = new NewTransactionViewModel()
             {
-                ReciverIBAN = default_Iban,
+                ReceiverIBAN = default_Iban,
                 Amount = 100.00m,
                 SenderId = senderId
             };
@@ -96,7 +96,7 @@ namespace MyBankWebAppTests.Services.Transactions
             const int senderId = 1;
             var transactionVM = new NewTransactionViewModel()
             {
-                ReciverIBAN = default_Iban,
+                ReceiverIBAN = default_Iban,
                 Amount = 123.12m,
                 SenderId = senderId
             };
@@ -133,7 +133,7 @@ namespace MyBankWebAppTests.Services.Transactions
 
             var config = new MapperConfiguration(cfg =>
             {
-                cfg.AddProfile<TransactionMapper>();
+                cfg.AddProfile<NewTransactionToTransactionMap>();
             });
             mapper = config.CreateMapper();
 

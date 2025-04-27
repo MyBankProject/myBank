@@ -1,4 +1,5 @@
-﻿@model AccountViewModel
+﻿@using System.Text.RegularExpressions
+@model AccountViewModel
 @{
 	ViewData["Title"] = "Bank Service";
 
@@ -50,6 +51,13 @@
 				<h1>@String.Format("{0:N2}", Model.Balance)</h1>
 				<h1 id="currency">$</h1>
 			</div>
+			@{
+				var formattedIban = Regex.Replace(Model.IBAN, @"(\d{2})(\d{4})(\d{4})(\d{4})(\d{4})(\d{4})(\d{0,4})",
+				m => string.Join(" ", m.Groups.Cast<Group>().Skip(1).Where(g => g.Length > 0).Select(g => g.Value)));
+			}
+			<h3>
+				<button id="ibanBtn" onclick="onCopyIbanToClipboard()">@formattedIban</button>
+			</h3>
 			<div class="buttons-container">
 				<a asp-controller="BankService" asp-action="NewTransaction" asp-route-id="@Model.Id">New Transaction</a>
 				<a>Internal</a>
@@ -62,7 +70,9 @@
 
 	<div class="bottom-container">
 		<div class="box" id="calculations-box">
-			<h2>Calculations / How much did you spend this month?</h2>
+			<h2>Empty account? <br /> need some money? <br /> <span style="color: aquamarine">Ask Your mom for some!</span></h2>
+			<br />
+			@Html.Partial("_DepositForm", new DepositViewModel())
 		</div>
 		<div class="box" id="history-box">
 			<h2>History of transactions</h2>
@@ -89,3 +99,24 @@
 		</div>
 	</div>
 </div>
+
+<script>
+
+	function onCopyIbanToClipboard() {
+		const ibanElement = document.getElementById("ibanBtn");
+
+		if (ibanElement.innerText !== "Copied!") {
+			const text = ibanElement.innerText;
+
+			navigator.clipboard.writeText(text).then(() => {
+				ibanElement.innerText = "Copied!";
+
+				setTimeout(() => {
+					ibanElement.innerText = text;
+				}, 1000);
+			}).catch(err => {
+				console.error("Błąd kopiowania: ", err);
+			});
+		}
+	}
+</script>
