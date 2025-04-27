@@ -4,7 +4,7 @@
 
 	var successMessage = TempData["SuccessMessage"];
 	var errorMessage = TempData["ErrorMessage"];
-	<link rel="stylesheet" href="~/css/bankServiceStyle.css" asp-append-version="true"/>
+	<link rel="stylesheet" href="~/css/bankServiceStyle.css" asp-append-version="true" />
 	<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
 	<link rel="stylesheet"
 		  href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=settings" />
@@ -24,7 +24,7 @@
 
 <div class="main">
 	<div class="box" id="top-box">
-		<div>
+		<div class="logo">
 			<img src="~/img/Logos/Logo-green.png" alt="Logo" class="logo zoom-animation">
 		</div>
 		<div>
@@ -83,6 +83,9 @@
 				}
 			</ul>
 
+			<div>
+				<a id="link"> Show More</a>
+			</div>
 		</div>
 	</div>
 </div>
