@@ -14,20 +14,6 @@ body {
     color: var(--white-color);
 }
 
-#link {
-    all: unset;
-    text-decoration: underline;
-    cursor: pointer;
-    position:absolute;
-    right: 25px;
-    bottom: 15px;
-    font-size: 1.1rem;
-}
-
-#link:hover {
-    color: aquamarine;
-}
-
 .main {
     font-family: "Bebas Neue", sans-serif;
     display: flex;
@@ -45,54 +31,6 @@ body {
         padding: 25px;
         display: flex;
         overflow: hidden;
-    }
-
-.zoom-animation {
-    transition: transform 0.3s ease-in-out;
-}
-
-    .zoom-animation:hover {
-        transform: scale(1.05);
-    }
-
-#top-box {
-    display: flex;
-    border: 1px solid var(--main-color);
-    background: transparent;
-    justify-content: space-between;
-    padding: 10px 15px;
-    width: 100%;
-}
-
-    #top-box div {
-        flex: 1;
-        text-align: center;
-        height: 40px;
-    }
-
-        #top-box div:nth-child(3) {
-            text-align: right;
-        }
-
-    #top-box h2 {
-        font-size: 40px;
-        color: var(--main-color);
-    }
-
-.main .logo {
-    height: 40px;
-    display: block;
-}
-
-#settings-button {
-    color: var(--main-color);
-    font-size: 35px;
-    transition: transform 0.3s ease-in-out, color 0.3s ease-in-out;
-}
-
-    #settings-button:hover {
-        cursor: pointer;
-        transform: scale(1.1);
     }
 
 .greeting-container {
@@ -229,8 +167,8 @@ body {
 
 #history-box {
     position: relative;
-  flex-grow: 1;
-  flex-direction: column;
+    flex-grow: 1;
+    flex-direction: column;
 }
 
 .main ul {
