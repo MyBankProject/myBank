@@ -11,54 +11,50 @@
 </head>
 <body>
 	<header id="custom-header">
-		<nav >
-			<div class="custom-navbar">
-				<div class="logo">
-					<img src="~/img/Logos/Logo-green.png" alt="Logo" class="logo zoom-animation" style="width: 140px">
-				</div>
-				<div>
-					<ul class="navbar-nav flex-grow-1">
-						<li class="nav-item">
-							<a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link text-dark" asp-area="" asp-controller="BankService" asp-action="Index">Bank Service</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Index">Admin Only</a>
-						</li>
-					</ul>
-				</div>
-				<div>
-					<ul class="navbar-nav ms-auto">
-						@if (User.Identity.IsAuthenticated)
-						{
-							<li class="nav-item">
-								<form asp-controller="User" asp-action="Logout" method="post" class="form-inline">
-									<button type="submit" class="btn btn-link nav-link text-dark">Logout</button>
-								</form>
-							</li>
-						}
-						else
-						{
-							<li class="nav-item">
-								<a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Login">Log in</a>
-							</li>
-							<li class="nav-item">
-								<a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Register">Register</a>
-							</li>
-						}
-					</ul>
-				</div>
-			</div>
-		</nav>
+		<div class="logo">
+			<img src="~/img/Logos/Logo-green.png" alt="Logo" class="logo zoom-animation">
+		</div>
+		<div class="nav-list">
+			<ul class="navbar-nav flex-row">
+				<li class="nav-item">
+					<a class="btn btn-link nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+				</li>
+				<li class="nav-item">
+					<a class="btn btn-link nav-link" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+				</li>
+				<li class="nav-item">
+					<a class="btn btn-link nav-link" asp-area="" asp-controller="BankService" asp-action="Index">Bank Service</a>
+				</li>
+				<li class="nav-item">
+					<a class="btn btn-link nav-link" asp-area="" asp-controller="Admin" asp-action="Index">Admin Only</a>
+				</li>
+			</ul>
+		</div>
+		<div class="auth-btns" >
+			<ul class="navbar-nav flex-row ">
+		@if (User.Identity.IsAuthenticated)
+		{
+					<li class="nav-item">
+						<form asp-controller="User" asp-action="Logout" method="post" class="form-inline">
+							<button type="submit" class="btn btn-link nav-link">Logout</button>
+						</form>
+					</li>
+		}
+		else
+		{
+					<li class="nav-item">
+						<a class="btn btn-link nav-link" asp-area="" asp-controller="User" asp-action="Login">Log in</a>
+					</li>
+					<li class="nav-item">
+						<a class="btn btn-link nav-link" asp-area="" asp-controller="User" asp-action="Register">Register</a>
+					</li>
+		}
+			</ul>
+		</div>
 	</header>
 	<div class="container">
 		<main role="main" class="pb-3">
-			@RenderBody()
+		@RenderBody()
 		</main>
 	</div>
 
@@ -70,6 +66,6 @@
 	<script src="~/lib/jquery/dist/jquery.min.js"></script>
 	<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 	<script src="~/js/site.js" asp-append-version="true"></script>
-	@await RenderSectionAsync("Scripts", required: false)
+			@await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

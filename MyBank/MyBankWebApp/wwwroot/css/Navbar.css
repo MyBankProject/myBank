@@ -1,14 +1,4 @@
-﻿.custom-header {
-    background-color: #f4f4f4;
-    padding: 10px 30px;
-    border-bottom: 2px solid #ce6aec;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-
-:root {
+﻿:root {
     --main-color: #3ae8a4;
     --secondary-color: #0fe419;
     --third-color: #e9ba4d;
@@ -20,20 +10,73 @@
 }
 
 #custom-header {
-    background: var(--background-color);
+    background: transparent;
     display: flex;
-    flex-direction: row;
-    border: 1px solid var(--main-color);
+    align-items: center;
     justify-content: space-between;
-    padding: 10px 15px;
+    padding: 5px 20px 5px 10px;
+    border: 1px solid var(--main-color);
+
 }
 
     #custom-header .logo {
         width: 150px;
-        transition: transform 0.3s ease-in-out, color 0.3s ease-in-out;
+        transition: transform 0.3s ease-in-out;
+        margin-right: 20px;
+        margin-left: 0px;
+        padding: 0px;
     }
 
         #custom-header .logo:hover {
             cursor: pointer;
             transform: scale(1.04);
         }
+
+    #custom-header .nav-list ul {
+        display: flex;
+        flex-direction: row;
+        gap: 15px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+        #custom-header .nav-list ul li a {
+            color: var(--main-color);
+            text-decoration: none;
+        }
+
+            #custom-header .nav-list ul li a:hover {
+                color: navajowhite
+            }
+
+    #custom-header .auth-btns {
+        display: flex;
+        align-items: start;
+        margin-left: auto;
+    }
+
+        #custom-header .auth-btns ul {
+            display: flex;
+            flex-direction: row;
+            gap: 15px;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+            #custom-header .auth-btns ul li a,
+            #custom-header .auth-btns ul li button {
+                color: var(--main-color);
+                text-decoration: none;
+                background: none;
+                border: none;
+                padding: 0;
+                font: inherit;
+                cursor: pointer;
+            }
+
+                #custom-header .auth-btns ul li a:hover,
+                #custom-header .auth-btns ul li button:hover {
+                    color: mediumaquamarine;
+                }
