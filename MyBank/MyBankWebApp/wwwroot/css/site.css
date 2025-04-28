@@ -1,3 +1,11 @@
+:root {
+    --background-light: #F8F8FF;
+    --scd-background-light: #d2e6ff;
+    --background-night: #19181f;
+    --scd-background-night: #262b30;
+}
+
+
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
   box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
@@ -9,6 +17,12 @@ html {
 }
 
 body {
+    background: var(--background-light);
     margin-bottom: 60px;
-    background: #F8F8FF;
+    transition: background-color 0.5s, color 0.5s;
+}
+
+body.night-mode {
+    background: var(--background-night);
+    margin-bottom: 60px;
 }

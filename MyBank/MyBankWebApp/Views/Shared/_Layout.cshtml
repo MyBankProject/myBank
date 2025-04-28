@@ -32,6 +32,9 @@
 		</div>
 		<div class="auth-btns" >
 			<ul class="navbar-nav flex-row ">
+				<li class="nav-item">
+					<button onclick="toggleNightMode()" >Toggle Night Mode</button>
+				</li>
 		@if (User.Identity.IsAuthenticated)
 		{
 					<li class="nav-item">
@@ -67,5 +70,14 @@
 	<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 	<script src="~/js/site.js" asp-append-version="true"></script>
 			@await RenderSectionAsync("Scripts", required: false)
+<script>
+	function toggleNightMode(){
+		document.body.classList.toggle('night-mode');
+	}
+</script>
 </body>
+
+
 </html>
+
+
