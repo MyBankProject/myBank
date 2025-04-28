@@ -73,6 +73,10 @@
 <script>
 	function toggleNightMode(){
 		document.body.classList.toggle('night-mode');
+		var boxes = document.querySelectorAll('.box');
+		boxes.forEach(function(box){
+			box.classList.toggle('night-mode');
+		});
 	}
 </script>
 </body>

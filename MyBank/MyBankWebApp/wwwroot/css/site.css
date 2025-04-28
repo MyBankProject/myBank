@@ -3,17 +3,18 @@
     --scd-background-light: #d2e6ff;
     --background-night: #19181f;
     --scd-background-night: #262b30;
+    --white-color: #f0e6d9;
 }
 
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
 html {
-  font-size: 16px;
-  position: relative;
-  min-height: 100%;
+    font-size: 16px;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
@@ -22,7 +23,16 @@ body {
     transition: background-color 0.5s, color 0.5s;
 }
 
-body.night-mode {
-    background: var(--background-night);
-    margin-bottom: 60px;
+    body.night-mode {
+        background: var(--background-night);
+        color: var(--white-color);
+        margin-bottom: 60px;
+    }
+
+.box {
+    background: var(--scd-background-light);
 }
+
+    .box.night-mode {
+        background: var(--scd-background-night);
+    }

@@ -4,14 +4,8 @@
     --third-color: #e9ba4d;
     --fourth-color: #ce6aec;
     --cancel-color: #e8563a;
-    --white-color: #f0e6d9;
     --background-color: #19181f;
     --scd-background-color: #262b30;
-}
-
-body {
-    background: var(--background-color);
-    color: var(--white-color);
 }
 
 #show-more {
@@ -41,7 +35,6 @@ body {
     }
 
     .main .box {
-        background: var(--scd-background-color);
         border: 1px solid var(--main-color);
         padding: 25px;
         display: flex;
