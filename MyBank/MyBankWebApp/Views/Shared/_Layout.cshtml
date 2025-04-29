@@ -8,7 +8,7 @@
 	<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 	<link rel="stylesheet" href="~/css/Navbar.css" asp-append-version="true" />
 	<link rel="stylesheet" href="~/MyBankWebApp.styles.css" asp-append-version="true" />
-	<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet" >
+	<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
 </head>
 <body>
 	<header id="custom-header">
@@ -73,14 +73,35 @@
 	@await RenderSectionAsync("Scripts", required: false)
 
 	<script>
+		document.addEventListener('DOMContentLoaded', function(){
+			if(localStorage.getItem('nightMode') === 'enabled') {
+				document.body.classList.add('night-mode');
+				var boxes = document.querySelectorAll('.box');
+				boxes.forEach(function(box){
+					box.classList.add('night-mode');
+				});
+				var navbar = document.querySelector('#custom-header');
+				if (navbar) navbar.classList.add('night-mode');
+			}
+		});
+
 		function toggleNightMode(){
-			document.body.classList.toggle('night-mode');
+			document.body.classList.add('transition');
+
+			const isNight = document.body.classList.toggle('night-mode');
+
 			var boxes = document.querySelectorAll('.box');
 			boxes.forEach(function(box){
 				box.classList.toggle('night-mode');
 			});
+
+			var navbar = document.querySelector('#custom-header');
+			if (navbar) navbar.classList.toggle('night-mode');
+
+			localStorage.setItem('nightMode', isNight ? 'enabled' : 'disabled');
 		}
 	</script>
+
 
 </body>
 </html>

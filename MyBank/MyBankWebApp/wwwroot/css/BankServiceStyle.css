@@ -34,12 +34,12 @@
         font-size: 50px;
     }
 
-    .main .box {
-        border: 1px solid var(--main-color);
-        padding: 25px;
-        display: flex;
-        overflow: hidden;
-    }
+.box {
+    padding: 25px;
+    display: flex;
+    overflow: hidden;
+    border-radius: 6px;
+}
 
 .greeting-container {
     display: flex;
@@ -60,6 +60,7 @@
         }
 
 #greeting-box {
+    box-shadow: none;
     display: inline;
     background: transparent;
     color: var(--main-color);

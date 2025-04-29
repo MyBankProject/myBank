@@ -1,6 +1,6 @@
 :root {
-    --background-light: #F8F8FF;
-    --scd-background-light: #d2e6ff;
+    --background-light: #f7f6f6;
+    --scd-background-light: #f5f5fb;
     --background-night: #19181f;
     --scd-background-night: #262b30;
     --white-color: #f0e6d9;
@@ -21,8 +21,11 @@ body {
     font-family: "Bebas Neue", sans-serif;
     background: var(--background-light);
     margin-bottom: 60px;
-    transition: background-color 0.5s, color 0.5s;
 }
+
+    body.transition {
+        transition: background-color 0.5s, color 0.5s;
+    }
 
     body.night-mode {
         background: var(--background-night);
@@ -32,8 +35,12 @@ body {
 
 .box {
     background: var(--scd-background-light);
+    box-shadow: 4px 4px 10px 1px rgba(51, 215, 151, 0.4);
+    border: 1px solid var(--main-color);
 }
 
     .box.night-mode {
         background: var(--scd-background-night);
+        box-shadow: none;
+        border: 1px solid var(--main-color);
     }

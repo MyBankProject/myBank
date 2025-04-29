@@ -1,17 +1,22 @@
 ﻿:root {
     --main-color: #33d797;
+    --navbar-color: #f5f5fb;
     --secondary-color: navajowhite;
 }
 
 #custom-header {
-    background: transparent;
+    background: var(--navbar-color);
+    box-shadow: 1px 1px 0px 0px rgba(51, 215, 151, 0.4);
     font-size: 1.3rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 5px 20px 5px 10px;
     border: 1px solid var(--main-color);
+}
 
+#custom-header.night-mode {
+    background: transparent;
 }
 
     #custom-header .logo {
