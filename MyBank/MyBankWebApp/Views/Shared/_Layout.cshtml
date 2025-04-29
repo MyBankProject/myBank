@@ -8,6 +8,7 @@
 	<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 	<link rel="stylesheet" href="~/css/Navbar.css" asp-append-version="true" />
 	<link rel="stylesheet" href="~/MyBankWebApp.styles.css" asp-append-version="true" />
+	<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet" >
 </head>
 <body>
 	<header id="custom-header">
@@ -30,34 +31,34 @@
 				</li>
 			</ul>
 		</div>
-		<div class="auth-btns" >
+		<div class="auth-btns">
 			<ul class="navbar-nav flex-row ">
 				<li class="nav-item">
-					<button onclick="toggleNightMode()" >Toggle Night Mode</button>
+					<button onclick="toggleNightMode()">Toggle Night Mode</button>
 				</li>
-		@if (User.Identity.IsAuthenticated)
-		{
+				@if (User.Identity.IsAuthenticated)
+				{
 					<li class="nav-item">
 						<form asp-controller="User" asp-action="Logout" method="post" class="form-inline">
 							<button type="submit" class="btn btn-link nav-link">Logout</button>
 						</form>
 					</li>
-		}
-		else
-		{
+				}
+				else
+				{
 					<li class="nav-item">
 						<a class="btn btn-link nav-link" asp-area="" asp-controller="User" asp-action="Login">Log in</a>
 					</li>
 					<li class="nav-item">
 						<a class="btn btn-link nav-link" asp-area="" asp-controller="User" asp-action="Register">Register</a>
 					</li>
-		}
+				}
 			</ul>
 		</div>
 	</header>
 	<div class="container">
 		<main role="main" class="pb-3">
-		@RenderBody()
+			@RenderBody()
 		</main>
 	</div>
 
@@ -69,19 +70,19 @@
 	<script src="~/lib/jquery/dist/jquery.min.js"></script>
 	<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 	<script src="~/js/site.js" asp-append-version="true"></script>
-			@await RenderSectionAsync("Scripts", required: false)
-<script>
-	function toggleNightMode(){
-		document.body.classList.toggle('night-mode');
-		var boxes = document.querySelectorAll('.box');
-		boxes.forEach(function(box){
-			box.classList.toggle('night-mode');
-		});
-	}
-</script>
+	@await RenderSectionAsync("Scripts", required: false)
+
+	<script>
+		function toggleNightMode(){
+			document.body.classList.toggle('night-mode');
+			var boxes = document.querySelectorAll('.box');
+			boxes.forEach(function(box){
+				box.classList.toggle('night-mode');
+			});
+		}
+	</script>
+
 </body>
-
-
 </html>
 
 
