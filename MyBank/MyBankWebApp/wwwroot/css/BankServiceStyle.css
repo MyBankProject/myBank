@@ -70,7 +70,6 @@
 .fancy-text {
     --a: -45deg;
     --t: 0.23em;
-    color: var(--third-color);
     font-size: 4rem;
     font-weight: bold;
     line-height: 1.5;
