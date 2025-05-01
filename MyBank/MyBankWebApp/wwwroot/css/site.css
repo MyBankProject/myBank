@@ -4,6 +4,7 @@
     --background-night: #19181f;
     --scd-background-night: #262b30;
     --white-color: #f0e6d9;
+    --main-color: #3ae8a4;
 }
 
 
@@ -43,4 +44,67 @@ body {
         background: var(--scd-background-night);
         box-shadow: none;
         border: 1px solid var(--main-color);
+    }
+
+
+#night-mode-label {
+    margin-right: 10px !important;
+    cursor: default !important;
+}
+
+#night-mode-label[href]{
+    cursor: default !important;
+}
+
+    #night-mode-label:hover {
+        color: var(--main-color) !important;
+    }
+
+/*NightModeSlider*/
+
+.slider-container {
+    margin-top: 3px;
+    width: 51px;
+    height: 22px;
+    position: relative;
+}
+
+
+.checkbox {
+    opacity: 0;
+    width: 0;
+    height: 0;
+    position: absolute;
+}
+
+.switch {
+    width: 100%;
+    height: 100%;
+    display: block;
+    background-color: #e9e9eb;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease-out;
+}
+
+.slider {
+    width: 22px;
+    height: 22px;
+    position: absolute;
+    left: calc(45% - 27px/2 - 10px);
+    top: calc(63.5% - 27px/2);
+    border-radius: 50%;
+    background: #FFFFFF;
+    box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.15), 0px 3px 1px rgba(0, 0, 0, 0.06);
+    transition: all 0.2s ease-out;
+    cursor: pointer;
+}
+
+.checkbox:checked + .switch {
+    background-color: #34C759;
+}
+
+    .checkbox:checked + .switch .slider {
+        left: calc(63% - 27px/2 + 10px);
+        top: calc(63.5% - 27px/2);
     }
