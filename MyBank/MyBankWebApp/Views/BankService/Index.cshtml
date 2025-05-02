@@ -73,8 +73,8 @@
 				{
 					<li>
 						<span class="@(transfer.Amount > 0 ? "incoming" : "outgoing")">@transfer.Amount.ToString("C", culture)</span>
-						<span>@transfer.CreationTime.ToString("dd-MM-yyyy")</span>
-						<span>@transfer.Description</span>
+						<span >@transfer.CreationTime.ToString("dd-MM-yyyy")</span>
+						<span >@transfer.Description</span>
 						<span>@transfer.OtherSideOfTransaction.Id</span>
 					</li>
 				}

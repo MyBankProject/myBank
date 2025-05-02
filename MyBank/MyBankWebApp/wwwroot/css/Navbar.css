@@ -1,10 +1,4 @@
-﻿:root {
-    --main-color: #33d797;
-    --navbar-color: #f5f5fb;
-    --secondary-color: navajowhite;
-}
-
-#custom-header {
+﻿#custom-header {
     background: var(--navbar-color);
     box-shadow: 1px 1px 0px 0px rgba(51, 215, 151, 0.4);
     font-size: 1.3rem;
@@ -73,6 +67,7 @@
                 border: none;
                 padding: 0;
                 font: inherit;
+                font-size: 1.2rem;
                 cursor: pointer;
             }
 

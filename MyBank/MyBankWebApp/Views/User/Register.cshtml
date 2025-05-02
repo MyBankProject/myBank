@@ -3,43 +3,43 @@
 
 <html>
 <body>
-	<h1>Register new user</h1>
+	<h1 class="mt-4">Register new user</h1>
 	<hr />
 	<div class="row">
 		<div class="col-md-4">
 			<form id="registerForm" asp-controller="User" asp-action="Register" method="post">
-				<div class="form-group mb-1">
-					<label asp-for="FirstName" class="control-label">First Name</label>
+				<div class="form-group mb-2">
+					<label asp-for="FirstName" class="control-label fs-5">First Name</label>
 					<input asp-for="FirstName" type="text" class="form-control" placeholder="John">
 					<span asp-validation-for="FirstName" class="text-danger"></span>
 				</div>
-				<div class="form-group mb-1">
-					<label asp-for="LastName" class="control-label">Last name</label>
+				<div class="form-group mb-2">
+					<label asp-for="LastName" class="control-label fs-5">Last name</label>
 					<input asp-for="LastName" type="text" class="form-control" placeholder="Smith">
 					<span asp-validation-for="LastName" class="text-danger"></span>
 				</div>
-				<div class="form-group mb-1">
-					<label asp-for="Email" class="control-label"></label>
+				<div class="form-group mb-2">
+					<label asp-for="Email" class="control-label fs-5"></label>
 					<input asp-for="Email" type="text" class="form-control" placeholder="john.smith@gmail.com" id="email">
 					<span asp-validation-for="Email" class="text-danger" id="emailError"></span>
 				</div>
-				<div class="form-group mb-1">
-					<label asp-for="Password" class="control-label"></label>
+				<div class="form-group mb-2">
+					<label asp-for="Password" class="control-label fs-5"></label>
 					<input asp-for="Password" type="password" class="form-control">
 					<span asp-validation-for="Password" class="text-danger"></span>
 				</div>
-				<div class="form-group mb-1">
-					<label asp-for="ConfirmPassword" class="control-label"></label>
+				<div class="form-group mb-2">
+					<label asp-for="ConfirmPassword" class="control-label fs-5"></label>
 					<input asp-for="ConfirmPassword" type="password" class="form-control">
 					<span asp-validation-for="ConfirmPassword" class="text-danger"></span>
 				</div>
-				<div class="form-group mb-1">
-					<label asp-for="Nationality" class="control-label"></label>
+				<div class="form-group mb-2">
+					<label asp-for="Nationality" class="control-label fs-5"></label>
 					<input asp-for="Nationality" class="form-control" placeholder="PL">
 					<span asp-validation-for="Nationality" class="text-danger"></span>
 				</div>
 				<div class="form-group">
-					<label asp-for="DateOfBirth" class="control-label">Date Of Birth</label>
+					<label asp-for="DateOfBirth" class="control-label fs-5">Date Of Birth</label>
 					<input asp-for="DateOfBirth" type="date" class="form-control" max="@DateTime.Today.AddYears(-18).ToString("yyyy-MM-dd")">
 					<span asp-validation-for="DateOfBirth" class="text-danger"></span>
 				</div>
