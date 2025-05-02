@@ -7,6 +7,9 @@
     --main-color: #3ae8a4;
 }
 
+html, body {
+    overflow-x: hidden;
+}
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
     box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
@@ -46,6 +49,12 @@ body.night-mode {
 }
 
 .box {
+    flex 1 1 100px;
+    min-width: 280px;
+    max-width: 100%;
+    padding: 25px;
+    overflow: hidden;
+    border-radius: 6px;
     background: var(--scd-background-light);
     box-shadow: 4px 4px 10px 1px rgba(51, 215, 151, 0.4);
     border: 1px solid var(--main-color);
