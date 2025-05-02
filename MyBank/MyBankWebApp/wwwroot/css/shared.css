@@ -3,6 +3,10 @@
     --secondary-color: #e9ba4d;
     --third-color: #ce6aec;
     --cancel-color: #e8563a;
-    --background-color: #19181f;
-    --scd-background-color: #262b30;
+
+    --background-light: #f7f6f6;
+    --scd-background-light: #f5f5fb;
+    --background-night: #19181f;
+    --scd-background-night: #262b30;
+    --white-color: #f0e6d9;
 }
