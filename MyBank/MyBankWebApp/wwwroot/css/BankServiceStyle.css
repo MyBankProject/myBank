@@ -110,7 +110,7 @@
     text-align: center;
     text-decoration: none;
     box-shadow: 0 0 0 0.1em inset var(--main-color);
-    color: var(--white-color);
+    color: var(--secondary-color);
     --_g: linear-gradient(var(--main-color) 0 0) no-repeat;
     background: var(--_g) calc(var(--_p, 0%) - 100%) 0%, var(--_g) calc(200% - var(--_p, 0%)) 0%, var(--_g) calc(var(--_p, 0%) - 100%) 100%, var(--_g) calc(200% - var(--_p, 0%)) 100%;
     background-size: 50.5% calc(var(--_p, 0%) / 2 + 0.5%);
