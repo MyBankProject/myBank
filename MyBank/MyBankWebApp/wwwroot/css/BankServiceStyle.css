@@ -218,7 +218,7 @@
         color: var(--secondary-color);
     }
 
-@media(max-width: 768px){
+@media(max-width: 992px){
     .balance-cards-container,
     .bottom-container {
         flex-direction: column;
