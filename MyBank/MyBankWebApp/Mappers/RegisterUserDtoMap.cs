@@ -4,9 +4,9 @@ using MyBankWebApp.ViewModels;
 
 namespace MyBankWebApp.Mappers
 {
-    public class RegisterUserDtoMapper : Profile
+    public class RegisterUserDtoMap : Profile
     {
-        public RegisterUserDtoMapper()
+        public RegisterUserDtoMap()
         {
             CreateMap<UserViewModel, RegisterUserDto>();
         }

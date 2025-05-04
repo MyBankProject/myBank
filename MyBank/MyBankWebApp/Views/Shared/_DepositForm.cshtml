@@ -1,0 +1,25 @@
+﻿@model DepositViewModel
+
+<form asp-action="Deposit">
+	<div class="form-group m-0 justify-content-start">
+		<label asp-for="Amount" class="control-label fs-3">Amount</label>
+		<input asp-for="Amount" class="form-control" />
+		<span asp-validation-for="Amount" class="text-danger fs-5"></span>
+		<a type="submit" onclick="OnSubmitForm(this)" class="mt-2">Submit</a>
+	</div>
+</form>
+
+<script>
+	function OnSubmitForm(anchor) {
+		const form = anchor.closest('form');
+		const amountInput = form.querySelector('input[name="Amount"]');
+
+
+		if (parseFloat(amountInput.value) > 0) {
+			form.submit();
+		} else {
+			const validationSpan = form.querySelector('span[data-valmsg-for="Amount"]');
+			validationSpan.textContent = "Amount must be greater than zero";
+		}
+	}
+</script>
