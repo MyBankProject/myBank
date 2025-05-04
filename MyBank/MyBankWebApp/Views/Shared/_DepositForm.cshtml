@@ -3,7 +3,7 @@
 <form asp-action="Deposit">
 	<div class="form-group m-0 justify-content-start">
 		<label asp-for="Amount" class="control-label fs-3">Amount</label>
-		<input asp-for="Amount" class="form-control fs-5" />
+		<input asp-for="Amount" class="form-control" />
 		<span asp-validation-for="Amount" class="text-danger fs-5"></span>
 		<a type="submit" onclick="OnSubmitForm(this)" class="mt-2">Submit</a>
 	</div>
