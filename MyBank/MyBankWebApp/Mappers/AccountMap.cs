@@ -5,9 +5,9 @@ using static MyBankWebApp.Enums;
 
 namespace MyBankWebApp.Mappers
 {
-    public class AccountMapper : Profile
+    public class AccountMap : Profile
     {
-        public AccountMapper()
+        public AccountMap()
         {
             CreateMap<Account, AccountViewModel>()
                 .ForMember(dest => dest.Transactions, opt =>

@@ -1,22 +1,93 @@
-html {
-  font-size: 14px;
+:root {
+    --background-light: #f7f6f6;
+    --scd-background-light: #f5f5fb;
+    --background-night: #19181f;
+    --scd-background-night: #262b30;
+    --white-color: #f0e6d9;
+    --main-color: #3ae8a4;
 }
 
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+html, body {
+    overflow-x: hidden;
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
 html {
-  position: relative;
-  min-height: 100%;
+    font-size: 16px;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
-  margin-bottom: 60px;
+    font-family: "Bebas Neue", sans-serif;
+    background: var(--background-light);
+    margin-bottom: 60px;
 }
+
+.main-container{
+    margin-left: 3%;
+    margin-right: 3%;
+}
+
+main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+    width: 100%;
+}
+
+.form-control {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    box-shadow: none;
+    outline: none;
+}
+
+    .form-control:focus {
+        box-shadow: none;
+        outline: none;
+    }
+
+body.transition {
+    transition: background-color 0.5s, color 0.5s;
+}
+
+body.night-mode {
+    background: var(--background-night);
+    color: var(--white-color);
+    margin-bottom: 60px;
+}
+
+.box {
+    flex 1 1 100px;
+    min-width: 280px;
+    max-width: 100%;
+    padding: 25px;
+    overflow: hidden;
+    border-radius: 6px;
+    background: var(--scd-background-light);
+    box-shadow: 4px 4px 10px 1px rgba(51, 215, 151, 0.4);
+    border: 1px solid var(--main-color);
+}
+
+    .box.night-mode {
+        background: var(--scd-background-night);
+        box-shadow: none;
+        border: 1px solid var(--main-color);
+    }
+
+
+#night-mode-label {
+    margin-right: 10px !important;
+    cursor: default !important;
+}
+
+    #night-mode-label[href] {
+        cursor: default !important;
+    }
+
+    #night-mode-label:hover {
+        color: var(--main-color) !important;
+    }

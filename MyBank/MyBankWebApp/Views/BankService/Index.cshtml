@@ -1,11 +1,11 @@
-﻿@model AccountViewModel
+﻿@using System.Text.RegularExpressions
+@model AccountViewModel
 @{
 	ViewData["Title"] = "Bank Service";
 
 	var successMessage = TempData["SuccessMessage"];
 	var errorMessage = TempData["ErrorMessage"];
-	<link rel="stylesheet" href="~/css/bankServiceStyle.css" asp-append-version="true"/>
-	<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="~/css/bankServiceStyle.css" asp-append-version="true" />
 	<link rel="stylesheet"
 		  href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=settings" />
 	if (successMessage != null)
@@ -23,18 +23,6 @@
 }
 
 <div class="main">
-	<div class="box" id="top-box">
-		<div>
-			<img src="~/img/Logos/Logo-green.png" alt="Logo" class="logo zoom-animation">
-		</div>
-		<div>
-			<h2>Your Account</h2>
-		</div>
-		<div>
-			<span id="settings-button" class="material-symbols-outlined zoom-animation">settings</span>
-		</div>
-	</div>
-
 	<div class="greeting-container">
 		<div class="box" id="greeting-box">
 			<h2 class="fancy-text"><span>Your Finances</span></h2>
@@ -50,6 +38,13 @@
 				<h1>@String.Format("{0:N2}", Model.Balance)</h1>
 				<h1 id="currency">$</h1>
 			</div>
+			@{
+				var formattedIban = Regex.Replace(Model.IBAN, @"(\d{2})(\d{4})(\d{4})(\d{4})(\d{4})(\d{4})(\d{0,4})",
+				m => string.Join(" ", m.Groups.Cast<Group>().Skip(1).Where(g => g.Length > 0).Select(g => g.Value)));
+			}
+			<h3>
+				<button id="ibanBtn" onclick="onCopyIbanToClipboard()">@formattedIban</button>
+			</h3>
 			<div class="buttons-container">
 				<a asp-controller="BankService" asp-action="NewTransaction" asp-route-id="@Model.Id">New Transaction</a>
 				<a>Internal</a>
@@ -62,7 +57,9 @@
 
 	<div class="bottom-container">
 		<div class="box" id="calculations-box">
-			<h2>Calculations / How much did you spend this month?</h2>
+			<h2>Empty account? <br /> need some money? <br /> <span style="color: aquamarine">Ask Your mom for some!</span></h2>
+			<br />
+			@Html.Partial("_DepositForm", new DepositViewModel())
 		</div>
 		<div class="box" id="history-box">
 			<h2>History of transactions</h2>
@@ -76,13 +73,37 @@
 				{
 					<li>
 						<span class="@(transfer.Amount > 0 ? "incoming" : "outgoing")">@transfer.Amount.ToString("C", culture)</span>
-						<span>@transfer.CreationTime.ToString("dd-MM-yyyy")</span>
-						<span>@transfer.Description</span>
+						<span >@transfer.CreationTime.ToString("dd-MM-yyyy")</span>
+						<span >@transfer.Description</span>
 						<span>@transfer.OtherSideOfTransaction.Id</span>
 					</li>
 				}
 			</ul>
 
+			<div>
+				<a id="show-more"> Show More</a>
+			</div>
 		</div>
 	</div>
 </div>
+
+<script>
+
+	function onCopyIbanToClipboard() {
+		const ibanElement = document.getElementById("ibanBtn");
+
+		if (ibanElement.innerText !== "Copied!") {
+			const text = ibanElement.innerText;
+
+			navigator.clipboard.writeText(text).then(() => {
+				ibanElement.innerText = "Copied!";
+
+				setTimeout(() => {
+					ibanElement.innerText = text;
+				}, 1000);
+			}).catch(err => {
+				console.error("Błąd kopiowania: ", err);
+			});
+		}
+	}
+</script>
