@@ -28,16 +28,11 @@ namespace MyBankWebApp.Services.Transactions
         public async Task AddDepositAsync(DepositViewModel newDeposit)
         {
             string filteredIban = Regex.Replace(newDeposit.ReceiverIBAN, @"\D", "");
-            Account? reciverAccount = await accountDetailsRepository.GetAccountByIbanAsync(filteredIban);
-            if (reciverAccount == null)
-            {
-                throw new UserNotFoundException("Reciver not found");
-            }
-
+            Account? receiverAccount = await accountDetailsRepository.GetAccountByIbanAsync(filteredIban) ?? throw new UserNotFoundException("Receiver not found");
             using IDbContextTransaction dbTransaction = await transactionRepository.BeginTransactionAsync();
             try
             {
-                await ProcessDeposit(reciverAccount!, newDeposit);
+                await ProcessDeposit(receiverAccount!, newDeposit);
                 await dbTransaction.CommitAsync();
             }
             catch
@@ -50,13 +45,13 @@ namespace MyBankWebApp.Services.Transactions
         public async Task AddTransactionAsync(NewTransactionViewModel newTransaction)
         {
             string filteredIban = Regex.Replace(newTransaction.ReceiverIBAN, @"\D", "");
-            Account? reciverAccount = await accountDetailsRepository.GetAccountByIbanAsync(filteredIban);
+            Account? receiverAccount = await accountDetailsRepository.GetAccountByIbanAsync(filteredIban);
             Account? senderAccount = await accountDetailsRepository.GetByIdAsync(newTransaction.SenderId);
-            ValidateTransaction(senderAccount, reciverAccount, newTransaction);
+            ValidateTransaction(senderAccount, receiverAccount, newTransaction);
             using IDbContextTransaction dbTransaction = await transactionRepository.BeginTransactionAsync();
             try
             {
-                await ProcessTransaction(senderAccount!, reciverAccount!, newTransaction);
+                await ProcessTransaction(senderAccount!, receiverAccount!, newTransaction);
                 await dbTransaction.CommitAsync();
             }
             catch
@@ -66,65 +61,65 @@ namespace MyBankWebApp.Services.Transactions
             }
         }
 
-        private static void UpdateBalanceForBothSides(Account senderAccount, Account reciverAccount, NewTransactionViewModel newTransaction)
+        private static void UpdateBalanceForBothSides(Account senderAccount, Account receiverAccount, NewTransactionViewModel newTransaction)
         {
             senderAccount.Balance -= newTransaction.Amount;
-            reciverAccount.Balance += newTransaction.Amount;
+            receiverAccount.Balance += newTransaction.Amount;
         }
 
-        private static void ValidateTransaction(Account? senderAccount, Account? reciverAccount, NewTransactionViewModel newTransaction)
+        private static void ValidateTransaction(Account? senderAccount, Account? receiverAccount, NewTransactionViewModel newTransaction)
         {
             if (senderAccount == null)
-                throw new UserNotFoundException("Reciver not found");
+                throw new UserNotFoundException("Receiver not found");
 
-            if (reciverAccount == null)
+            if (receiverAccount == null)
                 throw new UserNotFoundException("Sender not found");
 
             if (senderAccount.Balance < newTransaction.Amount)
                 throw new LackOfFundsException("Not enough funds");
         }
 
-        private Transaction CreateTransaction(Account senderAccount, Account reciverAccount, NewTransactionViewModel newTransaction)
+        private Transaction CreateTransaction(Account senderAccount, Account receiverAccount, NewTransactionViewModel newTransaction)
         {
             Transaction transaction = mapper.Map<Transaction>(newTransaction);
-            transaction.ReceiverId = reciverAccount.Id;
+            transaction.ReceiverId = receiverAccount.Id;
             transaction.SenderId = senderAccount.Id;
-            transaction.StatusId = Enum.IsDefined(typeof(Enums.TransactionStatuses), Enums.TransactionStatuses.Completed)
-                        ? (int)Enums.TransactionStatuses.Completed
+            transaction.StatusId = Enum.IsDefined(typeof(TransactionStatuses), TransactionStatuses.Completed)
+                        ? (int)TransactionStatuses.Completed
                         : default;
-            transaction.TransactionTypeId = Enum.IsDefined(typeof(TransactionTypes), Enums.TransactionTypes.Transfer)
-                        ? (int)Enums.TransactionTypes.Transfer
+            transaction.TransactionTypeId = Enum.IsDefined(typeof(TransactionTypes), TransactionTypes.Transfer)
+                        ? (int)TransactionTypes.Transfer
                         : default;
             return transaction;
         }
 
-        private Transaction CreateTransaction(Account reciverAccount, DepositViewModel newDeposit)
+        private Transaction CreateTransaction(Account receiverAccount, DepositViewModel newDeposit)
         {
             Transaction transaction = mapper.Map<Transaction>(newDeposit);
-            transaction.ReceiverId = reciverAccount.Id;
+            transaction.ReceiverId = receiverAccount.Id;
             transaction.Description = DEPOSIT_DESCRIPTION_STRING;
-            transaction.SenderId  = DEPOSIT_SENDER_DEFAULT;
-            transaction.StatusId = Enum.IsDefined(typeof(Enums.TransactionStatuses), Enums.TransactionStatuses.Completed)
-                        ? (int)Enums.TransactionStatuses.Completed
+            transaction.SenderId = DEPOSIT_SENDER_DEFAULT;
+            transaction.StatusId = Enum.IsDefined(typeof(TransactionStatuses), TransactionStatuses.Completed)
+                        ? (int)TransactionStatuses.Completed
                         : default;
-            transaction.TransactionTypeId = Enum.IsDefined(typeof(TransactionTypes), Enums.TransactionTypes.Transfer)
-                        ? (int)Enums.TransactionTypes.Deposit
+            transaction.TransactionTypeId = Enum.IsDefined(typeof(TransactionTypes), TransactionTypes.Transfer)
+                        ? (int)TransactionTypes.Deposit
                         : default;
             return transaction;
         }
 
-        private async Task ProcessTransaction(Account senderAccount, Account reciverAccount, NewTransactionViewModel newTransaction)
+        private async Task ProcessDeposit(Account receiverAccount, DepositViewModel newDeposit)
         {
-            Transaction transaction = CreateTransaction(senderAccount, reciverAccount, newTransaction);
-            UpdateBalanceForBothSides(senderAccount, reciverAccount, newTransaction);
+            Transaction transaction = CreateTransaction(receiverAccount, newDeposit);
+            receiverAccount.Balance += newDeposit.Amount;
             await transactionRepository.AddAsync(transaction);
             await transactionRepository.SaveAsync();
         }
 
-        private async Task ProcessDeposit(Account reciverAccount, DepositViewModel newDeposit)
+        private async Task ProcessTransaction(Account senderAccount, Account receiverAccount, NewTransactionViewModel newTransaction)
         {
-            Transaction transaction = CreateTransaction(reciverAccount, newDeposit);
-            reciverAccount.Balance += newDeposit.Amount;
+            Transaction transaction = CreateTransaction(senderAccount, receiverAccount, newTransaction);
+            UpdateBalanceForBothSides(senderAccount, receiverAccount, newTransaction);
             await transactionRepository.AddAsync(transaction);
             await transactionRepository.SaveAsync();
         }

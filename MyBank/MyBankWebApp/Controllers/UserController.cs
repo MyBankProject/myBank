@@ -10,9 +10,9 @@ namespace MyBankWebApp.Controllers
 {
     public class UserController : Controller
     {
-        private readonly IUserService userService;
         private readonly ILogger<UserController> logger;
         private readonly IMapper mapper;
+        private readonly IUserService userService;
 
         public UserController(IUserService userService, ILogger<UserController> logger, IMapper mapper)
         {
@@ -25,14 +25,16 @@ namespace MyBankWebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> IsEmailTaken()
         {
-            using (var reader = new System.IO.StreamReader(Request.Body))
+            using var reader = new System.IO.StreamReader(Request.Body);
+            string body = await reader.ReadToEndAsync();
+            Dictionary<string, string>? emailData = JsonConvert.DeserializeObject<Dictionary<string, string>>(body);
+            if (emailData == null || !emailData.TryGetValue("email", out string? email))
             {
-                var body = await reader.ReadToEndAsync();
-                var emailData = JsonConvert.DeserializeObject<Dictionary<string, string>>(body);
-                var email = emailData["email"];
-                bool isEmailTaken = await userService.AnyUserByQuerryAsync(query => query.Where(u => u.Email == email));
-                return Json(isEmailTaken);
+                return BadRequest("Invalid request body or missing 'email' key.");
             }
+
+            bool isEmailTaken = await userService.AnyUserByQueryAsync(query => query.Where(u => u.Email == email));
+            return Json(isEmailTaken);
         }
 
         [HttpGet]
@@ -49,9 +51,9 @@ namespace MyBankWebApp.Controllers
 
             Response.Cookies.Append("AuthToken", token, new CookieOptions
             {
-                HttpOnly = true, // Zabezpiecza przed dostępem przez JavaScript
-                Secure = true, // Włączone dla HTTPS
-                Expires = DateTime.UtcNow.AddHours(1) // Token ważny przez 1 godzinę
+                HttpOnly = true,
+                Secure = true,
+                Expires = DateTime.UtcNow.AddHours(1)
             });
             return RedirectToAction("Index", "BankService");
         }
@@ -76,7 +78,7 @@ namespace MyBankWebApp.Controllers
             }
             try
             {
-                var dto = mapper.Map<RegisterUserDto>(model);
+                RegisterUserDto dto = mapper.Map<RegisterUserDto>(model);
                 await userService.RegisterUser(dto);
                 TempData["SuccessMessage"] = "Registration Successful!";
                 return RedirectToAction("Index", "Home");

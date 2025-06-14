@@ -28,4 +28,8 @@
     <None Include="wwwroot\img\Logo.png" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="DTOs\Creates\" />
+  </ItemGroup>
+
 </Project>

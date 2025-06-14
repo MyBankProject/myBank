@@ -11,9 +11,9 @@ namespace MyBankWebApp.Services.Accounts
 {
     public class AccountService(IMapper mapper, IAccountRepository accountRepository) : IAccountService
     {
-        private readonly IMapper mapper = mapper;
         private readonly IAccountRepository accountRepository = accountRepository;
-        private readonly IbanGenerator ibanGenerator = new IbanGenerator();
+        private readonly IbanGenerator ibanGenerator = new();
+        private readonly IMapper mapper = mapper;
 
         public async Task<Account> CreateAccount(string countryCode)
         {
@@ -28,7 +28,7 @@ namespace MyBankWebApp.Services.Accounts
             return account;
         }
 
-        public async Task<AccountViewModel> GetAccountVmByIdAsync(int id)
+        public async Task<AccountViewModel> GetAccountViewModelByIdAsync(int id)
         {
             Account? account = await accountRepository.GetByIdAsync(id, query => query
                     .Include(a => a.ReceivedTransactions)
@@ -40,7 +40,7 @@ namespace MyBankWebApp.Services.Accounts
                 {
                     t.OtherSideOfTransaction = mapper.Map<AccountViewModel>(await accountRepository.GetByIdAsync(t.OtherSideOfTransactionId));
                 }
-                accountVM.Transactions = accountVM.Transactions.OrderByDescending(x => x.CreationTime).ToList();
+                accountVM.Transactions = [.. accountVM.Transactions.OrderByDescending(x => x.CreationTime)];
             }
             return accountVM;
         }

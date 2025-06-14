@@ -12,18 +12,13 @@ namespace MyBankWebApp.Models
 
         [MaxLength(200)]
         public string? Description { get; set; }
-
         public required int StatusId {  get; set; }
-        public TransactionStatus Status { get; set; }
-
+        public TransactionStatus? Status { get; set; }
         public required int TransactionTypeId {  get; set; }
-        public TransactionType TransactionType { get; set; }
-
+        public TransactionType? TransactionType { get; set; }
         public Account? ReceiverAccount { get; set; }
         public int ReceiverId { get; set; }
-
         public Account? SenderAccount { get; set; }
-        //TODO: Zmienić na nullowalny
         public int SenderId { get; set; }
     }
 }

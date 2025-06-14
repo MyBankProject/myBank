@@ -18,7 +18,7 @@ namespace MyBankWebAppTests.Services.Transactions
         private const string default_CountryCode = "PL";
         private Mock<IAccountRepository> accountDetailsRepository;
         private IMapper mapper;
-        private Account reciver;
+        private Account receiver;
         private Account sender;
         private TransactionService sut;
         private Mock<ITransactionRepository> transactionRepository;
@@ -53,7 +53,7 @@ namespace MyBankWebAppTests.Services.Transactions
             accountDetailsRepository.Verify(_ => _.GetByIdAsync(senderId, null), Times.Once);
             transactionRepository.Verify(_ => _.BeginTransactionAsync(), Times.Once);
             Assert.AreEqual(0.00m, sender.Balance);
-            Assert.AreEqual(200.00m, reciver.Balance);
+            Assert.AreEqual(200.00m, receiver.Balance);
             transaction.Verify(_ => _.CommitAsync(It.IsAny<CancellationToken>()), Times.Once);
             transactionRepository.Verify(_ => _.AddAsync(It.IsAny<Transaction>()), Times.Once);
             transactionRepository.Verify(_ => _.SaveAsync(), Times.Once);
@@ -116,7 +116,7 @@ namespace MyBankWebAppTests.Services.Transactions
         {
             transactionRepository = new Mock<ITransactionRepository>();
             accountDetailsRepository = new Mock<IAccountRepository>();
-            reciver = new Account() 
+            receiver = new Account() 
             {
                 Balance = 100,
                 IBAN = default_Iban,
@@ -129,7 +129,7 @@ namespace MyBankWebAppTests.Services.Transactions
                 CountryCode = default_CountryCode
             };
             accountDetailsRepository.Setup(_ => _.GetByIdAsync(It.IsAny<int>(), null)).ReturnsAsync(sender);
-            accountDetailsRepository.Setup(_ => _.GetAccountByIbanAsync(It.IsAny<string>())).ReturnsAsync(reciver);
+            accountDetailsRepository.Setup(_ => _.GetAccountByIbanAsync(It.IsAny<string>())).ReturnsAsync(receiver);
 
             var config = new MapperConfiguration(cfg =>
             {

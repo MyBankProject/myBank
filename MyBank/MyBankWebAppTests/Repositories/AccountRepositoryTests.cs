@@ -71,7 +71,7 @@ namespace MyBankWebAppTests.Repositories
         public async Task GetAccountByIbanAsync_DbContainsIban_ReturnsCorrect()
         {
             //Act
-            var result = await sut.GetAccountByIbanAsync(default_Iban);
+            Account result = await sut.GetAccountByIbanAsync(default_Iban);
 
             //Assert
             Assert.IsNotNull(result);
@@ -82,7 +82,7 @@ namespace MyBankWebAppTests.Repositories
         public async Task GetAccountByIbanAsync_DbDoesNotContainsIban_ReturnsNull()
         {
             //Act
-            var result = await sut.GetAccountByIbanAsync("111111111111111111");
+            Account result = await sut.GetAccountByIbanAsync("111111111111111111");
 
             //Assert
             Assert.IsNull(result);
@@ -92,7 +92,7 @@ namespace MyBankWebAppTests.Repositories
         public async Task GetByIdAsync_ReturnsCorrect()
         {
             //Act
-            var result = await sut.GetByIdAsync(default_Id);
+            Account result = await sut.GetByIdAsync(default_Id);
 
             //Assert
             Assert.IsNotNull(result);
@@ -108,7 +108,7 @@ namespace MyBankWebAppTests.Repositories
 
         private async Task<ApplicationDbContext> GetDbContext()
         {
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+            DbContextOptions<ApplicationDbContext> options = new DbContextOptionsBuilder<ApplicationDbContext>()
                 .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
                 .Options;
             var context = new ApplicationDbContext(options);

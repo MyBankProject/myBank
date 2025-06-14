@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using MyBankWebApp.Entities;
 using MyBankWebApp.Models;
 using MyBankWebApp.Models.Enums;
+using MyBankWebApp.Models.Users;
 
 namespace MyBankWebApp.Data
 {
