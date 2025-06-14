@@ -9,7 +9,7 @@ namespace MyBankWebApp.Repositories.Abstractions
 
         Task<IDbContextTransaction> BeginTransactionAsync();
 
-        Task<Account?> GetByIdAsync(int id, Func<IQueryable<Account>, IQueryable<Account>>? inclue = null);
+        Task<Account?> GetByIdAsync(int id, Func<IQueryable<Account>, IQueryable<Account>>? include = null);
 
         Task SaveAsync();
     }

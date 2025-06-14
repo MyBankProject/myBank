@@ -17,12 +17,12 @@ namespace MyBankWebApp.Models.Validators
 
             RuleFor(x => x.ConfirmPassword)
                 .Equal(p => p.Password)
-                .WithMessage("Passwords do not match."); ;
+                .WithMessage("Passwords do not match.");
 
             RuleFor(x => x.Email)
                 .Custom((value, context) =>
                 {
-                    var emailInUse = dbContext.Users.Any(u => u.Email == value);
+                    bool emailInUse = dbContext.Users.Any(u => u.Email == value);
                     if(emailInUse)
                     {
                         context.AddFailure("Email", "That email is taken");

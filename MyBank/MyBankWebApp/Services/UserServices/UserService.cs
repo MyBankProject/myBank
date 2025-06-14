@@ -1,6 +1,8 @@
 ﻿using FluentValidation;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.IdentityModel.Tokens;
 using MyBankWebApp.Data;
 using MyBankWebApp.DTOs;
@@ -107,13 +109,13 @@ namespace MyBankWebApp.Services.UserServices
 
         public async Task<List<string>> RegisterUser(RegisterUserDto dto)
         {
-            var result = validator.Validate(dto);
+            ValidationResult result = validator.Validate(dto);
             if (!result.IsValid)
             {
                 return [.. result.Errors.Select(e => e.ErrorMessage)];
             }
 
-            var transaction = await dbContext.Database.BeginTransactionAsync();
+            IDbContextTransaction transaction = await dbContext.Database.BeginTransactionAsync();
             try
             {
                 var newUser = new User()

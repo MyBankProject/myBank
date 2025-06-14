@@ -17,6 +17,7 @@ namespace MyBankWebApp.ControllersApi
         }
 
         [HttpPost("login")]
+        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
         public ActionResult Login([FromBody] LoginDto dto)
         {
             string token = userService.GenerateJwt(dto);

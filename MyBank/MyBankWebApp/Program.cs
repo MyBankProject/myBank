@@ -23,11 +23,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Register controllers
 builder.Services.AddControllersWithViews();
 
-// dziala w przypadku api.. w przypadku serwisow trzeba recznie wstrzykiwac
-//builder.Services.AddControllers();
-//builder.Services.AddFluentValidationAutoValidation(); // Automatyczna walidacja
-//builder.Services.AddFluentValidationClientsideAdapters(); // Obs³uga walidacji po stronie klienta
-builder.Services.AddValidatorsFromAssemblyContaining<RegisterUserDtoValidator>(); // Rejestracja walidatorów
+builder.Services.AddValidatorsFromAssemblyContaining<RegisterUserDtoValidator>(); 
 
 //Register Services
 builder.Services.AddScoped<ITransactionService, TransactionService>();

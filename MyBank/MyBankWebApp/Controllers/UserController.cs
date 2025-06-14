@@ -78,7 +78,7 @@ namespace MyBankWebApp.Controllers
             }
             try
             {
-                var dto = mapper.Map<RegisterUserDto>(model);
+                RegisterUserDto dto = mapper.Map<RegisterUserDto>(model);
                 await userService.RegisterUser(dto);
                 TempData["SuccessMessage"] = "Registration Successful!";
                 return RedirectToAction("Index", "Home");

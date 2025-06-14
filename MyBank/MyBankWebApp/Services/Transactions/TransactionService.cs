@@ -61,10 +61,10 @@ namespace MyBankWebApp.Services.Transactions
             }
         }
 
-        private static void UpdateBalanceForBothSides(Account senderAccount, Account reciverAccount, NewTransactionViewModel newTransaction)
+        private static void UpdateBalanceForBothSides(Account senderAccount, Account receiverAccount, NewTransactionViewModel newTransaction)
         {
             senderAccount.Balance -= newTransaction.Amount;
-            reciverAccount.Balance += newTransaction.Amount;
+            receiverAccount.Balance += newTransaction.Amount;
         }
 
         private static void ValidateTransaction(Account? senderAccount, Account? receiverAccount, NewTransactionViewModel newTransaction)
