@@ -7,7 +7,5 @@ namespace MyBankWebApp.Repositories.Abstractions
         Task<bool> AnyByIdAsync(int id);
 
         Task<Account?> GetAccountByIbanAsync(string iban);
-
-        Task<Account?> GetByIdAsync(int id, Func<IQueryable<Account>, IQueryable<Account>>? inclue = null);
     }
 }

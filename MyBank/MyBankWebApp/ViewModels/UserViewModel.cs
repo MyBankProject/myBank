@@ -8,7 +8,7 @@ namespace MyBankWebApp.ViewModels
 
         public required string LastName { get; set; }
 
-        [EmailAddress(ErrorMessage = "Invalid email fromat")]
+        [EmailAddress(ErrorMessage = "Invalid email format")]
         public required string Email { get; set; }
 
         [MinLength(6)]

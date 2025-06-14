@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore.Storage;
+using MyBankWebApp.Models;
 
 namespace MyBankWebApp.Repositories.Abstractions
 {
@@ -7,6 +8,8 @@ namespace MyBankWebApp.Repositories.Abstractions
         Task AddAsync(T transaction);
 
         Task<IDbContextTransaction> BeginTransactionAsync();
+
+        Task<Account?> GetByIdAsync(int id, Func<IQueryable<Account>, IQueryable<Account>>? inclue = null);
 
         Task SaveAsync();
     }

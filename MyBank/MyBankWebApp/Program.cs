@@ -5,19 +5,18 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using MyBankWebApp;
 using MyBankWebApp.Data;
-using MyBankWebApp.Models.Validators;
-using MyBankWebApp.Services.Transactions.Abstractions;
-using MyBankWebApp.Services.UserServices.Abstractions;
-using MyBankWebApp.Services.UserServices;
-using System.Text;
-using MyBankWebApp.Services.Transactions;
-using MyBankWebApp.Repositories.Abstractions;
-using MyBankWebApp.Repositories;
-using MyBankWebApp.Models;
-using MyBankWebApp.Services.Accounts.Abstractions;
-using MyBankWebApp.Services.Accounts;
 using MyBankWebApp.Middlewares;
 using MyBankWebApp.Models.Users;
+using MyBankWebApp.Models.Validators;
+using MyBankWebApp.Repositories;
+using MyBankWebApp.Repositories.Abstractions;
+using MyBankWebApp.Services.Accounts;
+using MyBankWebApp.Services.Accounts.Abstractions;
+using MyBankWebApp.Services.Transactions;
+using MyBankWebApp.Services.Transactions.Abstractions;
+using MyBankWebApp.Services.UserServices;
+using MyBankWebApp.Services.UserServices.Abstractions;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -39,7 +38,6 @@ builder.Services.AddScoped<IAccountService, AccountService>();
 
 //Register Mappers
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-
 
 //Register Db Context
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -68,7 +66,7 @@ builder.Services.AddAuthentication(option =>
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authenticationSettings.JwtKey)),
     };
 
-    // Pobieranie tokena z ciasteczka
+    // Get token from cookie
     cfg.Events = new JwtBearerEvents
     {
         OnMessageReceived = context =>
@@ -81,13 +79,13 @@ builder.Services.AddAuthentication(option =>
         },
         OnChallenge = context =>
         {
-            context.HandleResponse(); // Zapobiega domyœlnemu b³êdowi 401
-            context.Response.Redirect("/User/Login"); // Przekierowanie na stronê logowania
+            context.HandleResponse(); 
+            context.Response.Redirect("/User/Login"); 
             return Task.CompletedTask;
         }
     };
 });
-//builder.Services.AddScoped<IValidator<RegisterUserDto>, RegisterUserDtoValidator>();
+
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 
 builder.Services.AddScoped<IUserService, UserService>();

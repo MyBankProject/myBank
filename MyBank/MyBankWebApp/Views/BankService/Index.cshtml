@@ -39,7 +39,7 @@
 				<h1 id="currency">$</h1>
 			</div>
 			@{
-				var formattedIban = Regex.Replace(Model.IBAN, @"(\d{2})(\d{4})(\d{4})(\d{4})(\d{4})(\d{4})(\d{0,4})",
+				var formattedIban = Regex.Replace(Model.Iban, @"(\d{2})(\d{4})(\d{4})(\d{4})(\d{4})(\d{4})(\d{0,4})",
 				m => string.Join(" ", m.Groups.Cast<Group>().Skip(1).Where(g => g.Length > 0).Select(g => g.Value)));
 			}
 			<h3>
