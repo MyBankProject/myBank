@@ -1,6 +1,6 @@
 ﻿using MyBankWebApp.DTOs;
 using MyBankWebApp.DTOs.Creates;
-using MyBankWebApp.Entities;
+using MyBankWebApp.Models.Users;
 
 namespace MyBankWebApp.Services.UserServices.Abstractions
 {

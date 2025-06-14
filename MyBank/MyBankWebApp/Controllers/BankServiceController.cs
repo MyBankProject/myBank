@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using MyBankWebApp.Entities;
 using MyBankWebApp.Exceptions;
+using MyBankWebApp.Models.Users;
 using MyBankWebApp.Repositories.Abstractions;
 using MyBankWebApp.Services.Accounts.Abstractions;
 using MyBankWebApp.Services.Transactions.Abstractions;

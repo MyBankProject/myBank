@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using MyBankWebApp;
 using MyBankWebApp.Data;
-using MyBankWebApp.Entities;
 using MyBankWebApp.Models.Validators;
 using MyBankWebApp.Services.Transactions.Abstractions;
 using MyBankWebApp.Services.UserServices.Abstractions;
@@ -18,6 +17,7 @@ using MyBankWebApp.Models;
 using MyBankWebApp.Services.Accounts.Abstractions;
 using MyBankWebApp.Services.Accounts;
 using MyBankWebApp.Middlewares;
+using MyBankWebApp.Models.Users;
 
 var builder = WebApplication.CreateBuilder(args);
 

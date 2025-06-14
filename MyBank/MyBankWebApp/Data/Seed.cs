@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using MyBankWebApp.Entities;
 using MyBankWebApp.Models;
+using MyBankWebApp.Models.Users;
 using static MyBankWebApp.Enums;
 
 namespace MyBankWebApp.Data
