@@ -30,16 +30,18 @@ namespace MyBankWebApp.Services.UserServices
             IPasswordHasher<User> passwordHasher,
             AuthenticationSettings authenticationSettings,
             IValidator<RegisterUserDto> validator,
-            IAccountService accountService)
+            IAccountService accountService,
+            ILogger<UserService> logger)
         {
             this.dbContext = dbContext;
             this.passwordHasher = passwordHasher;
             this.authenticationSettings = authenticationSettings;
             this.validator = validator;
             this.accountService = accountService;
+            this.logger = logger;
         }
 
-        public async Task<bool> AnyUserByQuerryAsync(Func<IQueryable<User>, IQueryable<User>> query)
+        public async Task<bool> AnyUserByQueryAsync(Func<IQueryable<User>, IQueryable<User>> query)
         {
             if (query == null)
             {
@@ -49,18 +51,13 @@ namespace MyBankWebApp.Services.UserServices
             return await queryToCheck.AnyAsync();
         }
 
-
         public string GenerateJwt(LoginDto dto)
         {
-            var user = dbContext.Users
+            User user = dbContext.Users
                 .Include(u => u.Role)
-                .FirstOrDefault(u => u.Email == dto.Email);
-            if (user == null)
-            {
-                throw new BadReQuestException("Invalid username or password"); 
-            }
-
-            var result = passwordHasher.VerifyHashedPassword(user, user.PasswordHash, dto.Password);
+                .FirstOrDefault(u => u.Email == dto.Email) 
+                ?? throw new BadReQuestException("Invalid username or password");
+            PasswordVerificationResult result = passwordHasher.VerifyHashedPassword(user, user.PasswordHash, dto.Password);
             if (result == PasswordVerificationResult.Failed)
             {
                 throw new BadReQuestException("Invalid username or password");
@@ -68,14 +65,14 @@ namespace MyBankWebApp.Services.UserServices
 
             var claims = new List<Claim>()
             {
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Name, $"{user.FirstName} {user.LastName}"),
-                new Claim(ClaimTypes.Role, $"{user.Role.Name}"),
+                new(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new(ClaimTypes.Name, $"{user.FirstName} {user.LastName}"),
+                new(ClaimTypes.Role, $"{user.Role.Name}"),
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authenticationSettings.JwtKey));
             var credential = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-            var expires = DateTime.Now.AddDays(authenticationSettings.JwtExpireDays);
+            DateTime expires = DateTime.Now.AddDays(authenticationSettings.JwtExpireDays);
 
             var token = new JwtSecurityToken(
                 authenticationSettings.JwtIssuer,
@@ -96,7 +93,7 @@ namespace MyBankWebApp.Services.UserServices
                 query = include(query);
             }
             User? user = await query.FirstOrDefaultAsync(user => user.Id == id);
-            return user ?? throw new InvalidIdException($"Cound not find user with id {id}");
+            return user ?? throw new InvalidIdException($"Could not find user with id {id}");
         }
 
         public async Task<User> GetUserByStringIdAsync(string? stringId, Func<IQueryable<User>, IQueryable<User>>? include = null)
@@ -113,7 +110,7 @@ namespace MyBankWebApp.Services.UserServices
             var result = validator.Validate(dto);
             if (!result.IsValid)
             {
-                return result.Errors.Select(e => e.ErrorMessage).ToList();
+                return [.. result.Errors.Select(e => e.ErrorMessage)];
             }
 
             var transaction = await dbContext.Database.BeginTransactionAsync();
@@ -133,12 +130,12 @@ namespace MyBankWebApp.Services.UserServices
                 newUser.AccountId = newAccount.Id;
                 dbContext.Users.Add(newUser);
                 await dbContext.SaveChangesAsync();
-                transaction.Commit();
+                await transaction.CommitAsync();
                 return null;
             }
             catch (Exception ex)
             {
-                dbContext.Database.RollbackTransaction();
+                await dbContext.Database.RollbackTransactionAsync();
                 logger.LogError(ex, ex.Message);
                 return ["An error occurred while registering the user."];
             }

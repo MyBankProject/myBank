@@ -1,5 +1,4 @@
-﻿using MyBankWebApp.Atributes;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace MyBankWebApp.ViewModels
 {

@@ -16,7 +16,7 @@ namespace MyBankWebApp.Mappers
                         .OrderBy(t => t.CreationTime)
                         .Select(t => new TransactionViewModel
                         {
-                            Amount = (t.ReceiverId == src.Id ? t.Amount : - t.Amount),
+                            Amount = (t.ReceiverId == src.Id ? t.Amount : -t.Amount),
                             CreationTime = t.CreationTime,
                             Description = t.Description,
                             Id = t.Id,

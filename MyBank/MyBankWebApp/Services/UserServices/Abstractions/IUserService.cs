@@ -6,7 +6,7 @@ namespace MyBankWebApp.Services.UserServices.Abstractions
 {
     public interface IUserService
     {
-        Task<bool> AnyUserByQuerryAsync(Func<IQueryable<User>, IQueryable<User>> query);
+        Task<bool> AnyUserByQueryAsync(Func<IQueryable<User>, IQueryable<User>> query);
 
         string GenerateJwt(LoginDto dto);
 
