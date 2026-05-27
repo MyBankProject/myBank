@@ -1,1 +1,3 @@
 # myBank
+
+**myBank** is a simple banking system designed as a pet project to explore new technologies and practice development skills. The application allows users to register, log in, and perform transactions, including transferring money between accounts. To add funds to your account, you can use the deposit function. This project highlights a collaborative effort between two workmates to create a functional and engaging learning experience.
