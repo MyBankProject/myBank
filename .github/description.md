@@ -1,0 +1,1 @@
+A web application for managing your finances and budgeting. The app allows users to log in to multiple bank accounts, track their expenses, and view spending patterns all in one place. Built using React and ASP.NET API, this project serves as a practice ground and to demonstrate my development skills.
